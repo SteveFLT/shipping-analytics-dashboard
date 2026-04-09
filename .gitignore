@@ -1,0 +1,36 @@
+# ── Python scripts & pipeline ─────────────────────────────────────────────────
+*.py
+__pycache__/
+*.pyc
+*.pyo
+
+# ── Raw data files ─────────────────────────────────────────────────────────────
+*.csv
+*.xlsx
+*.xls
+
+# ── Source data inside visualizations (not needed by the dashboard) ────────────
+visualizations/final_shipping_dataset.csv
+
+# ── OS / editor artifacts ──────────────────────────────────────────────────────
+desktop.ini
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Python virtual environments ────────────────────────────────────────────────
+venv/
+.venv/
+env/
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Everything NOT listed above that lives in the repo root or visualizations/
+# will be tracked — specifically:
+#   index.html
+#   visualizations/*.html
+#   visualizations/*.png
+#   visualizations/*.jpg
+#   visualizations/dashboard_metrics.js
+#   visualizations/*Logo.png / *logo.jpg
+# ─────────────────────────────────────────────────────────────────────────────

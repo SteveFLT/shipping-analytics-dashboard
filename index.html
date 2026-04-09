@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping & Logistics Analytics</title>
+    
+    <!-- Custom Favicon embedded as an inline SVG -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- IMPORT LOCAL METRICS DATA (Bypasses CORS restrictions) -->
+    <script src="visualizations/dashboard_metrics.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        /* Fallback styling for when images are missing/loading or for interactive-only charts */
+        .img-placeholder {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .bg-pattern {
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+
+        /* Chat Scrollbar */
+        #chatMessages::-webkit-scrollbar { width: 6px; }
+        #chatMessages::-webkit-scrollbar-track { background: #1e293b; border-radius: 4px; }
+        #chatMessages::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+        /* Hide card descriptions — shown in detail viewer instead */
+        .card-desc { display: none; }
+    </style>
+</head>
+<body class="min-h-screen font-sans selection:bg-blue-500/30 overflow-x-hidden">
+
+    <!-- Header (Always Visible) -->
+    <header class="border-b border-slate-800 bg-slate-950/50 sticky top-0 z-40 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3 w-full md:w-auto justify-center md:justify-start">
+                    <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    <h1 class="text-2xl font-bold tracking-tight text-white">Logistics <span class="text-blue-500">Dashboard</span></h1>
+                </div>
+
+                <!-- View Toggle Switch -->
+                <div class="flex bg-slate-800/80 p-1.5 rounded-xl border border-slate-600/50 shadow-inner backdrop-blur-md">
+                    <button id="tabAnalytics" class="px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all">Current Analytics</button>
+                    <button id="tabProposals" class="px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all">3PL Proposals</button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <main class="flex flex-col flex-1 relative">
+
+        <!-- ============================================== -->
+        <!-- DASHBOARD GRID VIEW                            -->
+        <!-- ============================================== -->
+        <div id="dashboardView" class="flex flex-col pb-12 w-full">
+
+            <!-- ================= VIEW 1: CURRENT ANALYTICS ================= -->
+            <div id="viewAnalytics" class="flex flex-col w-full animate-fade-in">
+                <!-- Section 1: Volume & Composition Section -->
+                <section class="py-12 md:py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">FY 2025 Shipping Overview</h2>
+                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
+                            </div>
+                            <!-- Dynamic Callouts -->
+                            <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
+                                <div class="px-3 border-r border-slate-700/50">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Total Shipments</p>
+                                    <p class="text-lg font-bold text-blue-400" id="metric-current-vol">---,---</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Timeframe</p>
+                                    <p class="text-lg font-bold text-white">FY 2025</p>
+                                </div>
+                            </div>
+                            <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
+                        </div>
+
+                        <!-- Executive Narrative Banner -->
+                        <div class="bg-blue-950/40 rounded-xl p-5 mb-8 border border-blue-700/40 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                FY 2025 delivered strong shipment volume growth year-over-year. The geographic footprint of our customer base is predominantly domestic and skewed heavily toward the East Coast — Zone 8 alone accounts for 44% of domestic volume, with Zones 6, 7, and 8 combined representing 67%. This distribution holds steady throughout the year, making the zone problem structural rather than seasonal, and establishing the core case for an East Coast fulfillment node.
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Map A1 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/17_volume_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/17_volume_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Domestic Volume Bubble Map">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-blue-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map A1: Zone Volume Bubble Map</h3>
+                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A1" class="card-desc text-sm text-slate-400 mb-0">Our shipment density is heavily concentrated on the coasts — a pattern that drives zone inflation when shipping from a single West Coast origin.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart A2 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/4_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/4_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Volume Trend">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A2: Order Fulfillment Volume Over Time</h3>
+                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A2" class="card-desc text-sm text-slate-400 mb-0">Volume grew consistently through 2025, with a pronounced Q4 holiday spike — the same spike that caused disproportionate cost acceleration.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart A3 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/3_weight_distribution_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/3_weight_distribution.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Weight Distribution">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Histogram Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A3: Distribution of Shipment Weights</h3>
+                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A3" class="card-desc text-sm text-slate-400 mb-0">The weight distribution reveals a meaningful tail of heavy packages — orders that are disproportionately expensive to ship and are key candidates for 3PL zone optimization.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Chart A4 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/1c_international_volume_breakdown_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/1c_international_volume_breakdown.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="International Breakdown">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A4: International Volume Breakdown</h3>
+                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A4" class="card-desc text-sm text-slate-400 mb-0">International volume is a small but growing portion of total shipments. Domestic optimization remains the primary cost lever.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart A5 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5_zone_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5_zone_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Volume">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A5: Volume by Zone (Current)</h3>
+                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A5" class="card-desc text-sm text-slate-400 mb-0">Zone 8 dominates at 44% of domestic volume, with Zones 6, 7, and 8 combined accounting for 67%. A second fulfillment node on the East Coast would convert the majority of these high-zone shipments into low-zone deliveries.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart A6 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5e_zone_volume_stacked_area_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5e_zone_volume_stacked_area.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Stacked Area">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Area Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A6: Volume by Zone Over Time</h3>
+                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A6" class="card-desc text-sm text-slate-400 mb-0">Zone density is consistent throughout the year — the Q4 cost spike was driven by carrier mix changes, not a shift in where customers are located.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- YoY Analysis Section -->
+                <section class="py-12 md:py-16 bg-cyan-950/10 border-y border-cyan-900/30 shadow-inner">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">Year-Over-Year Analysis <span class="text-xs text-slate-500 font-normal ml-2">(2024 vs 2025)</span></h2>
+                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
+                            </div>
+                            <!-- Dynamic Callouts -->
+                            <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
+                                <div class="px-3 border-r border-slate-700/50">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Vol Growth</p>
+                                    <p class="text-lg font-bold text-cyan-400" id="metric-yoy-vol">--.-%</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Spend Growth</p>
+                                    <p class="text-lg font-bold text-cyan-400" id="metric-yoy-spend">--.-%</p>
+                                </div>
+                            </div>
+                            <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
+                        </div>
+
+                        <!-- Executive Narrative: The Core Problem Statement -->
+                        <div class="bg-cyan-950/40 rounded-xl p-5 mb-8 border border-cyan-700/40 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+                            <p class="text-sm font-semibold text-cyan-300 mb-2">The Core Problem: Costs Are Growing Faster Than Volume</p>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                While shipment volume grew meaningfully year-over-year, shipping spend grew at a significantly higher rate — meaning we are paying more per order, not just shipping more orders. The gap between volume growth and spend growth is the primary driver behind this analysis. A sharp Q4 spike accelerated this trend and warrants specific investigation.
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- YoY Volume Trend -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group lg:col-span-2">
+                                <a href="visualizations/yoy_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Volume Trend">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B1: YoY Order Fulfillment Volume</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B1" class="card-desc text-sm text-slate-400 mb-0">Volume growth is strong and consistent — but compare this to Chart B2. The spend curve should not be tracking significantly above the volume curve.</p>
+                                </div>
+                            </div>
+
+                            <!-- YoY Spend Trend -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_spend_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_spend_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Spend Trend">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B2: YoY Total Shipping Spend</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B2" class="card-desc text-sm text-slate-400 mb-0">Total spend grew at a rate that outpaced volume growth, with a dramatic Q4 acceleration. This divergence is the central cost problem this analysis addresses.</p>
+                                </div>
+                            </div>
+
+                            <!-- YoY Avg Cost Trend -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_avg_cost_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_avg_cost_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Avg Cost Trend">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B3: YoY Average Cost Per Shipment</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B3" class="card-desc text-sm text-slate-400 mb-0">The average cost per shipment is rising — confirming the spend growth is structural, not just a volume effect. Q4 pushed the per-order cost to its highest point of the year.</p>
+                                </div>
+                            </div>
+
+                            <!-- YoY Carrier Volume -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_carrier_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_carrier_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Carrier Volume">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B4: YoY Shipment Volume by Carrier</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B4" class="card-desc text-sm text-slate-400 mb-0">UPS captured a larger share of our volume in 2025 vs. 2024 — a shift with significant cost implications given UPS rates run substantially higher than USPS for comparable weights and zones.</p>
+                                </div>
+                            </div>
+
+                            <!-- YoY Zone Volume -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_zone_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_zone_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Zone Volume">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B5: YoY Shipment Volume by Zone</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B5" class="card-desc text-sm text-slate-400 mb-0">Zone distribution is largely stable year-over-year — the cost increase is not driven by shipping to farther destinations, but by how we're shipping and at what weight.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q4 Deep Dive Sub-section -->
+                        <div class="mt-16 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                <h3 class="text-lg font-semibold text-slate-200 whitespace-nowrap">Q4 Deep Dive: Cost Spike Diagnostics</h3>
+                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-24"></div>
+                            </div>
+                        </div>
+
+                        <!-- Q4 Root Cause Callout -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                            <div class="bg-orange-950/40 rounded-xl p-5 border border-orange-700/40 relative overflow-hidden shadow-lg">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                                <p class="text-sm font-semibold text-orange-300 mb-2">Root Cause #1: Carrier Mix Shift</p>
+                                <p class="text-sm text-slate-300 leading-relaxed">During Q4, severe USPS capacity constraints forced a large portion of volume to shift to UPS — a carrier that commands a significant cost premium for equivalent zones and weights. The capacity limitation, not a service preference, drove the switch.</p>
+                            </div>
+                            <div class="bg-red-950/40 rounded-xl p-5 border border-red-700/40 relative overflow-hidden shadow-lg">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                                <p class="text-sm font-semibold text-red-300 mb-2">Root Cause #2: Heavier Orders</p>
+                                <p class="text-sm text-slate-300 leading-relaxed">Holiday bundling and multi-item orders drove up average package weight. Both of these effects — paying more per shipment for UPS and carrying more weight — compounded simultaneously in Q4.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Chart B6 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_q4_carrier_mix_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_q4_carrier_mix.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Carrier Mix">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B6: Q4 Carrier Mix Shift</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B6" class="card-desc text-sm text-slate-400 mb-0">Confirms Root Cause #1: a significant portion of Q4 volume shifted from USPS to UPS, directly inflating per-shipment costs during the highest-volume period of the year.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart B7 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_q4_weight_avg_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_q4_weight_avg.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Average Weight">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B7: Q4 Average Shipment Weight</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B7" class="card-desc text-sm text-slate-400 mb-0">Confirms Root Cause #2: average package weight rose in Q4 as customers bundled multi-item orders. Heavier packages cost significantly more to ship, compounding the UPS rate premium.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart B8 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_q4_ups_share_weight_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_q4_ups_share_weight.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 UPS Share by Weight">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B8: UPS Share by Weight Tier</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B8" class="card-desc text-sm text-slate-400 mb-0">The USPS→UPS shift was not uniform: heavier weight tiers saw the largest migration to UPS, precisely the packages where the cost premium is greatest.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart B9 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/yoy_q4_weight_tier_dist_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/yoy_q4_weight_tier_dist.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Weight Tier Distribution">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart B9: Volume Distribution by Weight Tier</h3>
+                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-B9" class="card-desc text-sm text-slate-400 mb-0">The full weight distribution shifted right in Q4 — a structural change in order composition that, combined with the carrier mix shift, fully explains the cost spike.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Financial & Spend Analysis Section -->
+                <section class="py-12 md:py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">Cost Baseline: Direct-to-Consumer Shipping <span class="text-xs text-slate-500 font-normal ml-2">(Costco Volume Excluded)</span></h2>
+                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
+                            </div>
+                            <!-- Dynamic Callouts -->
+                            <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
+                                <div class="px-3 border-r border-slate-700/50">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Total Baseline Spend</p>
+                                    <p class="text-lg font-bold text-purple-400" id="metric-current-spend">$---,---</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Avg Cost / Order</p>
+                                    <p class="text-lg font-bold text-purple-400" id="metric-current-avg">$---</p>
+                                </div>
+                            </div>
+                            <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
+                        </div>
+                        
+                        <!-- Section C Narrative -->
+                        <div class="bg-purple-950/30 rounded-xl p-5 mb-8 border border-purple-700/40 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                This section establishes the cost baseline we are trying to improve. Costco wholesale volume is excluded from this analysis since its shipping economics differ fundamentally from direct-to-consumer fulfillment. All 3PL savings projections in the proposal tab are measured against this baseline.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Map 7 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/7_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/7_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost Heatmap">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-purple-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map C1: Cost & Volume Heatmap</h3>
+                                        <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-C1" class="card-desc text-sm text-slate-400 mb-0">Cost is highest in the Northeast — exactly where an East Coast 3PL node would reduce shipping zones and bring rates down.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 11 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/11_monthly_total_spend_carrier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/11_monthly_total_spend_carrier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend Trend">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Stacked Area Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart C2: Total Monthly Spend by Carrier</h3>
+                                        <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-C2" class="card-desc text-sm text-slate-400 mb-0">The Q4 cost spike is clearly visible here — UPS spend inflates the total far beyond the seasonal volume increase, confirming the carrier mix shift was the primary driver.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 10 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/10_total_spend_by_zone_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/10_total_spend_by_zone.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend by Zone">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart C3: Total Shipping Spend by Zone</h3>
+                                        <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-C3" class="card-desc text-sm text-slate-400 mb-0">Zones 4–6 represent our largest total spend buckets — high volume combined with meaningful distance from California. Reducing these zone numbers via a second fulfillment node is the core savings opportunity.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 2 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/2_carrier_avg_cost_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/2_carrier_avg_cost.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Carrier">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart C4: Average Shipping Cost by Carrier</h3>
+                                        <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-C4" class="card-desc text-sm text-slate-400 mb-0">UPS costs materially more per shipment than USPS on a like-for-like basis. This premium, applied across the volume that shifted to UPS in Q4, is the direct financial impact of the carrier mix change.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 14 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/14_avg_cost_weight_tier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/14_avg_cost_weight_tier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Weight Tier">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart C5: Avg Cost by Weight Tier</h3>
+                                        <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-C5" class="card-desc text-sm text-slate-400 mb-0">Cost scales steeply with weight — packages over 3 lbs cost significantly more to ship. Our Q4 order weight increase directly translated into higher per-shipment costs across the board.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 12 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/12_monthly_avg_cost_zone_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/12_monthly_avg_cost_zone.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Zone">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart C6: Average Cost by Zone Over Time</h3>
+                                        <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-C6" class="card-desc text-sm text-slate-400 mb-0">Per-zone costs remain relatively stable until Q4, when the carrier mix shift drove up costs uniformly across all zones — confirming this is a carrier-level issue, not a destination-level one.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Carrier Comparisons -->
+                <section class="py-12 md:py-16 bg-indigo-950/20 border-y border-indigo-900/50 shadow-inner">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">Carrier Analysis: The UPS Cost Premium</h2>
+                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
+                            </div>
+                            <!-- Dynamic Callouts -->
+                            <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
+                                <div class="px-3 border-r border-slate-700/50">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">UPS Avg Cost</p>
+                                    <p class="text-lg font-bold text-indigo-400" id="metric-ups-avg">$---</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">USPS Avg Cost</p>
+                                    <p class="text-lg font-bold text-pink-400" id="metric-usps-avg">$---</p>
+                                </div>
+                            </div>
+                            <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
+                        </div>
+                        
+                        <!-- Section D Narrative -->
+                        <div class="bg-indigo-950/40 rounded-xl p-5 mb-8 border border-indigo-700/40 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                Understanding the USPS vs. UPS cost differential is critical to sizing the Q4 problem. Looking ahead, carrier mix expansion is a strategic priority: both USPS and UPS have demonstrated capacity constraints, and relying on one or two primary carriers creates operational and cost risk. Diversifying across additional carriers reduces single-carrier exposure and improves negotiating leverage.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Chart 1 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/1_carrier_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/1_carrier_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Carrier Volume">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart D1: Shipment Volume by Carrier</h3>
+                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-D1" class="card-desc text-sm text-slate-400 mb-0">UPS handles a substantial share of our total volume. Given the rate differential vs. USPS, reducing UPS dependency on lower-priority shipments is a direct lever for cost reduction.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 4b -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/4b_monthly_avg_cost_carrier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/4b_monthly_avg_cost_carrier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Carrier">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart D2: Monthly Avg Cost (USPS vs UPS)</h3>
+                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-D2" class="card-desc text-sm text-slate-400 mb-0">The UPS rate premium over USPS is consistent throughout the year — but the gap becomes financially material in Q4 when UPS captures a higher share of volume.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 13 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/13_cost_vs_weight_scatter_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/13_cost_vs_weight_scatter.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost vs Weight Scatter">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Scatter Plot Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart D3: Cost vs. Weight Scatter Plot</h3>
+                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-D3" class="card-desc text-sm text-slate-400 mb-0">The pricing clusters reveal that UPS and USPS rates diverge sharply above 1 lb — the weight band where the majority of our shipments fall, making every ounce above that threshold more expensive under UPS.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 15 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/15_combo_spend_volume_zone_ups_usps_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/15_combo_spend_volume_zone_ups_usps.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend & Volume Combined">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Interactive Clustered Column</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart D4: Spend & Volume by Zone (Combined)</h3>
+                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-D4" class="card-desc text-sm text-slate-400 mb-0">Spend per zone is disproportionate to volume in higher zones — confirming that zone distance, not just shipment count, is inflating our cost structure.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 16 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group md:col-span-2">
+                                <a href="visualizations/16_combo_spend_volume_zone_separated_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/16_combo_spend_volume_zone_separated.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend & Volume Separated">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Interactive Separated Clusters</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart D5: Spend & Volume (UPS vs USPS)</h3>
+                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-D5" class="card-desc text-sm text-slate-400 mb-0">UPS generates higher spend relative to its volume share than USPS — the clearest direct comparison of carrier cost efficiency in this dataset.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ================= VIEW 2: 3PL PROPOSALS ================= -->
+            <div id="viewProposals" class="flex flex-col w-full hidden animate-fade-in">
+
+                <!-- Strategic Rationale Banner -->
+                <div class="bg-slate-900 border-b border-slate-800 shadow-inner">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                        <h2 class="text-2xl font-bold text-white mb-2">The Proposal: Dual-Node Fulfillment</h2>
+                        <p class="text-base text-slate-400 mb-6 max-w-3xl">The data from the Current Analytics tab establishes a clear mandate: our single-warehouse model in California generates structurally high shipping costs for the majority of our domestic customer base. The following analysis evaluates three real proposals from third-party logistics providers to establish a second fulfillment node on the East Coast or Mid-South.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50">
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">The Mechanism</p>
+                                <p class="text-sm text-slate-300">Orders are dynamically routed to whichever warehouse produces the lowest shipping cost for that destination ZIP. Only shipments where the 3PL node is genuinely cheaper get redirected — the CA warehouse remains active for the rest.</p>
+                            </div>
+                            <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50">
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">What's Modeled</p>
+                                <p class="text-sm text-slate-300">Every projection includes the full Total Landed Cost (TLC): shipping freight, pick & pack fees, pallet receiving, and storage — applied to actual 2025 order weights, item counts, and zone data.</p>
+                            </div>
+                            <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50">
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">How to Read This</p>
+                                <p class="text-sm text-slate-300">Each 3PL section shows the same set of charts: zone improvement, monthly cost comparison vs. baseline, geographic allocation maps, and cost heatmaps. The Executive Modeling Suite at the bottom compares all three side-by-side.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Proposed MasonHub 3PL (Pennsylvania) -->
+                <section class="py-12 md:py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-4 w-full md:w-auto">
+                                <div class="bg-white p-3 rounded-xl border-2 border-amber-400/80 shadow-[0_0_15px_rgba(251,191,36,0.25)] flex items-center justify-center min-w-[140px] h-14">
+                                    <img src="visualizations/MasonHubLogo.png" alt="MasonHub Logo" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="flex flex-col">
+                                    <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">Proposed MasonHub 3PL</h2>
+                                    <p class="text-sm font-medium text-amber-500">Pennsylvania (East Coast)</p>
+                                </div>
+                            </div>
+                            <!-- Dynamic Callouts -->
+                            <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
+                                <div class="px-3 border-r border-slate-700/50">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Projected Net Savings</p>
+                                    <p class="text-lg font-bold text-amber-400" id="metric-mh-savings">$---,---</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Cost Reduction</p>
+                                    <p class="text-lg font-bold text-white" id="metric-mh-pct">--.-%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modernized Info Panel for TLC Details -->
+                        <div class="bg-slate-800/60 rounded-xl p-5 mb-8 border border-amber-500/30 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                            <h4 class="text-base font-bold text-amber-400 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                Total Landed Cost (TLC) Methodology
+                            </h4>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <!-- Pick & Pack Box -->
+                                <div class="bg-slate-900/80 rounded-lg p-4 shadow-inner border border-slate-700/60">
+                                    <h5 class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3 flex justify-between items-center">
+                                        Fulfillment Fees
+                                    </h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Base Pick</span>
+                                            <span class="text-amber-400 font-mono font-bold">$1.80</span>
+                                        </div>
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Additional Item</span>
+                                            <span class="text-amber-400 font-mono font-bold">$0.30</span>
+                                        </div>
+                                        <div class="flex justify-between items-end pb-1">
+                                            <span class="text-sm text-slate-300">Base Pack</span>
+                                            <span class="text-amber-400 font-mono font-bold">$0.60</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Storage & Receiving Box -->
+                                <div class="bg-slate-900/80 rounded-lg p-4 shadow-inner border border-slate-700/60">
+                                    <h5 class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Storage & Receiving</h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Receiving <span class="text-slate-500 text-xs ml-1">(Per Pallet)</span></span>
+                                            <span class="text-amber-400 font-mono font-bold">$15.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-end pb-1">
+                                            <span class="text-sm text-slate-300">Storage <span class="text-slate-500 text-xs ml-1">(Per Pallet / Day)</span></span>
+                                            <span class="text-amber-400 font-mono font-bold">$0.822</span>
+                                        </div>
+                                        <div class="mt-3 inline-block px-2.5 py-1 bg-amber-500/10 text-amber-300 text-[11px] font-medium rounded border border-amber-500/20">
+                                            Assumes 50% average depletion utilization
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Chart 5c -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-amber-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5c_dual_warehouse_zone_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5c_dual_warehouse_zone_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart E1: Single vs Dual Warehouse Zones</h3>
+                                        <svg class="w-5 h-5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-E1" class="card-desc text-sm text-slate-400 mb-0">Adding a PA node dramatically reduces zone numbers for East Coast customers — converting what are currently Zone 6–8 shipments from CA into Zone 1–3 shipments from PA.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart TLC_MH -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-amber-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/masonhub_monthly_tlc_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/masonhub_monthly_tlc_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Masonhub TLC Comparison">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart E2: Monthly TLC vs. 2025 Baseline</h3>
+                                        <svg class="w-5 h-5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-E2" class="card-desc text-sm text-slate-400 mb-0">After accounting for all pick, pack, storage, and receiving fees, MasonHub's TLC comes in below the 2025 baseline in most months — representing genuine bottom-line savings, not just a lower shipping rate.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 5d -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-amber-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5d_warehouse_allocation_split_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5d_warehouse_allocation_split.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Pie Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart E3: Optimal Warehouse Volume Split</h3>
+                                        <svg class="w-5 h-5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-E3" class="card-desc text-sm text-slate-400 mb-0">The routing model splits volume between CA and PA based purely on cost. This chart shows how much volume naturally gravitates to each node under optimal routing.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 9 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-amber-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/9_dual_warehouse_allocation_map_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/9_dual_warehouse_allocation_map_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-amber-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map E4: Dual Warehouse Coverage Map (PA)</h3>
+                                        <svg class="w-5 h-5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-E4" class="card-desc text-sm text-slate-400 mb-0">The geographic split is intuitive — PA handles the East, CA handles the West. The overlap zone in the middle is where the routing engine dynamically selects the lowest-cost node per order.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 8 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-amber-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/8_masonhub_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/8_masonhub_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-amber-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map E5: Cost & Volume Heatmap (PA)</h3>
+                                        <svg class="w-5 h-5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-E5" class="card-desc text-sm text-slate-400 mb-0">Cost relief is visible in the Northeast — the region most expensive to serve from CA. The PA node brings those customers into lower, cheaper zones.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 9b -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-amber-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/9b_dual_warehouse_zone_gradient_map_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-amber-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map E6: Dual Warehouse Zone Map (PA)</h3>
+                                        <svg class="w-5 h-5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-E6" class="card-desc text-sm text-slate-400 mb-0">The zone gradient flattens significantly under the dual-node model — the dark high-zone areas in the East shrink as those orders shift to the PA facility.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: Proposed RedStag 3PL (Tennessee) -->
+                <section class="py-12 md:py-16 bg-indigo-950/20 border-y border-indigo-900/50 shadow-inner">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-4 w-full md:w-auto">
+                                <div class="bg-white p-3 rounded-xl border-2 border-emerald-400/80 shadow-[0_0_15px_rgba(52,211,153,0.25)] flex items-center justify-center min-w-[140px] h-14">
+                                    <img src="visualizations/RedStagLogo.png" alt="Red Stag Logo" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="flex flex-col">
+                                    <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">Proposed RedStag 3PL</h2>
+                                    <p class="text-sm font-medium text-emerald-500">Tennessee (Mid-South)</p>
+                                </div>
+                            </div>
+                            <!-- Dynamic Callouts -->
+                            <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
+                                <div class="px-3 border-r border-slate-700/50">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Projected Net Savings</p>
+                                    <p class="text-lg font-bold text-emerald-400" id="metric-rs-savings">$---,---</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Cost Reduction</p>
+                                    <p class="text-lg font-bold text-white" id="metric-rs-pct">--.-%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modernized Info Panel for TLC Details -->
+                        <div class="bg-slate-800/60 rounded-xl p-5 mb-8 border border-emerald-500/30 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                            <h4 class="text-base font-bold text-emerald-400 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                Total Landed Cost (TLC) Methodology
+                            </h4>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <!-- Pick & Pack Box -->
+                                <div class="bg-slate-900/80 rounded-lg p-4 shadow-inner border border-slate-700/60">
+                                    <h5 class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3 flex justify-between items-center">
+                                        Fulfillment Fees
+                                    </h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Base Pick</span>
+                                            <span class="text-emerald-400 font-mono font-bold">$1.40</span>
+                                        </div>
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Additional Item</span>
+                                            <span class="text-emerald-400 font-mono font-bold">$0.25</span>
+                                        </div>
+                                        <div class="flex justify-between items-end pb-1">
+                                            <span class="text-sm text-slate-300">Base Pack</span>
+                                            <div class="text-right">
+                                                <span class="text-emerald-400 font-mono font-bold">$0.60</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 inline-block px-2.5 py-1 bg-emerald-500/10 text-emerald-300 text-[11px] font-medium rounded border border-emerald-500/20">
+                                            + $0.20 serialization surcharge (modeled > 4 lbs)
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Storage & Receiving Box -->
+                                <div class="bg-slate-900/80 rounded-lg p-4 shadow-inner border border-slate-700/60">
+                                    <h5 class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Storage & Receiving</h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Receiving <span class="text-slate-500 text-xs ml-1">(Per Pallet)</span></span>
+                                            <span class="text-emerald-400 font-mono font-bold">$12.50</span>
+                                        </div>
+                                        <div class="flex justify-between items-end pb-1">
+                                            <span class="text-sm text-slate-300">Storage <span class="text-slate-500 text-xs ml-1">(Per Cu Ft / Month)</span></span>
+                                            <span class="text-emerald-400 font-mono font-bold">$0.35</span>
+                                        </div>
+                                        <div class="mt-3 inline-block px-2.5 py-1 bg-emerald-500/10 text-emerald-300 text-[11px] font-medium rounded border border-emerald-500/20">
+                                            Assumes 50% average depletion utilization
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Chart 5c_TN -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5c_dual_warehouse_zone_comparison_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5c_dual_warehouse_zone_comparison_tn.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare TN">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart F1: Single vs Dual Warehouse Zones</h3>
+                                        <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-F1" class="card-desc text-sm text-slate-400 mb-0">A TN node in the Mid-South provides strong coverage for the central US — a different geographic profile than the PA options, with meaningful zone improvement for the Midwest corridor.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Chart TLC_TN -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/redstag_monthly_tlc_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/redstag_monthly_tlc_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Red Stag TLC Comparison">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart F2: Monthly TLC vs. 2025 Baseline</h3>
+                                        <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-F2" class="card-desc text-sm text-slate-400 mb-0">Red Stag's TLC vs. baseline comparison — after fully loaded fees. The TN location produces different savings patterns than PA due to its distinct zone footprint across the country.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 5d_TN -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5d_warehouse_allocation_split_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5d_warehouse_allocation_split_tn.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split TN">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Pie Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart F3: Optimal Warehouse Volume Split</h3>
+                                        <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-F3" class="card-desc text-sm text-slate-400 mb-0">The TN routing split differs from the PA split — Tennessee captures a larger share of Midwest volume while Pennsylvania has a stronger pull on the Northeast.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 9_TN -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/9_dual_warehouse_allocation_map_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/9_dual_warehouse_allocation_map_tn_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map TN">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-emerald-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map F4: Dual Warehouse Coverage Map (TN)</h3>
+                                        <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-F4" class="card-desc text-sm text-slate-400 mb-0">Tennessee's central location creates a different coverage boundary than PA — serving the South and Midwest more efficiently while CA retains the West Coast and PA retains the Northeast under a tri-node model.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 8_TN -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/8_redstag_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/8_redstag_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap TN">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-emerald-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map F5: Cost & Volume Heatmap (TN)</h3>
+                                        <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-F5" class="card-desc text-sm text-slate-400 mb-0">The TN cost profile reflects Red Stag's competitive rates — particularly on heavier packages, which is an advantage given our Q4 order weight patterns.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 9b_TN -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/9b_dual_warehouse_zone_gradient_map_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_tn_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual TN">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-emerald-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map F6: Dual Warehouse Zone Map (TN)</h3>
+                                        <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-F6" class="card-desc text-sm text-slate-400 mb-0">The TN zone gradient shows improvement concentrated in the central band of the country — the region that benefits most from a Mid-South fulfillment origin.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7: Proposed ShipFusion 3PL (Pennsylvania) -->
+                <section class="py-12 md:py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-4 w-full md:w-auto">
+                                <div class="bg-white p-3 rounded-xl border-2 border-violet-400/80 shadow-[0_0_15px_rgba(139,92,246,0.25)] flex items-center justify-center min-w-[140px] h-14">
+                                    <img src="visualizations/shipfusionlogo.jpg" alt="ShipFusion Logo" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="flex flex-col">
+                                    <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">Proposed ShipFusion 3PL</h2>
+                                    <p class="text-sm font-medium text-violet-400">Pennsylvania (East Coast)</p>
+                                </div>
+                            </div>
+                            <!-- Dynamic Callouts -->
+                            <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
+                                <div class="px-3 border-r border-slate-700/50">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Projected Net Savings</p>
+                                    <p class="text-lg font-bold text-violet-400" id="metric-sf-savings">$---,---</p>
+                                </div>
+                                <div class="px-3">
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Cost Reduction</p>
+                                    <p class="text-lg font-bold text-white" id="metric-sf-pct">--.-%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modernized Info Panel for TLC Details -->
+                        <div class="bg-slate-800/60 rounded-xl p-5 mb-8 border border-violet-500/30 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-violet-500"></div>
+                            <h4 class="text-base font-bold text-violet-400 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                Total Landed Cost (TLC) Methodology
+                            </h4>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <!-- Pick & Pack Box -->
+                                <div class="bg-slate-900/80 rounded-lg p-4 shadow-inner border border-slate-700/60">
+                                    <h5 class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3 flex justify-between items-center">
+                                        Fulfillment Fees
+                                    </h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Base Pick</span>
+                                            <span class="text-violet-400 font-mono font-bold">$1.99</span>
+                                        </div>
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Additional Item</span>
+                                            <span class="text-violet-400 font-mono font-bold">$0.41</span>
+                                        </div>
+                                        <div class="flex justify-between items-end pb-1">
+                                            <span class="text-sm text-slate-300">Base Pack</span>
+                                            <span class="text-violet-400 font-mono font-bold">$1.20</span>
+                                        </div>
+                                        <div class="mt-3 inline-block px-2.5 py-1 bg-violet-500/10 text-violet-300 text-[11px] font-medium rounded border border-violet-500/20">
+                                            Pick fees fully waived for first 31,552 orders
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Storage & Receiving Box -->
+                                <div class="bg-slate-900/80 rounded-lg p-4 shadow-inner border border-slate-700/60">
+                                    <h5 class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Storage & Receiving</h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-end border-b border-slate-800/80 pb-2">
+                                            <span class="text-sm text-slate-300">Receiving <span class="text-slate-500 text-xs ml-1">(Per Pallet)</span></span>
+                                            <span class="text-violet-400 font-mono font-bold">$10.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-end pb-1">
+                                            <span class="text-sm text-slate-300">Storage <span class="text-slate-500 text-xs ml-1">(Per Pallet / Month)</span></span>
+                                            <span class="text-violet-400 font-mono font-bold">$25.00</span>
+                                        </div>
+                                        <div class="mt-3 inline-block px-2.5 py-1 bg-violet-500/10 text-violet-300 text-[11px] font-medium rounded border border-violet-500/20">
+                                            Assumes 80% EOM snapshot utilization
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm text-slate-400 leading-relaxed bg-slate-900/50 p-3.5 rounded-lg border border-slate-700/50">
+                                <strong class="text-violet-200 font-semibold">Waiver Note:</strong> The 31,552 order waiver applies only to Year 1. Chart H3 explicitly models both the initial Year 1 savings and the un-waived long-term Run-Rate for full transparency.
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Chart 5c_SF -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-violet-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5c_dual_warehouse_zone_comparison_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5c_dual_warehouse_zone_comparison_sf.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare SF">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart G1: Single vs Dual Warehouse Zones</h3>
+                                        <svg class="w-5 h-5 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-G1" class="card-desc text-sm text-slate-400 mb-0">ShipFusion is also PA-based, so its zone improvement profile mirrors MasonHub — with the key differentiator being cost structure, waiver terms, and operational capabilities.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Chart TLC_SF -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-violet-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/shipfusion_monthly_tlc_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/shipfusion_monthly_tlc_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="ShipFusion TLC Comparison">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart G2: Monthly TLC vs. 2025 Baseline</h3>
+                                        <svg class="w-5 h-5 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-G2" class="card-desc text-sm text-slate-400 mb-0">ShipFusion's Year 1 pick fee waiver produces lower TLC in the near term. This chart reflects the waivered Year 1 cost — compare with Chart H3 to see the run-rate impact once the waiver expires.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 5d_SF -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-violet-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/5d_warehouse_allocation_split_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/5d_warehouse_allocation_split_sf.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split SF">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Pie Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart G3: Optimal Warehouse Volume Split</h3>
+                                        <svg class="w-5 h-5 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-G3" class="card-desc text-sm text-slate-400 mb-0">ShipFusion's PA location produces a similar East/West routing split to MasonHub. The allocation here reflects optimal cost routing, not geographic proximity alone.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 9_SF -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-violet-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/9_dual_warehouse_allocation_map_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/9_dual_warehouse_allocation_map_sf_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map SF">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-violet-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map G4: Dual Warehouse Coverage Map (PA)</h3>
+                                        <svg class="w-5 h-5 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-G4" class="card-desc text-sm text-slate-400 mb-0">ShipFusion's PA coverage map is nearly identical to MasonHub's — both are East Coast PA nodes. The decision between them comes down to rate card competitiveness, fees, and long-term contract terms.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 8_SF -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-violet-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/8_shipfusion_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/8_shipfusion_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap SF">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-violet-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map G5: Cost & Volume Heatmap (PA)</h3>
+                                        <svg class="w-5 h-5 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-G5" class="card-desc text-sm text-slate-400 mb-0">ShipFusion's PA cost heatmap — compare the cost relief in the Northeast vs. Map E5 (MasonHub) to evaluate which PA provider delivers better rates in high-density regions.</p>
+                                </div>
+                            </div>
+
+                            <!-- Map 9b_SF -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-violet-500 transition duration-300 shadow-lg relative group">
+                                <!-- Invisible link covering the entire card -->
+                                <a href="visualizations/9b_dual_warehouse_zone_gradient_map_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_sf_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual SF">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-violet-500/50">Plotly Scatter Geo</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Map G6: Dual Warehouse Zone Map (PA)</h3>
+                                        <svg class="w-5 h-5 text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-G6" class="card-desc text-sm text-slate-400 mb-0">Zone improvement under ShipFusion mirrors the MasonHub PA gradient — Eastern customers shift from high zones to low zones regardless of which PA provider is selected.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 8: Executive Modeling Suite (Advanced Savings Analysis) -->
+                <section class="py-12 md:py-16 bg-indigo-950/20 border-y border-indigo-900/50 shadow-inner">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex items-center space-x-4">
+                            <div class="flex -space-x-4">
+                                <div class="bg-white p-2 rounded-xl border-2 border-amber-400/80 shadow-[0_0_10px_rgba(251,191,36,0.25)] relative z-20 flex items-center justify-center min-w-[100px] h-12 ring-4 ring-[#0f172a]">
+                                    <img src="visualizations/MasonHubLogo.png" alt="MasonHub Logo" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="bg-white p-2 rounded-xl border-2 border-emerald-400/80 shadow-[0_0_10px_rgba(52,211,153,0.25)] relative z-10 flex items-center justify-center min-w-[100px] h-12 ring-4 ring-[#0f172a]">
+                                    <img src="visualizations/RedStagLogo.png" alt="Red Stag Logo" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="bg-white p-2 rounded-xl border-2 border-violet-400/80 shadow-[0_0_10px_rgba(139,92,246,0.25)] relative z-0 flex items-center justify-center min-w-[100px] h-12 ring-4 ring-[#0f172a]">
+                                    <img src="visualizations/shipfusionlogo.jpg" alt="ShipFusion Logo" class="max-h-full max-w-full object-contain">
+                                </div>
+                            </div>
+                            <div class="flex flex-col ml-2">
+                                <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">Executive Modeling Suite: Head-to-Head Comparison</h2>
+                                <p class="text-sm font-medium text-teal-400">All three 3PL proposals evaluated side-by-side on Total Landed Cost</p>
+                            </div>
+                            <div class="h-px bg-slate-800 flex-grow ml-4"></div>
+                        </div>
+
+                        <!-- Modernized Info Panel for TLC Details -->
+                        <div class="bg-slate-800/60 rounded-xl p-5 mb-8 border border-teal-500/30 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-teal-500"></div>
+                            <h4 class="text-base font-bold text-teal-400 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Total Landed Cost (TLC) Executive Summary
+                            </h4>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+                                <div class="bg-slate-900/80 border border-slate-700/60 rounded-lg p-3 flex flex-col justify-center items-center shadow-inner text-center">
+                                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Volumetric Assumption</span>
+                                    <span class="text-lg font-bold text-teal-300 font-mono">1.0 cu ft / item</span>
+                                </div>
+                                <div class="bg-slate-900/80 border border-slate-700/60 rounded-lg p-3 flex flex-col justify-center items-center shadow-inner text-center">
+                                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Palletization Ratio</span>
+                                    <span class="text-lg font-bold text-teal-300 font-mono">100 items / pallet</span>
+                                </div>
+                                <div class="bg-slate-900/80 border border-slate-700/60 rounded-lg p-3 flex flex-col justify-center items-center shadow-inner text-center">
+                                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Avg Inventory Holding</span>
+                                    <span class="text-lg font-bold text-teal-300 font-mono">1.5 Months</span>
+                                </div>
+                            </div>
+                            
+                            <div class="text-sm text-slate-300 leading-relaxed bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+                                <strong class="text-teal-200">These are decision-ready numbers.</strong> All projections represent true bottom-line impact — not just lower shipping rates. Each scenario explicitly models shipping freight plus 3PL pick, pack, receiving, and storage fees, applied to actual 2025 order weights and item counts. CA baseline fulfillment costs are excluded (treated as sunk) so the comparison reflects only the net incremental cost of each 3PL strategy. The charts on this page are the primary basis for a go/no-go recommendation.
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Chart 18 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-2">
+                                <a href="visualizations/18_monthly_avg_cost_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-64 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/18_monthly_avg_cost_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Comparison">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart H1: Monthly Average Cost per Shipment (TLC)</h3>
+                                        <svg class="w-5 h-5 text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-H1" class="card-desc text-sm text-slate-400 mb-0">The primary monthly cost comparison. Any scenario that consistently tracks below the red baseline line represents a real, sustained reduction in per-order cost. Watch for seasonal convergence in Q4.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 19 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-1">
+                                <a href="visualizations/19_monthly_total_savings_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-64 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/19_monthly_total_savings.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Total Projected Savings">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart H2: Total Projected Net Savings by Month</h3>
+                                        <svg class="w-5 h-5 text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-H2" class="card-desc text-sm text-slate-400 mb-0">Absolute net savings per month after all 3PL fees are deducted. This is the number that directly flows to the bottom line — annualize it to size the total opportunity.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 23 (NEW COST BREAKDOWN) -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-3">
+                                <a href="visualizations/23_cost_breakdown_stacked_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-64 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/23_cost_breakdown_stacked.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Average Cost Breakdown">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart H3: Average Cost of a Relocated 3PL Shipment</h3>
+                                        <svg class="w-5 h-5 text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-H3" class="card-desc text-sm text-slate-400 mb-0">Unit economics for a relocated shipment under each scenario, broken into all four cost components: shipping, fulfillment (pick &amp; pack), receiving, and storage. The total above each bar is what the company actually pays per order — compare these directly to identify the most cost-efficient provider.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 24 (NEW CUMULATIVE COST BREAKDOWN) -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-3">
+                                <a href="visualizations/24_total_cost_breakdown_stacked_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-64 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/24_total_cost_breakdown_stacked.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cumulative Cost Breakdown">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart H4: Projected Total Annual Landed Cost (Cumulative)</h3>
+                                        <svg class="w-5 h-5 text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-H4" class="card-desc text-sm text-slate-400 mb-0">The bottom-line number: total annual spend under each scenario. This is Chart H3 scaled to the full year — the difference between the current CA baseline bar and any 3PL bar is the annualized dollar savings available for capture.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 20 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-3">
+                                <a href="visualizations/20_comprehensive_zone_shift_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-64 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/20_comprehensive_zone_shift.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Comprehensive Zone Shift">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart H5: Comprehensive Zone Shift Projection</h3>
+                                        <svg class="w-5 h-5 text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-H5" class="card-desc text-sm text-slate-400 mb-0">All three 3PL strategies compared simultaneously — showing how adding an East Coast node shifts volume out of high zones and into low zones. Lower zones mean lower rates; this chart visualizes the structural improvement behind the cost savings.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 21 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-1">
+                                <a href="visualizations/21_savings_by_weight_tier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-64 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/21_savings_by_weight_tier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Savings by Weight Tier">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart H6: Avg Net Savings per Shipment by Weight Tier</h3>
+                                        <svg class="w-5 h-5 text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-H6" class="card-desc text-sm text-slate-400 mb-0">Heavier packages generate more savings per shipment — exactly the orders that drove Q4 cost inflation. This chart shows that the 3PL strategy addresses the specific problem identified in the YoY analysis.</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart 22 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-2">
+                                <a href="visualizations/22_savings_distribution_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-64 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/22_savings_distribution.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Distribution of Savings">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Distribution Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart H7: Distribution of Net Dollar Savings per Shipment</h3>
+                                        <svg class="w-5 h-5 text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-H7" class="card-desc text-sm text-slate-400 mb-0">The savings distribution reveals consistency — the bulk of relocated shipments generate meaningful positive savings, not just a few outliers pulling up an average. A tight, right-shifted curve is the ideal profile for a reliable cost reduction program.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- DETAIL VIEWER OVERLAY                          -->
+        <!-- ============================================== -->
+        <div id="detailView" style="display: none;" class="flex-col w-full h-[calc(100vh-80px)] bg-[#0f172a] shadow-inner">
+            <!-- Toolbar -->
+            <div class="bg-slate-900 border-b border-slate-800 px-3 sm:px-6 py-3 sm:py-4 flex items-start justify-between gap-3 sm:gap-6 shadow-md z-10 w-full">
+
+                <!-- Left: Back Button & Logo -->
+                <div class="flex items-center gap-3 flex-shrink-0 mt-0.5">
+                    <button id="btnBackDashboard" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition text-sm font-medium flex items-center gap-1.5 whitespace-nowrap">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        <span class="hidden sm:inline">Back</span>
+                    </button>
+                    <div id="vizLogoContainer" class="hidden items-center justify-center h-9 sm:h-10 min-w-[80px] bg-white px-2 py-1 rounded-lg border-2 transition-all duration-300 space-x-3">
+                        <img id="vizLogo1" src="" class="hidden max-h-full max-w-[90px] object-contain" alt="Partner Logo">
+                        <img id="vizLogo2" src="" class="hidden max-h-full max-w-[90px] object-contain" alt="Partner Logo">
+                        <img id="vizLogo3" src="" class="hidden max-h-full max-w-[90px] object-contain" alt="Partner Logo">
+                    </div>
+                </div>
+
+                <!-- Center: Title + Description -->
+                <div class="flex-1 min-w-0 flex flex-col items-center gap-1.5 text-center">
+                    <h2 id="vizTitle" class="text-sm sm:text-base font-bold text-white leading-snug"></h2>
+                    <p id="vizDescription" class="hidden text-xs sm:text-sm text-slate-400 leading-relaxed max-w-2xl"></p>
+                </div>
+
+                <!-- Right: Navigation -->
+                <div class="flex items-center gap-2 flex-shrink-0 mt-0.5">
+                    <button id="btnPrevViz" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium">
+                        ‹ Prev
+                    </button>
+                    <button id="btnNextViz" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium">
+                        Next ›
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 relative w-full h-full flex items-center justify-center p-4 bg-slate-950/50">
+                <!-- Loading State -->
+                <div id="vizLoading" class="absolute inset-0 flex flex-col items-center justify-center z-0 hidden">
+                    <svg class="animate-spin h-10 w-10 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="text-slate-400 font-medium">Loading Visualization...</span>
+                </div>
+                
+                <!-- Iframe for Plotly HTML -->
+                <iframe id="vizIframe" src="about:blank" class="w-full h-full border border-slate-800 rounded-xl bg-slate-900 shadow-2xl relative z-10 hidden" onload="document.getElementById('vizLoading').classList.add('hidden')"></iframe>
+                
+                <!-- Img for Static PNGs -->
+                <img id="vizImg" class="max-w-full max-h-full object-contain rounded-xl relative z-10 hidden drop-shadow-2xl" src="" alt="Visualization" onload="document.getElementById('vizLoading').classList.add('hidden')">
+            </div>
+        </div>
+
+    </main>
+
+    
+    <!-- JS Logic -->
+    <script>
+        // ==========================================
+        // 1. DATA INGESTION & UI POPULATION
+        // ==========================================
+        // This function dynamically populates the HTML badges using the JS exported by the Python script
+        function loadDashboardMetrics() {
+            try {
+                // Read directly from memory instead of fetching a JSON file
+                const data = window.DASHBOARD_METRICS;
+                
+                if (!data) throw new Error('Metrics JS not loaded yet');
+                
+                // Format numbers as currency or formatted ints
+                const formatCurrency = (num) => '$' + num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                const formatCurrencyPrecise = (num) => '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const formatInt = (num) => num.toLocaleString('en-US');
+                const formatPct = (num) => num.toFixed(1) + '%';
+                
+                // Populate Current Analytics
+                if (data.current) {
+                    document.getElementById('metric-current-vol').textContent = formatInt(data.current.total_orders); // Using Total Base Orders
+                    document.getElementById('metric-current-spend').textContent = formatCurrency(data.current.total_spend);
+                    document.getElementById('metric-current-avg').textContent = formatCurrencyPrecise(data.current.avg_cost);
+                }
+                
+                // Populate YoY Analysis
+                if (data.yoy && data.yoy.vol_2024 > 0) {
+                    const volGrowth = ((data.yoy.vol_2025 - data.yoy.vol_2024) / data.yoy.vol_2024) * 100;
+                    const spendGrowth = ((data.yoy.spend_2025 - data.yoy.spend_2024) / data.yoy.spend_2024) * 100;
+                    
+                    const volEl = document.getElementById('metric-yoy-vol');
+                    const spendEl = document.getElementById('metric-yoy-spend');
+                    
+                    volEl.textContent = (volGrowth > 0 ? '+' : '') + formatPct(volGrowth);
+                    spendEl.textContent = (spendGrowth > 0 ? '+' : '') + formatPct(spendGrowth);
+                    
+                    // Optional: Color code negative values green if spend goes down
+                    if (spendGrowth < 0) spendEl.classList.replace('text-cyan-400', 'text-green-400');
+                }
+                
+                // Populate Carrier Comparisons
+                if (data.carriers) {
+                    document.getElementById('metric-ups-avg').textContent = formatCurrencyPrecise(data.carriers.ups_avg);
+                    document.getElementById('metric-usps-avg').textContent = formatCurrencyPrecise(data.carriers.usps_avg);
+                }
+                
+                // Track max savings for the Exec Suite header
+                let maxSavings = 0;
+
+                // Populate 3PL Proposals
+                if (data.masonhub) {
+                    document.getElementById('metric-mh-savings').textContent = formatCurrency(data.masonhub.savings);
+                    document.getElementById('metric-mh-pct').textContent = formatPct(data.masonhub.savings_pct);
+                    if (data.masonhub.savings > maxSavings) maxSavings = data.masonhub.savings;
+                }
+                if (data.redstag) {
+                    document.getElementById('metric-rs-savings').textContent = formatCurrency(data.redstag.savings);
+                    document.getElementById('metric-rs-pct').textContent = formatPct(data.redstag.savings_pct);
+                    if (data.redstag.savings > maxSavings) maxSavings = data.redstag.savings;
+                }
+                if (data.shipfusion) {
+                    document.getElementById('metric-sf-savings').textContent = formatCurrency(data.shipfusion.savings);
+                    document.getElementById('metric-sf-pct').textContent = formatPct(data.shipfusion.savings_pct);
+                    if (data.shipfusion.savings > maxSavings) maxSavings = data.shipfusion.savings;
+                }
+                
+                // Populate Executive Suite Callout
+                const maxSavEl = document.getElementById('metric-max-savings');
+                if (maxSavEl) {
+                    maxSavEl.textContent = formatCurrency(maxSavings);
+                }
+
+                // Inject content-aware chart descriptions
+                if (data.descriptions) {
+                    for (const [chartId, text] of Object.entries(data.descriptions)) {
+                        const el = document.getElementById(`desc-${chartId}`);
+                        if (el) el.textContent = text;
+                    }
+                }
+
+            } catch (error) {
+                console.warn("Metrics JS not loaded. Make sure to run the Python script first!", error);
+            }
+        }
+        
+        // Execute on page load
+        document.addEventListener('DOMContentLoaded', loadDashboardMetrics);
+
+        // ==========================================
+        // 2. VISUALIZATION SPA NAVIGATION LOGIC
+        // ==========================================
+        let currentVizIndex = 0;
+        let vizLinks = [];
+
+        // Tab Switching Logic
+        const tabAnalytics = document.getElementById('tabAnalytics');
+        const tabProposals = document.getElementById('tabProposals');
+        const viewAnalytics = document.getElementById('viewAnalytics');
+        const viewProposals = document.getElementById('viewProposals');
+
+        function switchTab(viewName) {
+            if (viewName === 'analytics') {
+                viewAnalytics.classList.remove('hidden');
+                viewProposals.classList.add('hidden');
+                
+                tabAnalytics.className = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all';
+                tabProposals.className = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
+            } else {
+                viewAnalytics.classList.add('hidden');
+                viewProposals.classList.remove('hidden');
+                
+                tabProposals.className = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all';
+                tabAnalytics.className = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
+            }
+        }
+
+        tabAnalytics.addEventListener('click', () => switchTab('analytics'));
+        tabProposals.addEventListener('click', () => switchTab('proposals'));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Collect all invisible interactive links inside the dashboard cards
+            const cards = document.querySelectorAll('#dashboardView section .grid > div');
+            let globalIndex = 0;
+
+            cards.forEach((card) => {
+                const titleEl = card.querySelector('h3');
+                if (!titleEl) return;
+                
+                // Keep the exact title including the "Chart X: " prefix for the modal
+                const title = titleEl.textContent.trim();
+                const link = card.querySelector('a.absolute.inset-0.z-20');
+                
+                const sectionEl = card.closest('section');
+                const h2El = sectionEl ? sectionEl.querySelector('h2') : null;
+                const sectionTitle = h2El ? h2El.textContent.toLowerCase() : '';
+                
+                if (link) {
+                    const href = link.getAttribute('href');
+                    if (!href || href === '#') return;
+
+                    const isHtml = href.endsWith('.html');
+
+                    link.dataset.vizIndex = globalIndex;
+
+                    const descEl = card.querySelector('p[id^="desc-"]');
+                    const descId = descEl ? descEl.id : null;
+
+                    vizLinks.push({
+                        index: globalIndex,
+                        href: href,
+                        title: title,
+                        isHtml: isHtml,
+                        sectionTitle: sectionTitle,
+                        descId: descId
+                    });
+                    
+                    // Open in the SPA Viewer instead of a new tab
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openViz(parseInt(link.dataset.vizIndex));
+                    });
+                    
+                    globalIndex++;
+                }
+            });
+            
+            // Attach Viewer Navigation Event Listeners
+            document.getElementById('btnBackDashboard').addEventListener('click', closeViz);
+            document.getElementById('btnPrevViz').addEventListener('click', () => {
+                if (currentVizIndex > 0) openViz(currentVizIndex - 1);
+            });
+            document.getElementById('btnNextViz').addEventListener('click', () => {
+                if (currentVizIndex < vizLinks.length - 1) openViz(currentVizIndex + 1);
+            });
+        });
+
+        function openViz(index) {
+            currentVizIndex = index;
+            const viz = vizLinks[index];
+            
+            // Swap Views
+            document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'flex';
+            window.scrollTo(0, 0); // Reset scroll to top
+            
+            // Update Viewer UI
+            document.getElementById('vizTitle').textContent = viz.title;
+
+            // Populate description (lives under the title in the toolbar)
+            const descTextEl = document.getElementById('vizDescription');
+            const descSource = viz.descId ? document.getElementById(viz.descId) : null;
+            const descText = descSource ? descSource.textContent.trim() : '';
+            if (descText) {
+                descTextEl.textContent = descText;
+                descTextEl.classList.remove('hidden');
+            } else {
+                descTextEl.classList.add('hidden');
+            }
+            
+            // Handle Logos in Carousel View
+            const logoContainer = document.getElementById('vizLogoContainer');
+            const logo1 = document.getElementById('vizLogo1');
+            const logo2 = document.getElementById('vizLogo2');
+            const logo3 = document.getElementById('vizLogo3');
+            
+            // Reset container classes
+            logoContainer.className = 'hidden items-center justify-center h-9 sm:h-10 min-w-[80px] bg-white px-2 py-1 rounded-lg border-2 transition-all duration-300 space-x-3';
+            logo1.className = 'hidden max-h-full max-w-[90px] object-contain';
+            logo2.className = 'hidden max-h-full max-w-[90px] object-contain';
+            logo3.className = 'hidden max-h-full max-w-[90px] object-contain';
+
+            const sTitle = viz.sectionTitle || '';
+            
+            if (sTitle.includes('modeling suite')) {
+                logo1.src = 'visualizations/MasonHubLogo.png';
+                logo2.src = 'visualizations/RedStagLogo.png';
+                logo3.src = 'visualizations/shipfusionlogo.jpg';
+                logo1.classList.remove('hidden');
+                logo2.classList.remove('hidden');
+                logo3.classList.remove('hidden');
+                logoContainer.classList.remove('hidden');
+                logoContainer.classList.add('flex', 'border-teal-400/80', 'shadow-[0_0_10px_rgba(45,212,191,0.25)]');
+            } else if (sTitle.includes('masonhub')) {
+                logo1.src = 'visualizations/MasonHubLogo.png';
+                logo1.classList.remove('hidden');
+                logoContainer.classList.remove('hidden');
+                logoContainer.classList.add('flex', 'border-amber-400/80', 'shadow-[0_0_10px_rgba(251,191,36,0.25)]');
+            } else if (sTitle.includes('redstag') || sTitle.includes('red stag')) {
+                logo1.src = 'visualizations/RedStagLogo.png';
+                logo1.classList.remove('hidden');
+                logoContainer.classList.remove('hidden');
+                logoContainer.classList.add('flex', 'border-emerald-400/80', 'shadow-[0_0_10px_rgba(52,211,153,0.25)]');
+            } else if (sTitle.includes('shipfusion')) {
+                logo1.src = 'visualizations/shipfusionlogo.jpg';
+                logo1.classList.remove('hidden');
+                logoContainer.classList.remove('hidden');
+                logoContainer.classList.add('flex', 'border-violet-400/80', 'shadow-[0_0_10px_rgba(139,92,246,0.25)]');
+            }
+
+            const iframe = document.getElementById('vizIframe');
+            const img = document.getElementById('vizImg');
+            const loading = document.getElementById('vizLoading');
+            
+            // Show Loading Spinner until asset finishes loading
+            loading.classList.remove('hidden');
+            
+            if (viz.isHtml) {
+                img.classList.add('hidden');
+                iframe.classList.remove('hidden');
+                iframe.src = viz.href;
+            } else {
+                iframe.classList.add('hidden');
+                img.classList.remove('hidden');
+                img.src = viz.href;
+            }
+            
+            // Update Navigation Buttons state
+            document.getElementById('btnPrevViz').disabled = index === 0;
+            document.getElementById('btnNextViz').disabled = index === vizLinks.length - 1;
+        }
+
+        function closeViz() {
+            // Swap Views
+            document.getElementById('dashboardView').style.display = 'flex';
+            document.getElementById('detailView').style.display = 'none';
+            
+            // Clear sources safely using about:blank to prevent infinite loop
+            document.getElementById('vizIframe').src = 'about:blank';
+            document.getElementById('vizImg').removeAttribute('src');
+            window.scrollTo(0, 0);
+        }
+
+    </script>
+</body>
+</html>
