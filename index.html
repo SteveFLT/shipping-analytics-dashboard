@@ -91,6 +91,7 @@
                 <div class="flex bg-slate-800/80 p-1.5 rounded-xl border border-slate-600/50 shadow-inner backdrop-blur-md">
                     <button id="tabAnalytics" class="px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all">Current Analytics</button>
                     <button id="tabProposals" class="px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all">3PL Proposals</button>
+                    <button id="tabQ1Results" class="px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all">2026 Performance</button>
                 </div>
 
             </div>
@@ -1462,6 +1463,131 @@
                     </div>
                 </section>
 
+            </div><!-- end viewProposals -->
+
+            <!-- ================= VIEW 3: Q1 2026 RESULTS ================= -->
+            <div id="viewQ1Results" class="flex flex-col w-full hidden animate-fade-in">
+                <section data-section="I" class="py-12 md:py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="mb-6">
+                        <!-- Section header -->
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-1 h-8 bg-emerald-500 rounded-full flex-shrink-0"></div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">2026 YTD Performance: Carrier Diversification &amp; Cartonization Results</h2>
+                        </div>
+                        <!-- Narrative banner -->
+                        <div class="bg-slate-800/60 border border-slate-700/50 rounded-xl p-5 text-sm text-slate-300 leading-relaxed space-y-2">
+                            <p>
+                                Two structural changes went live in <span class="text-emerald-400 font-semibold">February 2026</span>: a <span class="text-emerald-400 font-semibold">multi-carrier diversification strategy</span> — expanding beyond UPS/USPS to include GLS and EasyPost-routed carriers — and <span class="text-emerald-400 font-semibold">WMS cartonization logic</span>, which automates box selection at pick time to minimize dimensional weight. These charts extend the existing 2024/2025 comparison with actual 2026 YTD results and break down performance month-by-month to surface the February inflection point.
+                            </p>
+                            <p>
+                                The <span class="text-slate-200 font-medium">three-year charts</span> show where 2026 sits relative to prior full years. The <span class="text-slate-200 font-medium">monthly 2026 charts</span> show January as the pre-change baseline and February/March as the post-change trajectory — confirming whether improvements are structural or a one-month effect.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                        <!-- I1: Three-Year Monthly Avg Cost -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/three_year_avg_cost_monthly_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/three_year_avg_cost_monthly.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost 3 Years">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I1: Monthly Avg Cost: 2024 vs 2025 vs 2026 YTD</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I1" class="card-desc text-sm text-slate-400 mb-0">Monthly avg cost per order across all three years — the 2026 line extends the existing 2024/2025 comparison with real results.</p>
+                            </div>
+                        </div>
+
+                        <!-- I2: 2026 Monthly Avg Cost -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/2026_monthly_avg_cost_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/2026_monthly_avg_cost.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Cost">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I2: 2026 Monthly Avg Cost (Jan / Feb / Mar)</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I2" class="card-desc text-sm text-slate-400 mb-0">Month-by-month avg cost within 2026 — Jan is the pre-change baseline; Feb/Mar show the post-change trajectory.</p>
+                            </div>
+                        </div>
+
+                        <!-- I3: Three-Year Carrier Mix -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/three_year_carrier_mix_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/three_year_carrier_mix.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Three-Year Carrier Mix">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I3: Carrier Mix: 2024 vs 2025 vs 2026 YTD</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I3" class="card-desc text-sm text-slate-400 mb-0">Carrier volume share across all three years — shows the diversification away from UPS and the addition of GLS in 2026.</p>
+                            </div>
+                        </div>
+
+                        <!-- I4: 2026 Monthly Carrier Mix -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/2026_monthly_carrier_mix_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/2026_monthly_carrier_mix.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Carrier Mix">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I4: 2026 Monthly Carrier Mix (Jan / Feb / Mar)</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I4" class="card-desc text-sm text-slate-400 mb-0">Carrier mix evolution within 2026 — new carriers enter in February and March, reducing UPS concentration and lowering the blended rate.</p>
+                            </div>
+                        </div>
+
+                        <!-- I5: Avg Package Volume (cartonization signal) -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/three_year_pkg_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/three_year_pkg_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Package Volume Per Order">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I5: Avg Package Volume Per Order (Cartonization Signal)</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I5" class="card-desc text-sm text-slate-400 mb-0">Avg package volume (cubic inches) per order — a smaller box in 2026 vs. 2024 is direct evidence that WMS cartonization is selecting more efficient packaging.</p>
+                            </div>
+                        </div>
+
+                        <!-- I6: 2026 Monthly Avg Weight -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/2026_monthly_avg_weight_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/2026_monthly_avg_weight.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Weight">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I6: 2026 Monthly Avg Order Weight (Cartonization Signal)</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I6" class="card-desc text-sm text-slate-400 mb-0">Avg order weight per month in 2026 — a downward trend from January signals WMS cartonization is right-sizing boxes and reducing billable dimensional weight.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    </div><!-- end max-w-7xl -->
+                </section>
+
             </div>
         </div>
 
@@ -1620,77 +1746,120 @@
         let vizLinks = [];
 
         // Tab Switching Logic
-        const tabAnalytics = document.getElementById('tabAnalytics');
-        const tabProposals = document.getElementById('tabProposals');
+        const tabAnalytics  = document.getElementById('tabAnalytics');
+        const tabProposals  = document.getElementById('tabProposals');
+        const tabQ1Results  = document.getElementById('tabQ1Results');
         const viewAnalytics = document.getElementById('viewAnalytics');
         const viewProposals = document.getElementById('viewProposals');
+        const viewQ1Results = document.getElementById('viewQ1Results');
+
+        const TAB_ACTIVE   = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all';
+        const TAB_INACTIVE = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
+        const TAB_ACTIVE_GREEN = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md ring-1 ring-white/10 transition-all';
 
         function switchTab(viewName) {
+            // Hide all views
+            viewAnalytics.classList.add('hidden');
+            viewProposals.classList.add('hidden');
+            viewQ1Results.classList.add('hidden');
+            // Reset all tabs
+            tabAnalytics.className = TAB_INACTIVE;
+            tabProposals.className = TAB_INACTIVE;
+            tabQ1Results.className = TAB_INACTIVE;
+
             if (viewName === 'analytics') {
                 viewAnalytics.classList.remove('hidden');
-                viewProposals.classList.add('hidden');
-                
-                tabAnalytics.className = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all';
-                tabProposals.className = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
-            } else {
-                viewAnalytics.classList.add('hidden');
+                tabAnalytics.className = TAB_ACTIVE;
+            } else if (viewName === 'proposals') {
                 viewProposals.classList.remove('hidden');
-                
-                tabProposals.className = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all';
-                tabAnalytics.className = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
+                tabProposals.className = TAB_ACTIVE;
+            } else if (viewName === 'q1results') {
+                viewQ1Results.classList.remove('hidden');
+                tabQ1Results.className = TAB_ACTIVE_GREEN;
             }
+
+            // Rebuild vizLinks for whichever view is now active
+            buildVizLinks();
         }
 
         tabAnalytics.addEventListener('click', () => switchTab('analytics'));
         tabProposals.addEventListener('click', () => switchTab('proposals'));
+        tabQ1Results.addEventListener('click', () => switchTab('q1results'));
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Collect all invisible interactive links inside the dashboard cards
-            const cards = document.querySelectorAll('#dashboardView section .grid > div');
+        // Build vizLinks from whichever view is currently visible.
+        // Called once on load and again on every tab switch.
+        function buildVizLinks() {
+            vizLinks = [];
             let globalIndex = 0;
 
-            cards.forEach((card) => {
+            // Scan only cards in visible views (hidden views are skipped)
+            const allCards = document.querySelectorAll('#dashboardView section .grid > div');
+            allCards.forEach((card) => {
+                // Skip cards inside hidden ancestor views
+                if (card.closest('[id^="view"]') && card.closest('[id^="view"]').classList.contains('hidden')) return;
+
                 const titleEl = card.querySelector('h3');
                 if (!titleEl) return;
-                
-                // Keep the exact title including the "Chart X: " prefix for the modal
+
                 const title = titleEl.textContent.trim();
-                const link = card.querySelector('a.absolute.inset-0.z-20');
-                
                 const sectionEl = card.closest('section');
                 const h2El = sectionEl ? sectionEl.querySelector('h2') : null;
                 const sectionTitle = h2El ? h2El.textContent.toLowerCase() : '';
-                
-                if (link) {
-                    const href = link.getAttribute('href');
-                    if (!href || href === '#') return;
+                const descEl = card.querySelector('p[id^="desc-"]');
+                const descId = descEl ? descEl.id : null;
 
-                    const isHtml = href.endsWith('.html');
+                // Support two card styles:
+                //   Style A: hidden <a> link + onclick="openViz(this)" on the div (Q1 cards & newer)
+                //   Style B: visible <a.absolute.inset-0.z-20> overlay link (older sections)
+                const hiddenLink = card.querySelector('a.hidden[href]');
+                const overlayLink = card.querySelector('a.absolute.inset-0.z-20');
 
-                    link.dataset.vizIndex = globalIndex;
-
-                    const descEl = card.querySelector('p[id^="desc-"]');
-                    const descId = descEl ? descEl.id : null;
-
-                    vizLinks.push({
-                        index: globalIndex,
-                        href: href,
-                        title: title,
-                        isHtml: isHtml,
-                        sectionTitle: sectionTitle,
-                        descId: descId
-                    });
-                    
-                    // Open in the SPA Viewer instead of a new tab
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        openViz(parseInt(link.dataset.vizIndex));
-                    });
-                    
-                    globalIndex++;
+                let href = null;
+                if (hiddenLink) {
+                    href = hiddenLink.getAttribute('href');
+                } else if (overlayLink) {
+                    href = overlayLink.getAttribute('href');
+                    // Wire overlay link to SPA viewer (idempotent — safe to call multiple times)
+                    if (!overlayLink.dataset.vizWired) {
+                        overlayLink.dataset.vizWired = '1';
+                        overlayLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            openViz(parseInt(overlayLink.dataset.vizIndex));
+                        });
+                    }
+                    overlayLink.dataset.vizIndex = globalIndex;
                 }
+
+                if (!href || href === '#') return;
+
+                vizLinks.push({
+                    index: globalIndex,
+                    href: href,
+                    title: title,
+                    isHtml: href.endsWith('.html'),
+                    sectionTitle: sectionTitle,
+                    descId: descId,
+                    cardEl: card
+                });
+
+                // Tag div-onclick cards with their index
+                if (card.hasAttribute('onclick')) {
+                    card.dataset.vizIndex = globalIndex;
+                    // Replace the inline onclick with a proper event (idempotent)
+                    if (!card.dataset.vizWired) {
+                        card.dataset.vizWired = '1';
+                        card.removeAttribute('onclick');
+                        card.addEventListener('click', () => openViz(parseInt(card.dataset.vizIndex)));
+                    }
+                }
+
+                globalIndex++;
             });
-            
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            buildVizLinks();
+
             // Attach Viewer Navigation Event Listeners
             document.getElementById('btnBackDashboard').addEventListener('click', closeViz);
             document.getElementById('btnPrevViz').addEventListener('click', () => {
@@ -1701,7 +1870,16 @@
             });
         });
 
-        function openViz(index) {
+        function openViz(indexOrEl) {
+            // Accept either a numeric index or a card DOM element (legacy inline onclick)
+            let index;
+            if (typeof indexOrEl === 'number') {
+                index = indexOrEl;
+            } else {
+                // Called as openViz(this) from inline onclick before wiring — find by element
+                index = parseInt(indexOrEl.dataset.vizIndex);
+                if (isNaN(index)) return;
+            }
             currentVizIndex = index;
             const viz = vizLinks[index];
             
