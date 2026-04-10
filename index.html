@@ -107,16 +107,16 @@
 
             <!-- ================= VIEW 1: CURRENT ANALYTICS ================= -->
             <div id="viewAnalytics" class="flex flex-col w-full animate-fade-in">
-                <!-- Section 1: Volume & Composition Section -->
-                <section class="py-12 md:py-16 bg-blue-950/10 border-y border-blue-900/20">
+
+                <!-- SECTION 1: Geographic Footprint (A - blue, bg-slate-800/20) -->
+                <section class="py-12 md:py-16 bg-slate-800/20 border-y border-blue-900/20">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
                                 <div class="w-1 h-7 bg-blue-500 rounded-full flex-shrink-0"></div>
-                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">FY 2025 Shipping Overview</h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Geographic Footprint</h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
-                            <!-- Dynamic Callouts -->
                             <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
                                 <div class="px-3 border-r border-slate-700/50">
                                     <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Total Shipments</p>
@@ -129,20 +129,14 @@
                             </div>
                             <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
                         </div>
-
-                        <!-- Executive Narrative Banner -->
                         <div class="bg-blue-950/40 rounded-xl p-5 mb-8 border border-blue-700/40 relative overflow-hidden shadow-lg">
                             <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                            <p class="text-sm text-slate-300 leading-relaxed">
-                                FY 2025 delivered strong shipment volume growth year-over-year. The geographic footprint of our customer base is predominantly domestic and skewed heavily toward the East Coast — Zone 8 alone accounts for 44% of domestic volume, with Zones 6, 7, and 8 combined representing 67%. This distribution holds steady throughout the year, making the zone problem structural rather than seasonal, and establishing the core case for an East Coast fulfillment node.
-                            </p>
+                            <p class="text-sm text-slate-300 leading-relaxed">FY 2025 delivered strong shipment volume growth year-over-year. The geographic footprint of our customer base is predominantly domestic and skewed heavily toward the East Coast — Zone 8 alone accounts for 44% of domestic volume, with Zones 6, 7, and 8 combined representing 67%. This distribution holds steady throughout the year, making the zone problem structural rather than seasonal, and establishing the core case for an East Coast fulfillment node.</p>
                         </div>
-                        
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <!-- Map A1 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/17_volume_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/17_volume_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Domestic Volume Bubble Map">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-blue-500/50">Plotly Scatter Geo</div>
@@ -155,62 +149,9 @@
                                     <p id="desc-A1" class="card-desc text-sm text-slate-400 mb-0">Our shipment density is heavily concentrated on the coasts — a pattern that drives zone inflation when shipping from a single West Coast origin.</p>
                                 </div>
                             </div>
-
-                            <!-- Chart A2 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/4_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/4_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Volume Trend">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart A2: Order Fulfillment Volume Over Time</h3>
-                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-A2" class="card-desc text-sm text-slate-400 mb-0">Volume grew consistently through 2025, with a pronounced Q4 holiday spike — the same spike that caused disproportionate cost acceleration.</p>
-                                </div>
-                            </div>
-
-                            <!-- Chart A3 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/3_weight_distribution_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/3_weight_distribution.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Weight Distribution">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Histogram Data</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart A3: Distribution of Shipment Weights</h3>
-                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-A3" class="card-desc text-sm text-slate-400 mb-0">The weight distribution reveals a meaningful tail of heavy packages — orders that are disproportionately expensive to ship and are key candidates for 3PL zone optimization.</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Chart A4 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/1c_international_volume_breakdown_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/1c_international_volume_breakdown.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="International Breakdown">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart A4: International Volume Breakdown</h3>
-                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-A4" class="card-desc text-sm text-slate-400 mb-0">International volume is a small but growing portion of total shipments. Domestic optimization remains the primary cost lever.</p>
-                                </div>
-                            </div>
-
                             <!-- Chart A5 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/5_zone_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/5_zone_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Volume">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -223,11 +164,74 @@
                                     <p id="desc-A5" class="card-desc text-sm text-slate-400 mb-0">Zone 8 dominates at 44% of domestic volume, with Zones 6, 7, and 8 combined accounting for 67%. A second fulfillment node on the East Coast would convert the majority of these high-zone shipments into low-zone deliveries.</p>
                                 </div>
                             </div>
-
-                            <!-- Chart A6 -->
+                            <!-- Chart A4 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/1c_international_volume_breakdown_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/1c_international_volume_breakdown.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="International Breakdown">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A4: International Volume Breakdown</h3>
+                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A4" class="card-desc text-sm text-slate-400 mb-0">International volume is a small but growing portion of total shipments. Domestic optimization remains the primary cost lever.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: Volume & Shipment Profile (B - sky, plain bg) -->
+                <section class="py-12 md:py-16 border-y border-sky-900/20">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                <div class="w-1 h-7 bg-sky-500 rounded-full flex-shrink-0"></div>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Volume &amp; Shipment Profile</h2>
+                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
+                            </div>
+                            <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
+                        </div>
+                        <div class="bg-sky-950/40 rounded-xl p-5 mb-8 border border-sky-700/40 relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-sky-500"></div>
+                            <p class="text-sm text-slate-300 leading-relaxed">Shipment volume grew consistently throughout FY 2025, with a sharp Q4 holiday spike. The weight profile reveals a meaningful tail of heavy packages — multi-unit orders that carry disproportionate shipping costs. Zone distribution held steady all year, confirming that the geographic footprint is structural rather than seasonal.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Chart A2 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-sky-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/4_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/4_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Volume Trend">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A2: Order Fulfillment Volume Over Time</h3>
+                                        <svg class="w-5 h-5 text-sky-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A2" class="card-desc text-sm text-slate-400 mb-0">Volume grew consistently through 2025, with a pronounced Q4 holiday spike — the same spike that caused disproportionate cost acceleration.</p>
+                                </div>
+                            </div>
+                            <!-- Chart A3 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-sky-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/3_weight_distribution_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/3_weight_distribution.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Weight Distribution">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Histogram Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart A3: Distribution of Shipment Weights</h3>
+                                        <svg class="w-5 h-5 text-sky-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-A3" class="card-desc text-sm text-slate-400 mb-0">The weight distribution reveals a meaningful tail of heavy packages — orders that are disproportionately expensive to ship and are key candidates for 3PL zone optimization.</p>
+                                </div>
+                            </div>
+                            <!-- Chart A6 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-sky-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/5e_zone_volume_stacked_area_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/5e_zone_volume_stacked_area.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Stacked Area">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Area Chart Data</div>
@@ -235,7 +239,7 @@
                                 <div class="p-5 relative z-10 pointer-events-none">
                                     <div class="flex justify-between items-start mb-1">
                                         <h3 class="text-base font-bold text-white">Chart A6: Volume by Zone Over Time</h3>
-                                        <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        <svg class="w-5 h-5 text-sky-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </div>
                                     <p id="desc-A6" class="card-desc text-sm text-slate-400 mb-0">Zone density is consistent throughout the year — the Q4 cost spike was driven by carrier mix changes, not a shift in where customers are located.</p>
                                 </div>
@@ -244,16 +248,15 @@
                     </div>
                 </section>
 
-                <!-- YoY Analysis Section -->
-                <section class="py-12 md:py-16 bg-cyan-950/10 border-y border-cyan-900/20">
+                <!-- SECTION 3: Year-Over-Year: Cost vs Volume (A - cyan, bg-slate-800/20) -->
+                <section class="py-12 md:py-16 bg-slate-800/20 border-y border-cyan-900/20">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
                                 <div class="w-1 h-7 bg-cyan-500 rounded-full flex-shrink-0"></div>
-                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Year-Over-Year Analysis <span class="text-xs text-slate-500 font-normal ml-2">(2024 vs 2025)</span></h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Year-Over-Year: Cost vs. Volume <span class="text-xs text-slate-500 font-normal ml-2">(2024 vs 2025)</span></h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
-                            <!-- Dynamic Callouts -->
                             <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
                                 <div class="px-3 border-r border-slate-700/50">
                                     <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Vol Growth</p>
@@ -266,21 +269,15 @@
                             </div>
                             <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
                         </div>
-
-                        <!-- Executive Narrative: The Core Problem Statement -->
                         <div class="bg-cyan-950/40 rounded-xl p-5 mb-8 border border-cyan-700/40 relative overflow-hidden shadow-lg">
                             <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
                             <p class="text-sm font-semibold text-cyan-300 mb-2">The Core Problem: Costs Are Growing Faster Than Volume</p>
-                            <p class="text-sm text-slate-300 leading-relaxed">
-                                While shipment volume grew meaningfully year-over-year, shipping spend grew at a significantly higher rate — meaning we are paying more per order, not just shipping more orders. The gap between volume growth and spend growth is the primary driver behind this analysis. A sharp Q4 spike accelerated this trend and warrants specific investigation.
-                            </p>
+                            <p class="text-sm text-slate-300 leading-relaxed">While shipment volume grew meaningfully year-over-year, shipping spend grew at a significantly higher rate — meaning we are paying more per order, not just shipping more orders. The gap between volume growth and spend growth is the primary driver behind this analysis. A sharp Q4 spike accelerated this trend and warrants specific investigation.</p>
                         </div>
-                        
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- YoY Volume Trend -->
+                            <!-- Chart B1 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Volume Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
@@ -293,11 +290,9 @@
                                     <p id="desc-B1" class="card-desc text-sm text-slate-400 mb-0">Volume growth is strong and consistent year-over-year. The key finding: shipping spend grew at a significantly higher rate than volume — meaning we are paying more per order, not just shipping more orders.</p>
                                 </div>
                             </div>
-
-                            <!-- YoY Avg Cost Trend -->
+                            <!-- Chart B3 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_avg_cost_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_avg_cost_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Avg Cost Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
@@ -310,11 +305,9 @@
                                     <p id="desc-B3" class="card-desc text-sm text-slate-400 mb-0">The average cost per shipment is rising — confirming the spend growth is structural, not just a volume effect. Q4 pushed the per-order cost to its highest point of the year.</p>
                                 </div>
                             </div>
-
-                            <!-- YoY Carrier Volume -->
+                            <!-- Chart B4 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_carrier_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_carrier_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Carrier Volume">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -327,11 +320,9 @@
                                     <p id="desc-B4" class="card-desc text-sm text-slate-400 mb-0">UPS captured a larger share of our volume in 2025 vs. 2024 — a shift with significant cost implications given UPS rates run substantially higher than USPS for comparable weights and zones.</p>
                                 </div>
                             </div>
-
-                            <!-- YoY Zone Volume -->
+                            <!-- Chart B5 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_zone_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_zone_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Zone Volume">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -345,16 +336,20 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
 
-                        <!-- Q4 Deep Dive Sub-section -->
-                        <div class="mt-16 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <!-- SECTION 4: Q4 Spike: Root Cause Diagnosis (B - orange, plain bg) -->
+                <section class="py-12 md:py-16 border-y border-orange-900/20">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
-                                <h3 class="text-lg font-bold text-slate-200 tracking-tight">Q4 Deep Dive: Cost Spike Diagnostics</h3>
-                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-24"></div>
+                                <div class="w-1 h-7 bg-orange-500 rounded-full flex-shrink-0"></div>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Q4 Spike: Root Cause Diagnosis</h2>
+                                <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
+                            <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
                         </div>
-
-                        <!-- Q4 Root Cause Callout -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                             <div class="bg-orange-950/40 rounded-xl p-5 border border-orange-700/40 relative overflow-hidden shadow-lg">
                                 <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
@@ -367,12 +362,10 @@
                                 <p class="text-sm text-slate-300 leading-relaxed">Holiday bundling and multi-item orders drove up average package weight. Both of these effects — paying more per shipment for UPS and carrying more weight — compounded simultaneously in Q4.</p>
                             </div>
                         </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <!-- Chart B6 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-orange-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_q4_carrier_mix_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_q4_carrier_mix.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Carrier Mix">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -380,16 +373,14 @@
                                 <div class="p-5 relative z-10 pointer-events-none">
                                     <div class="flex justify-between items-start mb-1">
                                         <h3 class="text-base font-bold text-white">Chart B6: Q4 Carrier Mix Shift</h3>
-                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        <svg class="w-5 h-5 text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </div>
                                     <p id="desc-B6" class="card-desc text-sm text-slate-400 mb-0">Confirms Root Cause #1: a significant portion of Q4 volume shifted from USPS to UPS, directly inflating per-shipment costs during the highest-volume period of the year.</p>
                                 </div>
                             </div>
-
                             <!-- Chart B7 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-orange-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_q4_weight_avg_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_q4_weight_avg.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Average Weight">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -397,16 +388,14 @@
                                 <div class="p-5 relative z-10 pointer-events-none">
                                     <div class="flex justify-between items-start mb-1">
                                         <h3 class="text-base font-bold text-white">Chart B7: Q4 Average Shipment Weight</h3>
-                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        <svg class="w-5 h-5 text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </div>
                                     <p id="desc-B7" class="card-desc text-sm text-slate-400 mb-0">Confirms Root Cause #2: average package weight rose in Q4 as customers bundled multi-item orders. Heavier packages cost significantly more to ship, compounding the UPS rate premium.</p>
                                 </div>
                             </div>
-
                             <!-- Chart B9 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-orange-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_q4_weight_tier_dist_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_q4_weight_tier_dist.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Weight Tier Distribution">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -414,7 +403,7 @@
                                 <div class="p-5 relative z-10 pointer-events-none">
                                     <div class="flex justify-between items-start mb-1">
                                         <h3 class="text-base font-bold text-white">Chart B9: Volume Distribution by Weight Tier</h3>
-                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        <svg class="w-5 h-5 text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </div>
                                     <p id="desc-B9" class="card-desc text-sm text-slate-400 mb-0">The full weight distribution shifted right in Q4 — a structural change in order composition that, combined with the carrier mix shift, fully explains the cost spike.</p>
                                 </div>
@@ -423,16 +412,15 @@
                     </div>
                 </section>
 
-                <!-- Section 3: Financial & Spend Analysis Section -->
-                <section class="py-12 md:py-16 bg-purple-950/10 border-y border-purple-900/20">
+                <!-- SECTION 5: 2025 Cost Baseline (A - purple, bg-slate-800/20) -->
+                <section class="py-12 md:py-16 bg-slate-800/20 border-y border-purple-900/20">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
                                 <div class="w-1 h-7 bg-purple-500 rounded-full flex-shrink-0"></div>
-                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Cost Baseline: Direct-to-Consumer Shipping <span class="text-xs text-slate-500 font-normal ml-2">(Costco Volume Excluded)</span></h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">2025 Cost Baseline <span class="text-xs text-slate-500 font-normal ml-2">(Costco Volume Excluded)</span></h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
-                            <!-- Dynamic Callouts -->
                             <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
                                 <div class="px-3 border-r border-slate-700/50">
                                     <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Total Baseline Spend</p>
@@ -445,37 +433,29 @@
                             </div>
                             <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
                         </div>
-                        
-                        <!-- Section C Narrative -->
                         <div class="bg-purple-950/30 rounded-xl p-5 mb-8 border border-purple-700/40 relative overflow-hidden shadow-lg">
                             <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
-                            <p class="text-sm text-slate-300 leading-relaxed">
-                                This section establishes the cost baseline we are trying to improve. Costco wholesale volume is excluded from this analysis since its shipping economics differ fundamentally from direct-to-consumer fulfillment. All 3PL savings projections in the proposal tab are measured against this baseline.
-                            </p>
+                            <p class="text-sm text-slate-300 leading-relaxed">This section establishes the cost baseline we are trying to improve. Costco wholesale volume is excluded from this analysis since its shipping economics differ fundamentally from direct-to-consumer fulfillment. All 3PL savings projections in the proposal tab are measured against this baseline.</p>
                         </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Map 7 -->
+                            <!-- Map C1 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/7_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/7_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost Heatmap">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-purple-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
                                     <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Map C1: Cost & Volume Heatmap</h3>
+                                        <h3 class="text-base font-bold text-white">Map C1: Cost &amp; Volume Heatmap</h3>
                                         <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </div>
                                     <p id="desc-C1" class="card-desc text-sm text-slate-400 mb-0">Cost is highest in the Northeast — exactly where an East Coast 3PL node would reduce shipping zones and bring rates down.</p>
                                 </div>
                             </div>
-
-                            <!-- Chart 11 -->
+                            <!-- Chart C2 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/11_monthly_total_spend_carrier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/11_monthly_total_spend_carrier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Stacked Area Data</div>
@@ -488,11 +468,9 @@
                                     <p id="desc-C2" class="card-desc text-sm text-slate-400 mb-0">The Q4 cost spike is clearly visible here — UPS spend inflates the total far beyond the seasonal volume increase, confirming the carrier mix shift was the primary driver.</p>
                                 </div>
                             </div>
-
-                            <!-- Chart 10 -->
+                            <!-- Chart C3 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/10_total_spend_by_zone_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/10_total_spend_by_zone.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend by Zone">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -505,28 +483,9 @@
                                     <p id="desc-C3" class="card-desc text-sm text-slate-400 mb-0">Zones 4–6 represent our largest total spend buckets — high volume combined with meaningful distance from California. Reducing these zone numbers via a second fulfillment node is the core savings opportunity.</p>
                                 </div>
                             </div>
-
-                            <!-- Chart 2 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/2_carrier_avg_cost_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/2_carrier_avg_cost.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Carrier">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart C4: Average Shipping Cost by Carrier</h3>
-                                        <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-C4" class="card-desc text-sm text-slate-400 mb-0">UPS costs materially more per shipment than USPS on a like-for-like basis. This premium, applied across the volume that shifted to UPS in Q4, is the direct financial impact of the carrier mix change.</p>
-                                </div>
-                            </div>
-
-                            <!-- Chart 14 -->
+                            <!-- Chart C5 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/14_avg_cost_weight_tier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/14_avg_cost_weight_tier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Weight Tier">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
@@ -539,11 +498,9 @@
                                     <p id="desc-C5" class="card-desc text-sm text-slate-400 mb-0">Cost scales steeply with weight — packages over 3 lbs cost significantly more to ship. Our Q4 order weight increase directly translated into higher per-shipment costs across the board.</p>
                                 </div>
                             </div>
-
-                            <!-- Chart 12 -->
+                            <!-- Chart C6 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/12_monthly_avg_cost_zone_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/12_monthly_avg_cost_zone.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Zone">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
@@ -560,16 +517,15 @@
                     </div>
                 </section>
 
-                <!-- Section 4: Carrier Comparisons -->
-                <section class="py-12 md:py-16 bg-indigo-950/10 border-y border-indigo-900/20">
+                <!-- SECTION 6: Carrier Analysis: UPS vs USPS (B - indigo, plain bg) -->
+                <section class="py-12 md:py-16 border-y border-indigo-900/20">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
                                 <div class="w-1 h-7 bg-indigo-500 rounded-full flex-shrink-0"></div>
-                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Carrier Analysis: The UPS Cost Premium</h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Carrier Analysis: UPS vs. USPS</h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
-                            <!-- Dynamic Callouts -->
                             <div class="flex space-x-4 items-center bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 flex-shrink-0">
                                 <div class="px-3 border-r border-slate-700/50">
                                     <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">UPS Avg Cost</p>
@@ -582,20 +538,29 @@
                             </div>
                             <div class="h-px bg-slate-800 flex-grow md:hidden w-full mt-2"></div>
                         </div>
-                        
-                        <!-- Section D Narrative -->
                         <div class="bg-indigo-950/40 rounded-xl p-5 mb-8 border border-indigo-700/40 relative overflow-hidden shadow-lg">
                             <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
-                            <p class="text-sm text-slate-300 leading-relaxed">
-                                Understanding the USPS vs. UPS cost differential is critical to sizing the Q4 problem. Looking ahead, carrier mix expansion is a strategic priority: both USPS and UPS have demonstrated capacity constraints, and relying on one or two primary carriers creates operational and cost risk. Diversifying across additional carriers reduces single-carrier exposure and improves negotiating leverage.
-                            </p>
+                            <p class="text-sm text-slate-300 leading-relaxed">Understanding the USPS vs. UPS cost differential is critical to sizing the Q4 problem. Looking ahead, carrier mix expansion is a strategic priority: both USPS and UPS have demonstrated capacity constraints, and relying on one or two primary carriers creates operational and cost risk. Diversifying across additional carriers reduces single-carrier exposure and improves negotiating leverage.</p>
                         </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Chart 4b -->
+                            <!-- Chart C4 -->
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
+                                <a href="visualizations/2_carrier_avg_cost_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                <div class="h-48 img-placeholder relative overflow-hidden">
+                                    <img src="visualizations/2_carrier_avg_cost.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Carrier">
+                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                                </div>
+                                <div class="p-5 relative z-10 pointer-events-none">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="text-base font-bold text-white">Chart C4: Average Shipping Cost by Carrier</h3>
+                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </div>
+                                    <p id="desc-C4" class="card-desc text-sm text-slate-400 mb-0">UPS costs materially more per shipment than USPS on a like-for-like basis. This premium, applied across the volume that shifted to UPS in Q4, is the direct financial impact of the carrier mix change.</p>
+                                </div>
+                            </div>
+                            <!-- Chart D2 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/4b_monthly_avg_cost_carrier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/4b_monthly_avg_cost_carrier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Carrier">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
@@ -608,11 +573,9 @@
                                     <p id="desc-D2" class="card-desc text-sm text-slate-400 mb-0">The UPS rate premium over USPS is consistent throughout the year — but the gap becomes financially material in Q4 when UPS captures a higher share of volume.</p>
                                 </div>
                             </div>
-
-                            <!-- Chart 13 -->
+                            <!-- Chart D3 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/13_cost_vs_weight_scatter_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/13_cost_vs_weight_scatter.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost vs Weight Scatter">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Scatter Plot Data</div>
@@ -625,12 +588,10 @@
                                     <p id="desc-D3" class="card-desc text-sm text-slate-400 mb-0">The pricing clusters reveal that UPS and USPS rates diverge sharply above 1 lb — the weight band where the majority of our shipments fall, making every ounce above that threshold more expensive under UPS.</p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </section>
             </div>
-
             <!-- ================= VIEW 2: 3PL PROPOSALS ================= -->
             <div id="viewProposals" class="flex flex-col w-full hidden animate-fade-in">
 
