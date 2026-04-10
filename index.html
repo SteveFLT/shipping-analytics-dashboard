@@ -1789,33 +1789,31 @@
             history.replaceState({ type: 'tab', tab: 'analytics' }, '', '#analytics');
 
             // Attach Viewer Navigation Event Listeners
-            document.getElementById('btnBackDashboard').addEventListener('click', () => history.back());
+            // "Back" button always goes directly to the dashboard — never relies on history
+            document.getElementById('btnBackDashboard').addEventListener('click', closeViz);
+            // Prev/Next navigate within the viewer without touching history
             document.getElementById('btnPrevViz').addEventListener('click', () => {
-                if (currentVizIndex > 0) openViz(currentVizIndex - 1);
+                if (currentVizIndex > 0) openViz(currentVizIndex - 1, false);
             });
             document.getElementById('btnNextViz').addEventListener('click', () => {
-                if (currentVizIndex < vizLinks.length - 1) openViz(currentVizIndex + 1);
+                if (currentVizIndex < vizLinks.length - 1) openViz(currentVizIndex + 1, false);
             });
 
-            // Handle browser back / forward button
+            // Handle the browser's native back button
             window.addEventListener('popstate', (e) => {
                 const state = e.state;
                 if (!state) return;
 
-                if (state.type === 'viz') {
-                    // Navigated back to a viz from a viz — just open it without pushing history
-                    openViz(state.index, false);
-                } else if (state.type === 'tab') {
-                    // Navigated back from viz to tab, or between tabs
-                    const isDashboardVisible = document.getElementById('dashboardView').style.display !== 'none';
-                    if (!isDashboardVisible) {
-                        // Close the detail viewer
+                if (state.type === 'tab') {
+                    // Close the detail viewer if it is open
+                    const detailVisible = document.getElementById('detailView').style.display !== 'none';
+                    if (detailVisible) {
                         document.getElementById('dashboardView').style.display = 'flex';
                         document.getElementById('detailView').style.display = 'none';
                         document.getElementById('vizIframe').src = 'about:blank';
                         document.getElementById('vizImg').removeAttribute('src');
                     }
-                    // Switch to the correct tab (no pushState — this is a pop)
+                    // Switch to the correct tab without pushing another history entry
                     switchTab(state.tab, false);
                     // Restore scroll position
                     const savedY = savedScrollPositions[state.tab] || 0;
