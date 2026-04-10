@@ -112,7 +112,7 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
-                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">FY 2025 Shipping Overview</h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">FY 2025 Shipping Overview</h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
                             <!-- Dynamic Callouts -->
@@ -248,7 +248,7 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
-                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">Year-Over-Year Analysis <span class="text-xs text-slate-500 font-normal ml-2">(2024 vs 2025)</span></h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Year-Over-Year Analysis <span class="text-xs text-slate-500 font-normal ml-2">(2024 vs 2025)</span></h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
                             <!-- Dynamic Callouts -->
@@ -276,9 +276,9 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <!-- YoY Volume Trend -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group lg:col-span-2">
+                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
+
                                 <div class="h-48 img-placeholder relative overflow-hidden">
                                     <img src="visualizations/yoy_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Volume Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
@@ -288,24 +288,7 @@
                                         <h3 class="text-base font-bold text-white">Chart B1: YoY Order Fulfillment Volume</h3>
                                         <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </div>
-                                    <p id="desc-B1" class="card-desc text-sm text-slate-400 mb-0">Volume growth is strong and consistent — but compare this to Chart B2. The spend curve should not be tracking significantly above the volume curve.</p>
-                                </div>
-                            </div>
-
-                            <!-- YoY Spend Trend -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/yoy_spend_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_spend_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Spend Trend">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart B2: YoY Total Shipping Spend</h3>
-                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-B2" class="card-desc text-sm text-slate-400 mb-0">Total spend grew at a rate that outpaced volume growth, with a dramatic Q4 acceleration. This divergence is the central cost problem this analysis addresses.</p>
+                                    <p id="desc-B1" class="card-desc text-sm text-slate-400 mb-0">Volume growth is strong and consistent year-over-year. The key finding: shipping spend grew at a significantly higher rate than volume — meaning we are paying more per order, not just shipping more orders.</p>
                                 </div>
                             </div>
 
@@ -364,7 +347,7 @@
                         <!-- Q4 Deep Dive Sub-section -->
                         <div class="mt-16 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
-                                <h3 class="text-lg font-semibold text-slate-200 whitespace-nowrap">Q4 Deep Dive: Cost Spike Diagnostics</h3>
+                                <h3 class="text-lg font-bold text-slate-200 tracking-tight">Q4 Deep Dive: Cost Spike Diagnostics</h3>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-24"></div>
                             </div>
                         </div>
@@ -418,23 +401,6 @@
                                 </div>
                             </div>
 
-                            <!-- Chart B8 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/yoy_q4_ups_share_weight_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_q4_ups_share_weight.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 UPS Share by Weight">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart B8: UPS Share by Weight Tier</h3>
-                                        <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-B8" class="card-desc text-sm text-slate-400 mb-0">The USPS→UPS shift was not uniform: heavier weight tiers saw the largest migration to UPS, precisely the packages where the cost premium is greatest.</p>
-                                </div>
-                            </div>
-
                             <!-- Chart B9 -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_q4_weight_tier_dist_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
@@ -460,7 +426,7 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
-                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">Cost Baseline: Direct-to-Consumer Shipping <span class="text-xs text-slate-500 font-normal ml-2">(Costco Volume Excluded)</span></h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Cost Baseline: Direct-to-Consumer Shipping <span class="text-xs text-slate-500 font-normal ml-2">(Costco Volume Excluded)</span></h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
                             <!-- Dynamic Callouts -->
@@ -596,7 +562,7 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto">
-                                <h2 class="text-xl font-semibold text-slate-200 whitespace-nowrap">Carrier Analysis: The UPS Cost Premium</h2>
+                                <h2 class="text-xl font-bold text-slate-200 tracking-tight">Carrier Analysis: The UPS Cost Premium</h2>
                                 <div class="h-px bg-slate-800 flex-grow hidden md:block w-12"></div>
                             </div>
                             <!-- Dynamic Callouts -->
@@ -622,23 +588,6 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Chart 1 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/1_carrier_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/1_carrier_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Carrier Volume">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart D1: Shipment Volume by Carrier</h3>
-                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-D1" class="card-desc text-sm text-slate-400 mb-0">UPS handles a substantial share of our total volume. Given the rate differential vs. USPS, reducing UPS dependency on lower-priority shipments is a direct lever for cost reduction.</p>
-                                </div>
-                            </div>
-
                             <!-- Chart 4b -->
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/4b_monthly_avg_cost_carrier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
@@ -673,39 +622,6 @@
                                 </div>
                             </div>
 
-                            <!-- Chart 15 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
-                                <a href="visualizations/15_combo_spend_volume_zone_ups_usps_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/15_combo_spend_volume_zone_ups_usps.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend & Volume Combined">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Interactive Clustered Column</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart D4: Spend & Volume by Zone (Combined)</h3>
-                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-D4" class="card-desc text-sm text-slate-400 mb-0">Spend per zone is disproportionate to volume in higher zones — confirming that zone distance, not just shipment count, is inflating our cost structure.</p>
-                                </div>
-                            </div>
-
-                            <!-- Chart 16 -->
-                            <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group md:col-span-2">
-                                <a href="visualizations/16_combo_spend_volume_zone_separated_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
-                                
-                                <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/16_combo_spend_volume_zone_separated.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend & Volume Separated">
-                                    <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Interactive Separated Clusters</div>
-                                </div>
-                                <div class="p-5 relative z-10 pointer-events-none">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 class="text-base font-bold text-white">Chart D5: Spend & Volume (UPS vs USPS)</h3>
-                                        <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    </div>
-                                    <p id="desc-D5" class="card-desc text-sm text-slate-400 mb-0">UPS generates higher spend relative to its volume share than USPS — the clearest direct comparison of carrier cost efficiency in this dataset.</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -737,7 +653,7 @@
                 </div>
 
                 <!-- Section 5: Proposed MasonHub 3PL (Pennsylvania) -->
-                <section class="py-12 md:py-16">
+                <section class="py-12 md:py-16 bg-amber-950/10 border-y border-amber-900/20">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-4 w-full md:w-auto">
@@ -920,7 +836,7 @@
                 </section>
 
                 <!-- Section 6: Proposed RedStag 3PL (Tennessee) -->
-                <section class="py-12 md:py-16 bg-indigo-950/20 border-y border-indigo-900/50 shadow-inner">
+                <section class="py-12 md:py-16 bg-emerald-950/10 border-y border-emerald-900/20">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-4 w-full md:w-auto">
@@ -1108,7 +1024,7 @@
                 </section>
 
                 <!-- Section 7: Proposed ShipFusion 3PL (Pennsylvania) -->
-                <section class="py-12 md:py-16">
+                <section class="py-12 md:py-16 bg-violet-950/10 border-y border-violet-900/20">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-4 w-full md:w-auto">
@@ -1744,6 +1660,8 @@
         // ==========================================
         let currentVizIndex = 0;
         let vizLinks = [];
+        let currentTab = 'analytics';
+        const savedScrollPositions = { analytics: 0, proposals: 0, q1results: 0 };
 
         // Tab Switching Logic
         const tabAnalytics  = document.getElementById('tabAnalytics');
@@ -1757,7 +1675,7 @@
         const TAB_INACTIVE = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
         const TAB_ACTIVE_GREEN = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md ring-1 ring-white/10 transition-all';
 
-        function switchTab(viewName) {
+        function switchTab(viewName, pushHistory) {
             // Hide all views
             viewAnalytics.classList.add('hidden');
             viewProposals.classList.add('hidden');
@@ -1778,13 +1696,20 @@
                 tabQ1Results.className = TAB_ACTIVE_GREEN;
             }
 
+            currentTab = viewName;
+
+            // Push history entry so the browser back button can return to this tab
+            if (pushHistory !== false) {
+                history.pushState({ type: 'tab', tab: viewName }, '', '#' + viewName);
+            }
+
             // Rebuild vizLinks for whichever view is now active
             buildVizLinks();
         }
 
-        tabAnalytics.addEventListener('click', () => switchTab('analytics'));
-        tabProposals.addEventListener('click', () => switchTab('proposals'));
-        tabQ1Results.addEventListener('click', () => switchTab('q1results'));
+        tabAnalytics.addEventListener('click', () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('analytics'); window.scrollTo(0, 0); });
+        tabProposals.addEventListener('click', () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('proposals'); window.scrollTo(0, 0); });
+        tabQ1Results.addEventListener('click', () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('q1results'); window.scrollTo(0, 0); });
 
         // Build vizLinks from whichever view is currently visible.
         // Called once on load and again on every tab switch.
@@ -1860,17 +1785,46 @@
         document.addEventListener('DOMContentLoaded', () => {
             buildVizLinks();
 
+            // Seed history with the initial tab state so popstate fires on first back
+            history.replaceState({ type: 'tab', tab: 'analytics' }, '', '#analytics');
+
             // Attach Viewer Navigation Event Listeners
-            document.getElementById('btnBackDashboard').addEventListener('click', closeViz);
+            document.getElementById('btnBackDashboard').addEventListener('click', () => history.back());
             document.getElementById('btnPrevViz').addEventListener('click', () => {
                 if (currentVizIndex > 0) openViz(currentVizIndex - 1);
             });
             document.getElementById('btnNextViz').addEventListener('click', () => {
                 if (currentVizIndex < vizLinks.length - 1) openViz(currentVizIndex + 1);
             });
+
+            // Handle browser back / forward button
+            window.addEventListener('popstate', (e) => {
+                const state = e.state;
+                if (!state) return;
+
+                if (state.type === 'viz') {
+                    // Navigated back to a viz from a viz — just open it without pushing history
+                    openViz(state.index, false);
+                } else if (state.type === 'tab') {
+                    // Navigated back from viz to tab, or between tabs
+                    const isDashboardVisible = document.getElementById('dashboardView').style.display !== 'none';
+                    if (!isDashboardVisible) {
+                        // Close the detail viewer
+                        document.getElementById('dashboardView').style.display = 'flex';
+                        document.getElementById('detailView').style.display = 'none';
+                        document.getElementById('vizIframe').src = 'about:blank';
+                        document.getElementById('vizImg').removeAttribute('src');
+                    }
+                    // Switch to the correct tab (no pushState — this is a pop)
+                    switchTab(state.tab, false);
+                    // Restore scroll position
+                    const savedY = savedScrollPositions[state.tab] || 0;
+                    window.scrollTo(0, savedY);
+                }
+            });
         });
 
-        function openViz(indexOrEl) {
+        function openViz(indexOrEl, pushHistory) {
             // Accept either a numeric index or a card DOM element (legacy inline onclick)
             let index;
             if (typeof indexOrEl === 'number') {
@@ -1880,13 +1834,25 @@
                 index = parseInt(indexOrEl.dataset.vizIndex);
                 if (isNaN(index)) return;
             }
+
+            // Save current scroll position before leaving the dashboard
+            const isDashboardVisible = document.getElementById('dashboardView').style.display !== 'none';
+            if (isDashboardVisible) {
+                savedScrollPositions[currentTab] = window.scrollY;
+            }
+
             currentVizIndex = index;
             const viz = vizLinks[index];
-            
+
+            // Push history entry so the browser back button can return here
+            if (pushHistory !== false) {
+                history.pushState({ type: 'viz', index: index, tab: currentTab }, '', '#viz-' + index);
+            }
+
             // Swap Views
             document.getElementById('dashboardView').style.display = 'none';
             document.getElementById('detailView').style.display = 'flex';
-            window.scrollTo(0, 0); // Reset scroll to top
+            window.scrollTo(0, 0);
             
             // Update Viewer UI
             document.getElementById('vizTitle').textContent = viz.title;
@@ -1968,11 +1934,14 @@
             // Swap Views
             document.getElementById('dashboardView').style.display = 'flex';
             document.getElementById('detailView').style.display = 'none';
-            
+
             // Clear sources safely using about:blank to prevent infinite loop
             document.getElementById('vizIframe').src = 'about:blank';
             document.getElementById('vizImg').removeAttribute('src');
-            window.scrollTo(0, 0);
+
+            // Restore scroll to where the user was on the dashboard
+            const savedY = savedScrollPositions[currentTab] || 0;
+            window.scrollTo(0, savedY);
         }
 
     </script>
