@@ -1648,6 +1648,15 @@
         const TAB_ACTIVE_GREEN = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md ring-1 ring-white/10 transition-all';
 
         function switchTab(viewName, pushHistory) {
+            // If the detail viewer is open, close it first before switching tabs
+            const detailViewEl = document.getElementById('detailView');
+            if (detailViewEl.style.display !== 'none') {
+                detailViewEl.style.display = 'none';
+                document.getElementById('dashboardView').style.display = 'flex';
+                document.getElementById('vizIframe').src = 'about:blank';
+                document.getElementById('vizImg').removeAttribute('src');
+            }
+
             // Hide all views
             viewAnalytics.classList.add('hidden');
             viewProposals.classList.add('hidden');
