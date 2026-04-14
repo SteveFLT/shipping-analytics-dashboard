@@ -1,0 +1,108 @@
+Logging to: C:\Users\steve\GEMINI\visualizations\pipeline_20260410_132835.log
+Ingesting Base Order Files...
+Combined base orders. Removed 63838 duplicates/nulls.
+Total Unique Base Orders: 78023
+Ingesting and standardizing Detail Files...
+Initiating Fallback Sequence...
+Filtered out 519 records that were not shipped in 2025.
+Applying Dual-Warehouse Optimization Model (Cost-Based Dual Node Routing with FF & Storage Fees)...
+
+--- DUAL-WAREHOUSE MODEL SUMMARY ---
+Orders Modeled:        61,524
+CA Baseline Total:     $972,689.17
+MasonHub (PA)         routed=34,686 (56.4%)  savings=$271,505.07  avg/order=$7.83
+Red Stag (TN)         routed=34,069 (55.4%)  savings=$258,814.59  avg/order=$7.60
+ShipFusion (PA)       routed=34,664 (56.3%)  savings=$269,115.17  avg/order=$7.76
+Best Combined         routed=39,312 (63.9%)  savings=$307,368.42  [MH 47.6% / RS 19.5% / SF 32.9%]
+
+Ingesting 2024 Historical Data (ShipStation + Shopify)...
+Dataset compiled and saved to: C:\Users\steve\GEMINI\visualizations\final_shipping_dataset.csv
+Ingesting Q1 2026 Data (Fulfil)...
+  2026 YTD orders ingested: 22,800  (1–3 month range)
+
+==================================================
+📊 SHIPPING ANALYTICS & KPI REPORT
+==================================================
+--- SEPARATED DATA ---
+Costco Orders Detected: 10,596 (Included in volume/weight, Excluded from spend/cost calculations)
+
+Total Base Orders Analyzed: 77,504
+Orders with Cost Data Found (Excl. Costco):  99.46%
+
+Total Current Spend (CA Only, Excl. Costco):  $1,243,536.24
+Average Cost per Shipment:                    $18.69
+Highest Single Shipment:                      $857.85
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + MasonHub, Excl. Costco) ---
+Projected Shipping Spend:       $779,417.10
+Projected 3PL Pick/Pack Fees:   $91,233.90 (Avg $2.51/relocated order)
+Projected 3PL Storage/Rec:      $16,794.88
+Projected Total Landed Cost:    $887,445.88
+Projected Savings (Net):        $356,090.36 (28.64%)
+
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + Red Stag, Excl. Costco) ---
+Projected Shipping Spend:       $802,753.35
+Projected 3PL Pick/Pack Fees:   $79,651.30 (Avg $2.23/relocated order)
+Projected 3PL Storage/Rec:      $15,014.20
+Projected Total Landed Cost:    $897,418.85
+Projected Savings (Net):        $346,117.39 (27.83%)
+
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + ShipFusion, Excl. Costco) ---
+Projected Shipping Spend:       $763,772.05
+Projected 3PL Pick/Pack Fees:   $105,472.33 (Avg Yr1 $2.90/order | Run-Rate $3.34/order)
+Projected 3PL Storage/Rec:      $24,930.50
+Projected Total Landed Cost:    $894,174.88
+Projected Savings (Net):        $349,361.36 (28.09%)
+
+
+--- Q4 COST SPIKE DIAGNOSTICS (Q1-Q3 vs Q4) ---
+Average Cost Per Order:       $17.05 (Q1-Q3) -> $21.37 (Q4)  [+25.4%]
+Avg Cost Per Lb (Inflation):  $6.72/lb (Q1-Q3) -> $6.23/lb (Q4)  [-7.3%]
+UPS Premium Carrier Share:    41.4% (Q1-Q3) -> 63.0% (Q4)  [+21.6% shift]
+Average Shipment Weight:      4.21 lbs (Q1-Q3) -> 6.40 lbs (Q4)  [+51.9%]
+Zone 5-8 Volume Skew:         77.9% (Q1-Q3) -> 78.2% (Q4)  [+0.3% shift]
+
+
+--- Volume by Sales Channel (All Orders) ---
+Shopify D2C: 64644 orders (83.4%)
+Costco: 10596 orders (13.7%)
+eBay: 1160 orders (1.5%)
+PR & Influencers: 492 orders (0.6%)
+Walmart: 426 orders (0.5%)
+Wholesale: 146 orders (0.2%)
+Employee Giveaway: 21 orders (0.0%)
+Target Plus: 19 orders (0.0%)
+
+--- Volume by Platform System (All Orders) ---
+Shopify: 64615 orders (83.4%)
+Fulfil: 12889 orders (16.6%)
+==================================================
+
+--- Q1 2025 vs Q1 2026 COMPARISON ---
+Avg Cost:   $16.83 (Q1 2025) → $19.00 (Q1 2026)  [+12.9%]
+Avg Weight: 3.83 lbs (Q1 2025) → 9.33 lbs (Q1 2026)  [+143.5%]
+
+-> Generated 57 content-aware chart descriptions.
+-> Exported KPI metrics to C:\Users\steve\GEMINI\visualizations\dashboard_metrics.js for dynamic HTML dashboard rendering.
+Generating Year-over-Year visualizations...
+Generating Q4 Cost Spike Diagnostics...
+Generating 2026 YTD Performance Charts...
+Generating Geographic Maps (including Zones 9 & A)...
+Generating Domestic Volume Bubble Map...
+Generating Dual-Warehouse Allocation Map ()...
+Generating Dual-Warehouse Zone Map ()...
+Generating Dual-Warehouse Allocation Map (_tn)...
+Generating Dual-Warehouse Zone Map (_tn)...
+Generating Dual-Warehouse Allocation Map (_sf)...
+Generating Dual-Warehouse Zone Map (_sf)...
+Generating Cost Heatmap (7)...
+Generating Cost Heatmap (8_masonhub)...
+Generating Cost Heatmap (8_redstag)...
+Generating Cost Heatmap (8_shipfusion)...
+Excluding outlier Zones 9 and A for standard charts...
+Generating standard visualizations...
+  [A3] Median shipment weight: 4.31 lbs  ← match this in the card description
+Error generating chart 23: [Errno 22] Invalid argument: 'C:\\Users\\steve\\GEMINI\\visualizations\\23_cost_breakdown_stacked_interactive.html'
+Success! Process complete.
