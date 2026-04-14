@@ -1,0 +1,40 @@
+Logging to: C:\Users\steve\GEMINI\visualizations\pipeline_20260414_135419.log
+Ingesting Base Order Files...
+Combined base orders. Removed 63838 duplicates/nulls.
+Total Unique Base Orders: 78023
+Ingesting and standardizing Detail Files...
+Initiating Fallback Sequence...
+Filtered out 519 records that were not shipped in 2025.
+Applying Dual-Warehouse Optimization Model (Cost-Based Dual Node Routing with FF & Storage Fees)...
+
+--- DUAL-WAREHOUSE MODEL SUMMARY ---
+Orders Modeled:        61,524
+CA Baseline Total:     $972,689.17
+MasonHub (PA)         routed=34,686 (56.4%)  savings=$271,505.07  avg/order=$7.83
+Red Stag (TN)         routed=34,069 (55.4%)  savings=$258,814.59  avg/order=$7.60
+ShipFusion (PA)       routed=34,664 (56.3%)  savings=$269,115.17  avg/order=$7.76
+Best Combined         routed=39,312 (63.9%)  savings=$307,368.42  [MH 47.6% / RS 19.5% / SF 32.9%]
+
+Ingesting 2024 Historical Data (ShipStation + Shopify)...
+Dataset compiled and saved to: C:\Users\steve\GEMINI\visualizations\final_shipping_dataset.csv
+Ingesting Q1 2026 Data (Fulfil)...
+  2026 YTD orders ingested: 22,800  (1–3 month range)
+
+==================================================
+Traceback (most recent call last):
+  File "C:\Users\steve\GEMINI\ShippingDashboard.py", line 197, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\steve\GEMINI\ShippingDashboard.py", line 149, in main
+    generate_kpis(final_2025_df, df_2024, df_q1_2026=df_q1_2026 if not df_q1_2026.empty else None)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\steve\GEMINI\kpi_engine.py", line 8, in generate_kpis
+    print("📊 SHIPPING ANALYTICS & KPI REPORT")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\steve\GEMINI\ShippingDashboard.py", line 47, in write
+    self._stream.write(msg)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\steve\AppData\Local\Python\pythoncore-3.14-64\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ca' in position 0: character maps to <undefined>
