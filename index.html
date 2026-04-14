@@ -7,11 +7,18 @@
     
     <!-- Custom Favicon embedded as an inline SVG -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
-    
+
+    <!-- Warm up CDN connections & preload critical script -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.plot.ly" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdn.plot.ly">
+    <link rel="preload" href="visualizations/dashboard_metrics.js" as="script">
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- IMPORT LOCAL METRICS DATA (Bypasses CORS restrictions) -->
-    <script src="visualizations/dashboard_metrics.js"></script>
+    <script src="visualizations/dashboard_metrics.js" defer></script>
 
     <script>
         tailwind.config = {
@@ -138,7 +145,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/17_volume_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/17_volume_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Domestic Volume Bubble Map">
+                                    <img src="visualizations/17_volume_heatmap_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Domestic Volume Bubble Map">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-blue-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -153,7 +160,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/5_zone_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5_zone_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Volume">
+                                    <img src="visualizations/5_zone_volume.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Volume">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -168,7 +175,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-blue-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/1c_international_volume_breakdown_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/1c_international_volume_breakdown.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="International Breakdown">
+                                    <img src="visualizations/1c_international_volume_breakdown.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="International Breakdown">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -203,7 +210,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-sky-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/4_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/4_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Volume Trend">
+                                    <img src="visualizations/4_volume_trend.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Volume Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -218,7 +225,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-sky-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/3_weight_distribution_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/3_weight_distribution.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Weight Distribution">
+                                    <img src="visualizations/3_weight_distribution.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Weight Distribution">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Histogram Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -233,7 +240,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-sky-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/5e_zone_volume_stacked_area_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5e_zone_volume_stacked_area.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Stacked Area">
+                                    <img src="visualizations/5e_zone_volume_stacked_area.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Stacked Area">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Area Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -279,7 +286,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_volume_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_volume_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Volume Trend">
+                                    <img src="visualizations/yoy_volume_trend.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Volume Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -294,7 +301,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_avg_cost_trend_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_avg_cost_trend.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Avg Cost Trend">
+                                    <img src="visualizations/yoy_avg_cost_trend.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Avg Cost Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -309,7 +316,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_carrier_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_carrier_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Carrier Volume">
+                                    <img src="visualizations/yoy_carrier_volume.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Carrier Volume">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -324,7 +331,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_zone_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_zone_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Zone Volume">
+                                    <img src="visualizations/yoy_zone_volume.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY Zone Volume">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -367,7 +374,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-orange-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_q4_carrier_mix_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_q4_carrier_mix.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Carrier Mix">
+                                    <img src="visualizations/yoy_q4_carrier_mix.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Carrier Mix">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -382,7 +389,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-orange-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_q4_weight_avg_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_q4_weight_avg.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Average Weight">
+                                    <img src="visualizations/yoy_q4_weight_avg.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Average Weight">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -397,7 +404,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-orange-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/yoy_q4_weight_tier_dist_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/yoy_q4_weight_tier_dist.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Weight Tier Distribution">
+                                    <img src="visualizations/yoy_q4_weight_tier_dist.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q4 Weight Tier Distribution">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -442,7 +449,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/7_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/7_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost Heatmap">
+                                    <img src="visualizations/7_avg_cost_heatmap_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost Heatmap">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-purple-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -457,7 +464,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/11_monthly_total_spend_carrier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/11_monthly_total_spend_carrier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend Trend">
+                                    <img src="visualizations/11_monthly_total_spend_carrier.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend Trend">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Stacked Area Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -472,7 +479,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/10_total_spend_by_zone_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/10_total_spend_by_zone.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend by Zone">
+                                    <img src="visualizations/10_total_spend_by_zone.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Spend by Zone">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -487,7 +494,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/14_avg_cost_weight_tier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/14_avg_cost_weight_tier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Weight Tier">
+                                    <img src="visualizations/14_avg_cost_weight_tier.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Weight Tier">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -502,7 +509,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-purple-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/12_monthly_avg_cost_zone_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/12_monthly_avg_cost_zone.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Zone">
+                                    <img src="visualizations/12_monthly_avg_cost_zone.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Zone">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -547,7 +554,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/2_carrier_avg_cost_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/2_carrier_avg_cost.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Carrier">
+                                    <img src="visualizations/2_carrier_avg_cost.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Cost Carrier">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -562,7 +569,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/4b_monthly_avg_cost_carrier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/4b_monthly_avg_cost_carrier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Carrier">
+                                    <img src="visualizations/4b_monthly_avg_cost_carrier.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Carrier">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -577,7 +584,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 transition duration-300 shadow-lg relative group">
                                 <a href="visualizations/13_cost_vs_weight_scatter_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/13_cost_vs_weight_scatter.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost vs Weight Scatter">
+                                    <img src="visualizations/13_cost_vs_weight_scatter.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cost vs Weight Scatter">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Scatter Plot Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -629,7 +636,7 @@
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-4 w-full md:w-auto">
                                 <div class="bg-white p-3 rounded-xl border-2 border-amber-400/80 shadow-[0_0_15px_rgba(251,191,36,0.25)] flex items-center justify-center min-w-[140px] h-14">
-                                    <img src="visualizations/MasonHubLogo.png" alt="MasonHub Logo" class="max-h-full max-w-full object-contain">
+                                    <img src="visualizations/MasonHubLogo.png" loading="lazy" alt="MasonHub Logo" class="max-h-full max-w-full object-contain">
                                 </div>
                                 <div class="flex flex-col">
                                     <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">Proposed MasonHub 3PL</h2>
@@ -703,7 +710,7 @@
                                 <a href="visualizations/5c_dual_warehouse_zone_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5c_dual_warehouse_zone_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare">
+                                    <img src="visualizations/5c_dual_warehouse_zone_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -720,7 +727,7 @@
                                 <a href="visualizations/masonhub_monthly_tlc_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/masonhub_monthly_tlc_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Masonhub TLC Comparison">
+                                    <img src="visualizations/masonhub_monthly_tlc_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Masonhub TLC Comparison">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -737,7 +744,7 @@
                                 <a href="visualizations/5d_warehouse_allocation_split_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5d_warehouse_allocation_split.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split">
+                                    <img src="visualizations/5d_warehouse_allocation_split.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Pie Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -755,7 +762,7 @@
                                 <a href="visualizations/9_dual_warehouse_allocation_map_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/9_dual_warehouse_allocation_map_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map">
+                                    <img src="visualizations/9_dual_warehouse_allocation_map_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-amber-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -773,7 +780,7 @@
                                 <a href="visualizations/8_masonhub_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/8_masonhub_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap">
+                                    <img src="visualizations/8_masonhub_avg_cost_heatmap_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-amber-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -791,7 +798,7 @@
                                 <a href="visualizations/9b_dual_warehouse_zone_gradient_map_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual">
+                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-amber-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -812,7 +819,7 @@
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-4 w-full md:w-auto">
                                 <div class="bg-white p-3 rounded-xl border-2 border-emerald-400/80 shadow-[0_0_15px_rgba(52,211,153,0.25)] flex items-center justify-center min-w-[140px] h-14">
-                                    <img src="visualizations/RedStagLogo.png" alt="Red Stag Logo" class="max-h-full max-w-full object-contain">
+                                    <img src="visualizations/RedStagLogo.png" loading="lazy" alt="Red Stag Logo" class="max-h-full max-w-full object-contain">
                                 </div>
                                 <div class="flex flex-col">
                                     <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">Proposed RedStag 3PL</h2>
@@ -891,7 +898,7 @@
                                 <a href="visualizations/5c_dual_warehouse_zone_comparison_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5c_dual_warehouse_zone_comparison_tn.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare TN">
+                                    <img src="visualizations/5c_dual_warehouse_zone_comparison_tn.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare TN">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -908,7 +915,7 @@
                                 <a href="visualizations/redstag_monthly_tlc_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/redstag_monthly_tlc_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Red Stag TLC Comparison">
+                                    <img src="visualizations/redstag_monthly_tlc_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Red Stag TLC Comparison">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -925,7 +932,7 @@
                                 <a href="visualizations/5d_warehouse_allocation_split_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5d_warehouse_allocation_split_tn.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split TN">
+                                    <img src="visualizations/5d_warehouse_allocation_split_tn.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split TN">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Pie Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -943,7 +950,7 @@
                                 <a href="visualizations/9_dual_warehouse_allocation_map_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/9_dual_warehouse_allocation_map_tn_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map TN">
+                                    <img src="visualizations/9_dual_warehouse_allocation_map_tn_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map TN">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-emerald-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -961,7 +968,7 @@
                                 <a href="visualizations/8_redstag_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/8_redstag_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap TN">
+                                    <img src="visualizations/8_redstag_avg_cost_heatmap_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap TN">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-emerald-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -979,7 +986,7 @@
                                 <a href="visualizations/9b_dual_warehouse_zone_gradient_map_tn_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_tn_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual TN">
+                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_tn_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual TN">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-emerald-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1000,7 +1007,7 @@
                         <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-center space-x-4 w-full md:w-auto">
                                 <div class="bg-white p-3 rounded-xl border-2 border-violet-400/80 shadow-[0_0_15px_rgba(139,92,246,0.25)] flex items-center justify-center min-w-[140px] h-14">
-                                    <img src="visualizations/shipfusionlogo.jpg" alt="ShipFusion Logo" class="max-h-full max-w-full object-contain">
+                                    <img src="visualizations/shipfusionlogo.jpg" loading="lazy" alt="ShipFusion Logo" class="max-h-full max-w-full object-contain">
                                 </div>
                                 <div class="flex flex-col">
                                     <h2 class="text-xl sm:text-2xl font-bold text-slate-200 tracking-tight">Proposed ShipFusion 3PL</h2>
@@ -1080,7 +1087,7 @@
                                 <a href="visualizations/5c_dual_warehouse_zone_comparison_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5c_dual_warehouse_zone_comparison_sf.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare SF">
+                                    <img src="visualizations/5c_dual_warehouse_zone_comparison_sf.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Dual Warehouse Compare SF">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1097,7 +1104,7 @@
                                 <a href="visualizations/shipfusion_monthly_tlc_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/shipfusion_monthly_tlc_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="ShipFusion TLC Comparison">
+                                    <img src="visualizations/shipfusion_monthly_tlc_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="ShipFusion TLC Comparison">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1114,7 +1121,7 @@
                                 <a href="visualizations/5d_warehouse_allocation_split_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/5d_warehouse_allocation_split_sf.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split SF">
+                                    <img src="visualizations/5d_warehouse_allocation_split_sf.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Allocation Split SF">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Pie Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1132,7 +1139,7 @@
                                 <a href="visualizations/9_dual_warehouse_allocation_map_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/9_dual_warehouse_allocation_map_sf_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map SF">
+                                    <img src="visualizations/9_dual_warehouse_allocation_map_sf_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Warehouse Allocation Map SF">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-violet-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1150,7 +1157,7 @@
                                 <a href="visualizations/8_shipfusion_avg_cost_heatmap_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/8_shipfusion_avg_cost_heatmap_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap SF">
+                                    <img src="visualizations/8_shipfusion_avg_cost_heatmap_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Projected Heatmap SF">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-violet-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1168,7 +1175,7 @@
                                 <a href="visualizations/9b_dual_warehouse_zone_gradient_map_sf_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 
                                 <div class="h-48 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_sf_geopandas.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual SF">
+                                    <img src="visualizations/9b_dual_warehouse_zone_gradient_map_sf_geopandas.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Zone Gradient Dual SF">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern text-violet-500/50">Plotly Scatter Geo</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1189,13 +1196,13 @@
                         <div class="mb-6 flex items-center space-x-4">
                             <div class="flex -space-x-4">
                                 <div class="bg-white p-2 rounded-xl border-2 border-amber-400/80 shadow-[0_0_10px_rgba(251,191,36,0.25)] relative z-20 flex items-center justify-center min-w-[100px] h-12 ring-4 ring-[#0f172a]">
-                                    <img src="visualizations/MasonHubLogo.png" alt="MasonHub Logo" class="max-h-full max-w-full object-contain">
+                                    <img src="visualizations/MasonHubLogo.png" loading="lazy" alt="MasonHub Logo" class="max-h-full max-w-full object-contain">
                                 </div>
                                 <div class="bg-white p-2 rounded-xl border-2 border-emerald-400/80 shadow-[0_0_10px_rgba(52,211,153,0.25)] relative z-10 flex items-center justify-center min-w-[100px] h-12 ring-4 ring-[#0f172a]">
-                                    <img src="visualizations/RedStagLogo.png" alt="Red Stag Logo" class="max-h-full max-w-full object-contain">
+                                    <img src="visualizations/RedStagLogo.png" loading="lazy" alt="Red Stag Logo" class="max-h-full max-w-full object-contain">
                                 </div>
                                 <div class="bg-white p-2 rounded-xl border-2 border-violet-400/80 shadow-[0_0_10px_rgba(139,92,246,0.25)] relative z-0 flex items-center justify-center min-w-[100px] h-12 ring-4 ring-[#0f172a]">
-                                    <img src="visualizations/shipfusionlogo.jpg" alt="ShipFusion Logo" class="max-h-full max-w-full object-contain">
+                                    <img src="visualizations/shipfusionlogo.jpg" loading="lazy" alt="ShipFusion Logo" class="max-h-full max-w-full object-contain">
                                 </div>
                             </div>
                             <div class="flex flex-col ml-2">
@@ -1238,7 +1245,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-2">
                                 <a href="visualizations/18_monthly_avg_cost_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-64 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/18_monthly_avg_cost_comparison.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Comparison">
+                                    <img src="visualizations/18_monthly_avg_cost_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost Comparison">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1254,7 +1261,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-1">
                                 <a href="visualizations/19_monthly_total_savings_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-64 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/19_monthly_total_savings.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Total Projected Savings">
+                                    <img src="visualizations/19_monthly_total_savings.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Total Projected Savings">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1270,7 +1277,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-3">
                                 <a href="visualizations/23_cost_breakdown_stacked_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-64 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/23_cost_breakdown_stacked.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Average Cost Breakdown">
+                                    <img src="visualizations/23_cost_breakdown_stacked.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Average Cost Breakdown">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1286,7 +1293,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-3">
                                 <a href="visualizations/24_total_cost_breakdown_stacked_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-64 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/24_total_cost_breakdown_stacked.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cumulative Cost Breakdown">
+                                    <img src="visualizations/24_total_cost_breakdown_stacked.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Cumulative Cost Breakdown">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1302,7 +1309,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-3">
                                 <a href="visualizations/20_comprehensive_zone_shift_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-64 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/20_comprehensive_zone_shift.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Comprehensive Zone Shift">
+                                    <img src="visualizations/20_comprehensive_zone_shift.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Comprehensive Zone Shift">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1318,7 +1325,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-1">
                                 <a href="visualizations/21_savings_by_weight_tier_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-64 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/21_savings_by_weight_tier.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Savings by Weight Tier">
+                                    <img src="visualizations/21_savings_by_weight_tier.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Savings by Weight Tier">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1334,7 +1341,7 @@
                             <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-teal-500 transition duration-300 shadow-lg relative group md:col-span-2">
                                 <a href="visualizations/22_savings_distribution_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                 <div class="h-64 img-placeholder relative overflow-hidden">
-                                    <img src="visualizations/22_savings_distribution.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Distribution of Savings">
+                                    <img src="visualizations/22_savings_distribution.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Distribution of Savings">
                                     <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Distribution Data</div>
                                 </div>
                                 <div class="p-5 relative z-10 pointer-events-none">
@@ -1380,7 +1387,7 @@
                         <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
                             <a href="visualizations/three_year_avg_cost_monthly_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                             <div class="h-48 img-placeholder relative overflow-hidden">
-                                <img src="visualizations/three_year_avg_cost_monthly.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost 3 Years">
+                                <img src="visualizations/three_year_avg_cost_monthly.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Monthly Avg Cost 3 Years">
                                 <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
@@ -1396,7 +1403,7 @@
                         <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
                             <a href="visualizations/2026_monthly_avg_cost_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                             <div class="h-48 img-placeholder relative overflow-hidden">
-                                <img src="visualizations/2026_monthly_avg_cost.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Cost">
+                                <img src="visualizations/2026_monthly_avg_cost.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Cost">
                                 <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
@@ -1412,7 +1419,7 @@
                         <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
                             <a href="visualizations/three_year_carrier_mix_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                             <div class="h-48 img-placeholder relative overflow-hidden">
-                                <img src="visualizations/three_year_carrier_mix.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Three-Year Carrier Mix">
+                                <img src="visualizations/three_year_carrier_mix.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Three-Year Carrier Mix">
                                 <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
@@ -1428,7 +1435,7 @@
                         <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
                             <a href="visualizations/2026_monthly_carrier_mix_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                             <div class="h-48 img-placeholder relative overflow-hidden">
-                                <img src="visualizations/2026_monthly_carrier_mix.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Carrier Mix">
+                                <img src="visualizations/2026_monthly_carrier_mix.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Carrier Mix">
                                 <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
@@ -1444,7 +1451,7 @@
                         <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
                             <a href="visualizations/three_year_pkg_volume_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                             <div class="h-48 img-placeholder relative overflow-hidden">
-                                <img src="visualizations/three_year_pkg_volume.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Package Volume Per Order">
+                                <img src="visualizations/three_year_pkg_volume.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Avg Package Volume Per Order">
                                 <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
@@ -1460,7 +1467,7 @@
                         <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
                             <a href="visualizations/2026_monthly_avg_weight_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                             <div class="h-48 img-placeholder relative overflow-hidden">
-                                <img src="visualizations/2026_monthly_avg_weight.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Weight">
+                                <img src="visualizations/2026_monthly_avg_weight.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Weight">
                                 <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
@@ -1923,6 +1930,17 @@
             window.scrollTo(0, savedY);
         }
 
+    </script>
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/shipping-analytics-dashboard/sw.js', {
+                    scope: '/shipping-analytics-dashboard/'
+                });
+            });
+        }
     </script>
 </body>
 </html>
