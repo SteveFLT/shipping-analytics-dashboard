@@ -6,7 +6,7 @@
 // automatically delete all old caches on the next page load.
 // ============================================================
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 
 const STATIC_CACHE = `static-${CACHE_VERSION}`;   // shell + CDN libs
 const CHART_CACHE  = `charts-${CACHE_VERSION}`;   // interactive HTML charts (lazy)

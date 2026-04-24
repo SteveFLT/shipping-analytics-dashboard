@@ -1,0 +1,210 @@
+Logging to: C:\Users\steve\GEMINI\visualizations\pipeline_20260415_110028.log
+Ingesting Base Order Files...
+Combined base orders. Removed 63838 duplicates/nulls.
+Total Unique Base Orders: 78023
+Ingesting and standardizing Detail Files...
+Initiating Fallback Sequence...
+Filtered out 519 records that were not shipped in 2025.
+Applying Dual-Warehouse Optimization Model (Cost-Based Dual Node Routing with FF & Storage Fees)...
+
+--- DUAL-WAREHOUSE MODEL SUMMARY ---
+Orders Modeled:        61,524
+CA Baseline Total:     $972,689.17
+MasonHub (PA)         routed=34,686 (56.4%)  savings=$271,505.07  avg/order=$7.83
+Red Stag (TN)         routed=34,069 (55.4%)  savings=$258,814.59  avg/order=$7.60
+ShipFusion (PA)       routed=34,664 (56.3%)  savings=$269,115.17  avg/order=$7.76
+Best Combined         routed=39,312 (63.9%)  savings=$307,368.42  [MH 47.6% / RS 19.5% / SF 32.9%]
+
+Ingesting 2024 Historical Data (ShipStation + Shopify)...
+Dataset compiled and saved to: C:\Users\steve\GEMINI\visualizations\final_shipping_dataset.csv
+Ingesting Q1 2026 Data (Fulfil)...
+  2026 YTD orders ingested: 22,800  (1–3 month range)
+
+==================================================
+📊 SHIPPING ANALYTICS & KPI REPORT
+==================================================
+--- SEPARATED DATA ---
+Costco Orders Detected: 10,596 (Included in volume/weight, Excluded from spend/cost calculations)
+
+Total Base Orders Analyzed: 77,504
+Orders with Cost Data Found (Excl. Costco):  99.46%
+
+Total Current Spend (CA Only, Excl. Costco):  $1,243,536.24
+Average Cost per Shipment:                    $18.69
+Highest Single Shipment:                      $857.85
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + MasonHub, Excl. Costco) ---
+Projected Shipping Spend:       $779,417.10
+Projected 3PL Pick/Pack Fees:   $91,233.90 (Avg $2.51/relocated order)
+Projected 3PL Storage/Rec:      $16,794.88
+Projected Total Landed Cost:    $887,445.88
+Projected Savings (Net):        $356,090.36 (28.64%)
+
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + Red Stag, Excl. Costco) ---
+Projected Shipping Spend:       $802,753.35
+Projected 3PL Pick/Pack Fees:   $79,651.30 (Avg $2.23/relocated order)
+Projected 3PL Storage/Rec:      $15,014.20
+Projected Total Landed Cost:    $897,418.85
+Projected Savings (Net):        $346,117.39 (27.83%)
+
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + ShipFusion, Excl. Costco) ---
+Projected Shipping Spend:       $763,772.05
+Projected 3PL Pick/Pack Fees:   $105,472.33 (Avg Yr1 $2.90/order | Run-Rate $3.34/order)
+Projected 3PL Storage/Rec:      $24,930.50
+Projected Total Landed Cost:    $894,174.88
+Projected Savings (Net):        $349,361.36 (28.09%)
+
+
+--- Q4 COST SPIKE DIAGNOSTICS (Q1-Q3 vs Q4) ---
+Average Cost Per Order:       $17.05 (Q1-Q3) -> $21.37 (Q4)  [+25.4%]
+Avg Cost Per Lb (Inflation):  $6.72/lb (Q1-Q3) -> $6.23/lb (Q4)  [-7.3%]
+UPS Premium Carrier Share:    41.4% (Q1-Q3) -> 63.0% (Q4)  [+21.6% shift]
+Average Shipment Weight:      4.21 lbs (Q1-Q3) -> 6.40 lbs (Q4)  [+51.9%]
+Zone 5-8 Volume Skew:         77.9% (Q1-Q3) -> 78.2% (Q4)  [+0.3% shift]
+
+
+--- Volume by Sales Channel (All Orders) ---
+Shopify D2C: 64644 orders (83.4%)
+Costco: 10596 orders (13.7%)
+eBay: 1160 orders (1.5%)
+PR & Influencers: 492 orders (0.6%)
+Walmart: 426 orders (0.5%)
+Wholesale: 146 orders (0.2%)
+Employee Giveaway: 21 orders (0.0%)
+Target Plus: 19 orders (0.0%)
+
+--- Volume by Platform System (All Orders) ---
+Shopify: 64615 orders (83.4%)
+Fulfil: 12889 orders (16.6%)
+==================================================
+
+--- Q1 2025 vs Q1 2026 COMPARISON ---
+Avg Cost:   $16.83 (Q1 2025) → $19.00 (Q1 2026)  [+12.9%]
+Avg Weight: 3.83 lbs (Q1 2025) → 9.33 lbs (Q1 2026)  [+143.5%]
+
+-> Generated 57 content-aware chart descriptions.
+-> Exported KPI metrics to C:\Users\steve\GEMINI\visualizations\dashboard_metrics.js for dynamic HTML dashboard rendering.
+Generating Year-over-Year visualizations...
+Generating Q4 Cost Spike Diagnostics...
+Generating 2026 YTD Performance Charts...
+Generating Geographic Maps (including Zones 9 & A)...
+Generating Domestic Volume Bubble Map...
+Generating Dual-Warehouse Allocation Map ()...
+Generating Dual-Warehouse Zone Map ()...
+Generating Dual-Warehouse Allocation Map (_tn)...
+Generating Dual-Warehouse Zone Map (_tn)...
+Generating Dual-Warehouse Allocation Map (_sf)...
+Generating Dual-Warehouse Zone Map (_sf)...
+Generating Cost Heatmap (7)...
+Generating Cost Heatmap (8_masonhub)...
+Generating Cost Heatmap (8_redstag)...
+Generating Cost Heatmap (8_shipfusion)...
+Excluding outlier Zones 9 and A for standard charts...
+Generating standard visualizations...
+  [A3] Median shipment weight: 4.31 lbs  ← match this in the card description
+
+==============================================================
+  2025 CUMULATIVE ORDER VOLUME REPORT
+==============================================================
+
+  Month          Orders    Cumulative   % of Year
+  ------------ --------  ------------  ----------
+  2025-01         5,234         5,234        6.8%  ██
+  2025-02         4,315         9,549       12.3%  ████
+  2025-03         5,192        14,741       19.0%  ███████
+  2025-04         4,573        19,314       24.9%  █████████
+  2025-05         4,657        23,971       30.9%  ████████████
+  2025-06         4,305        28,276       36.5%  ██████████████
+  2025-07         6,246        34,522       44.5%  █████████████████
+  2025-08         4,640        39,162       50.5%  ████████████████████
+  2025-09         5,398        44,560       57.5%  ███████████████████████
+  2025-10         6,035        50,595       65.3%  ██████████████████████████
+  2025-11        10,662        61,257       79.0%  ███████████████████████████████
+  2025-12        16,247        77,504      100.0%  ████████████████████████████████████████
+
+     Milestone  Date Reached       Day of Year    Pace vs. Uniform
+  ------------  ----------------  ------------  ------------------
+       1,000  Jan 09, 2025             Day 9           4d behind
+       2,000  Jan 15, 2025            Day 15           6d behind
+       3,000  Jan 21, 2025            Day 21           7d behind
+       4,000  Jan 24, 2025            Day 24           5d behind
+       5,000  Jan 31, 2025            Day 31           7d behind
+       6,000  Feb 06, 2025            Day 37           9d behind
+       7,000  Feb 13, 2025            Day 44          11d behind
+       8,000  Feb 19, 2025            Day 50          12d behind
+       9,000  Feb 25, 2025            Day 56          14d behind
+      10,000  Mar 04, 2025            Day 63          16d behind
+      11,000  Mar 07, 2025            Day 66          14d behind
+      12,000  Mar 14, 2025            Day 73          16d behind
+      13,000  Mar 20, 2025            Day 79          18d behind
+      14,000  Mar 26, 2025            Day 85          19d behind
+      15,000  Apr 03, 2025            Day 93          22d behind
+      16,000  Apr 09, 2025            Day 99          24d behind
+      17,000  Apr 15, 2025           Day 105          25d behind
+      18,000  Apr 22, 2025           Day 112          27d behind
+      19,000  Apr 28, 2025           Day 118          29d behind
+      20,000  May 06, 2025           Day 126          32d behind
+      21,000  May 12, 2025           Day 132          33d behind
+      22,000  May 19, 2025           Day 139          35d behind
+      23,000  May 26, 2025           Day 146          38d behind
+      24,000  Jun 01, 2025           Day 152          39d behind
+      25,000  Jun 09, 2025           Day 160          42d behind
+      26,000  Jun 15, 2025           Day 166          44d behind
+      27,000  Jun 23, 2025           Day 174          47d behind
+      28,000  Jun 29, 2025           Day 180          48d behind
+      29,000  Jul 03, 2025           Day 184          47d behind
+      30,000  Jul 08, 2025           Day 189          48d behind
+      31,000  Jul 14, 2025           Day 195          49d behind
+      32,000  Jul 18, 2025           Day 199          48d behind
+      33,000  Jul 24, 2025           Day 205          50d behind
+      34,000  Jul 30, 2025           Day 211          51d behind
+      35,000  Aug 04, 2025           Day 216          51d behind
+      36,000  Aug 11, 2025           Day 223          53d behind
+      37,000  Aug 18, 2025           Day 230          56d behind
+      38,000  Aug 25, 2025           Day 237          58d behind
+      39,000  Aug 30, 2025           Day 242          58d behind
+      40,000  Sep 04, 2025           Day 247          59d behind
+      41,000  Sep 09, 2025           Day 252          59d behind
+      42,000  Sep 16, 2025           Day 259          61d behind
+      43,000  Sep 22, 2025           Day 265          62d behind
+      44,000  Sep 27, 2025           Day 270          63d behind
+      45,000  Oct 04, 2025           Day 277          65d behind
+      46,000  Oct 09, 2025           Day 282          65d behind
+      47,000  Oct 14, 2025           Day 287          66d behind
+      48,000  Oct 20, 2025           Day 293          67d behind
+      49,000  Oct 24, 2025           Day 297          66d behind
+      50,000  Oct 29, 2025           Day 302          67d behind
+      51,000  Nov 03, 2025           Day 307          67d behind
+      52,000  Nov 06, 2025           Day 310          65d behind
+      53,000  Nov 10, 2025           Day 314          64d behind
+      54,000  Nov 14, 2025           Day 318          64d behind
+      55,000  Nov 18, 2025           Day 322          63d behind
+      56,000  Nov 21, 2025           Day 325          61d behind
+      57,000  Nov 24, 2025           Day 328          60d behind
+      58,000  Nov 26, 2025           Day 330          57d behind
+      59,000  Nov 28, 2025           Day 332          54d behind
+      60,000  Nov 28, 2025           Day 332          49d behind
+      61,000  Nov 30, 2025           Day 334          47d behind
+      62,000  Dec 01, 2025           Day 335          43d behind
+      63,000  Dec 02, 2025           Day 336          39d behind
+      64,000  Dec 03, 2025           Day 337          36d behind
+      65,000  Dec 05, 2025           Day 339          33d behind
+      66,000  Dec 08, 2025           Day 342          31d behind
+      67,000  Dec 09, 2025           Day 343          27d behind
+      68,000  Dec 11, 2025           Day 345          25d behind
+      69,000  Dec 14, 2025           Day 348          23d behind
+      70,000  Dec 16, 2025           Day 350          20d behind
+      71,000  Dec 17, 2025           Day 351          17d behind
+      72,000  Dec 19, 2025           Day 353          14d behind
+      73,000  Dec 22, 2025           Day 356          12d behind
+      74,000  Dec 25, 2025           Day 359          11d behind
+      75,000  Dec 26, 2025           Day 360           7d behind
+      76,000  Dec 29, 2025           Day 363           5d behind
+      77,000  Dec 30, 2025           Day 364           1d behind
+
+  Total 2025 orders: 77,504
+==============================================================
+
+Success! Process complete.

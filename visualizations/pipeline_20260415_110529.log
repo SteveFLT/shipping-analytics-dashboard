@@ -1,0 +1,162 @@
+Logging to: C:\Users\steve\GEMINI\visualizations\pipeline_20260415_110529.log
+Ingesting Base Order Files...
+Combined base orders. Removed 63838 duplicates/nulls.
+Total Unique Base Orders: 78023
+Ingesting and standardizing Detail Files...
+Initiating Fallback Sequence...
+Filtered out 519 records that were not shipped in 2025.
+Applying Dual-Warehouse Optimization Model (Cost-Based Dual Node Routing with FF & Storage Fees)...
+
+--- DUAL-WAREHOUSE MODEL SUMMARY ---
+Orders Modeled:        61,524
+CA Baseline Total:     $972,689.17
+MasonHub (PA)         routed=34,686 (56.4%)  savings=$271,505.07  avg/order=$7.83
+Red Stag (TN)         routed=34,069 (55.4%)  savings=$258,814.59  avg/order=$7.60
+ShipFusion (PA)       routed=34,664 (56.3%)  savings=$269,115.17  avg/order=$7.76
+Best Combined         routed=39,312 (63.9%)  savings=$307,368.42  [MH 47.6% / RS 19.5% / SF 32.9%]
+
+Ingesting 2024 Historical Data (ShipStation + Shopify)...
+Dataset compiled and saved to: C:\Users\steve\GEMINI\visualizations\final_shipping_dataset.csv
+Ingesting Q1 2026 Data (Fulfil)...
+  2026 YTD orders ingested: 22,800  (1–3 month range)
+
+==================================================
+📊 SHIPPING ANALYTICS & KPI REPORT
+==================================================
+--- SEPARATED DATA ---
+Costco Orders Detected: 10,596 (Included in volume/weight, Excluded from spend/cost calculations)
+
+Total Base Orders Analyzed: 77,504
+Orders with Cost Data Found (Excl. Costco):  99.46%
+
+Total Current Spend (CA Only, Excl. Costco):  $1,243,536.24
+Average Cost per Shipment:                    $18.69
+Highest Single Shipment:                      $857.85
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + MasonHub, Excl. Costco) ---
+Projected Shipping Spend:       $779,417.10
+Projected 3PL Pick/Pack Fees:   $91,233.90 (Avg $2.51/relocated order)
+Projected 3PL Storage/Rec:      $16,794.88
+Projected Total Landed Cost:    $887,445.88
+Projected Savings (Net):        $356,090.36 (28.64%)
+
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + Red Stag, Excl. Costco) ---
+Projected Shipping Spend:       $802,753.35
+Projected 3PL Pick/Pack Fees:   $79,651.30 (Avg $2.23/relocated order)
+Projected 3PL Storage/Rec:      $15,014.20
+Projected Total Landed Cost:    $897,418.85
+Projected Savings (Net):        $346,117.39 (27.83%)
+
+
+--- DUAL-WAREHOUSE OPTIMIZATION (CA + ShipFusion, Excl. Costco) ---
+Projected Shipping Spend:       $763,772.05
+Projected 3PL Pick/Pack Fees:   $105,472.33 (Avg Yr1 $2.90/order | Run-Rate $3.34/order)
+Projected 3PL Storage/Rec:      $24,930.50
+Projected Total Landed Cost:    $894,174.88
+Projected Savings (Net):        $349,361.36 (28.09%)
+
+
+--- Q4 COST SPIKE DIAGNOSTICS (Q1-Q3 vs Q4) ---
+Average Cost Per Order:       $17.05 (Q1-Q3) -> $21.37 (Q4)  [+25.4%]
+Avg Cost Per Lb (Inflation):  $6.72/lb (Q1-Q3) -> $6.23/lb (Q4)  [-7.3%]
+UPS Premium Carrier Share:    41.4% (Q1-Q3) -> 63.0% (Q4)  [+21.6% shift]
+Average Shipment Weight:      4.21 lbs (Q1-Q3) -> 6.40 lbs (Q4)  [+51.9%]
+Zone 5-8 Volume Skew:         77.9% (Q1-Q3) -> 78.2% (Q4)  [+0.3% shift]
+
+
+--- Volume by Sales Channel (All Orders) ---
+Shopify D2C: 64644 orders (83.4%)
+Costco: 10596 orders (13.7%)
+eBay: 1160 orders (1.5%)
+PR & Influencers: 492 orders (0.6%)
+Walmart: 426 orders (0.5%)
+Wholesale: 146 orders (0.2%)
+Employee Giveaway: 21 orders (0.0%)
+Target Plus: 19 orders (0.0%)
+
+--- Volume by Platform System (All Orders) ---
+Shopify: 64615 orders (83.4%)
+Fulfil: 12889 orders (16.6%)
+==================================================
+
+--- Q1 2025 vs Q1 2026 COMPARISON ---
+Avg Cost:   $16.83 (Q1 2025) → $19.00 (Q1 2026)  [+12.9%]
+Avg Weight: 3.83 lbs (Q1 2025) → 9.33 lbs (Q1 2026)  [+143.5%]
+
+-> Generated 57 content-aware chart descriptions.
+-> Exported KPI metrics to C:\Users\steve\GEMINI\visualizations\dashboard_metrics.js for dynamic HTML dashboard rendering.
+Generating Year-over-Year visualizations...
+Generating Q4 Cost Spike Diagnostics...
+Generating 2026 YTD Performance Charts...
+Generating Geographic Maps (including Zones 9 & A)...
+Generating Domestic Volume Bubble Map...
+Generating Dual-Warehouse Allocation Map ()...
+Generating Dual-Warehouse Zone Map ()...
+Generating Dual-Warehouse Allocation Map (_tn)...
+Generating Dual-Warehouse Zone Map (_tn)...
+Generating Dual-Warehouse Allocation Map (_sf)...
+Generating Dual-Warehouse Zone Map (_sf)...
+Generating Cost Heatmap (7)...
+Generating Cost Heatmap (8_masonhub)...
+Generating Cost Heatmap (8_redstag)...
+Generating Cost Heatmap (8_shipfusion)...
+Excluding outlier Zones 9 and A for standard charts...
+Generating standard visualizations...
+  [A3] Median shipment weight: 4.31 lbs  ← match this in the card description
+
+==========================================================================================
+  CUMULATIVE ORDER VOLUME REPORT  —  2025 vs 2026
+==========================================================================================
+
+  Month       2025 Orders  2025 Cumul.  2026 Orders  2026 Cumul.     MoM Δ
+  ----------  -----------  -----------  -----------  -----------  --------
+  2025-01           5,234        5,234            0            0   -100.0%  *
+  2025-02           4,315        9,549            0            0   -100.0%  *
+  2025-03           5,192       14,741            0            0   -100.0%  *
+  2025-04           4,573       19,314            0            0   -100.0%  *
+  2025-05           4,657       23,971            0            0   -100.0%  *
+  2025-06           4,305       28,276            0            0   -100.0%  *
+  2025-07           6,246       34,522            0            0   -100.0%  *
+  2025-08           4,640       39,162            0            0   -100.0%  *
+  2025-09           5,398       44,560            0            0   -100.0%  *
+  2025-10           6,035       50,595            0            0   -100.0%  *
+  2025-11          10,662       61,257            0            0   -100.0%  *
+  2025-12          16,247       77,504            0            0   -100.0%  *
+  2026-01               0       77,504        9,150        9,150       n/a
+  2026-02               0       77,504        7,100       16,250       n/a
+  2026-03               0       77,504        6,550       22,800       n/a
+
+  * No 2026 data for this month yet.
+
+   Milestone  2025 Date         DoY  2026 Date         DoY         Delta
+  ----------  --------------  -----  --------------  -----  ------------
+       1,000  Jan 09, 2025        9  Jan 05, 2026        5     4d faster
+       2,000  Jan 15, 2025       15  Jan 06, 2026        6     9d faster
+       3,000  Jan 21, 2025       21  Jan 08, 2026        8    13d faster
+       4,000  Jan 24, 2025       24  Jan 12, 2026       12    12d faster
+       5,000  Jan 31, 2025       31  Jan 14, 2026       14    17d faster
+       6,000  Feb 06, 2025       37  Jan 20, 2026       20    17d faster
+       7,000  Feb 13, 2025       44  Jan 22, 2026       22    22d faster
+       8,000  Feb 19, 2025       50  Jan 27, 2026       27    23d faster
+       9,000  Feb 25, 2025       56  Jan 30, 2026       30    26d faster
+      10,000  Mar 04, 2025       63  Feb 04, 2026       35    28d faster
+      11,000  Mar 07, 2025       66  Feb 10, 2026       41    25d faster
+      12,000  Mar 14, 2025       73  Feb 12, 2026       43    30d faster
+      13,000  Mar 20, 2025       79  Feb 17, 2026       48    31d faster
+      14,000  Mar 26, 2025       85  Feb 19, 2026       50    35d faster
+      15,000  Apr 03, 2025       93  Feb 23, 2026       54    39d faster
+      16,000  Apr 09, 2025       99  Feb 26, 2026       57    42d faster
+      17,000  Apr 15, 2025      105  Mar 03, 2026       62    43d faster
+      18,000  Apr 22, 2025      112  Mar 09, 2026       68    44d faster
+      19,000  Apr 28, 2025      118  Mar 12, 2026       71    47d faster
+      20,000  May 06, 2025      126  Mar 17, 2026       76    50d faster
+      21,000  May 12, 2025      132  Mar 23, 2026       82    50d faster
+      22,000  May 19, 2025      139  Mar 27, 2026       86    53d faster
+      23,000  May 26, 2025      146  (not yet)           —              
+
+  Total 2025 orders: 77,504
+  Total 2026 orders (to date): 22,800
+==========================================================================================
+
+Success! Process complete.
