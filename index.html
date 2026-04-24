@@ -345,19 +345,14 @@
                             </div>
 
                             <!-- International Callout Metrics -->
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                                 <div class="bg-slate-900/60 rounded-xl p-4 border border-cyan-900/40">
-                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">2025 Intl Spend</p>
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">2025 Intl Carrier Spend</p>
                                     <p class="text-2xl font-bold text-cyan-300" id="metric-intl-spend-25">—</p>
-                                    <p class="text-xs text-slate-500 mt-1">vs <span id="metric-intl-spend-24" class="text-slate-400">—</span> in 2024</p>
+                                    <p class="text-xs text-slate-500 mt-1">carrier cost across all cross-border shipments</p>
                                 </div>
                                 <div class="bg-slate-900/60 rounded-xl p-4 border border-cyan-900/40">
-                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Avg Cost / Intl Shipment</p>
-                                    <p class="text-2xl font-bold text-cyan-300" id="metric-intl-avg-25">—</p>
-                                    <p class="text-xs text-slate-500 mt-1">vs <span id="metric-intl-avg-24" class="text-slate-400">—</span> in 2024</p>
-                                </div>
-                                <div class="bg-slate-900/60 rounded-xl p-4 border border-cyan-900/40">
-                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Intl Volume YoY</p>
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Intl Orders YoY</p>
                                     <p class="text-2xl font-bold text-cyan-300" id="metric-intl-vol-25">—</p>
                                     <p class="text-xs text-slate-500 mt-1">vs <span id="metric-intl-vol-24" class="text-slate-400">—</span> in 2024</p>
                                 </div>
@@ -374,25 +369,25 @@
                                     </div>
                                     <div class="p-5 relative z-10 pointer-events-none">
                                         <div class="flex justify-between items-start mb-1">
-                                            <h3 class="text-base font-bold text-white">Chart B6: YoY International Shipment Volume</h3>
+                                            <h3 class="text-base font-bold text-white">Chart B6: YoY International Volume (Monthly)</h3>
                                             <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                         </div>
-                                        <p id="desc-B6" class="card-desc text-sm text-slate-400 mb-0">Year-over-year international shipment volume comparison, showing how cross-border order growth tracks alongside the overall business.</p>
+                                        <p id="desc-B6" class="card-desc text-sm text-slate-400 mb-0">Monthly international shipment volume — 2024 vs 2025. Shows cross-border order seasonality and overall growth trajectory.</p>
                                     </div>
                                 </div>
                                 <!-- Chart B7 -->
                                 <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-cyan-500 transition duration-300 shadow-lg relative group">
-                                    <a href="visualizations/yoy_intl_avg_cost_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                                    <a href="visualizations/yoy_intl_top_countries_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                                     <div class="h-48 img-placeholder relative overflow-hidden">
-                                        <img src="visualizations/yoy_intl_avg_cost.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="YoY International Avg Cost">
-                                        <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Line Chart Data</div>
+                                        <img src="visualizations/yoy_intl_top_countries.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Top International Markets by Volume">
+                                        <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                                     </div>
                                     <div class="p-5 relative z-10 pointer-events-none">
                                         <div class="flex justify-between items-start mb-1">
-                                            <h3 class="text-base font-bold text-white">Chart B7: YoY International Avg Cost Per Shipment</h3>
+                                            <h3 class="text-base font-bold text-white">Chart B7: Top International Markets by Volume</h3>
                                             <svg class="w-5 h-5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                         </div>
-                                        <p id="desc-B7" class="card-desc text-sm text-slate-400 mb-0">Year-over-year average cost per international shipment. International rates carry surcharges and cross-border fees that make them structurally higher than equivalent domestic shipments.</p>
+                                        <p id="desc-B7" class="card-desc text-sm text-slate-400 mb-0">Top international markets by shipment volume. Shows which countries drive the most cross-border order flow.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1645,9 +1640,6 @@
                 if (data.international) {
                     const i = data.international;
                     document.getElementById('metric-intl-spend-25').textContent = formatCurrency(i.spend_2025);
-                    document.getElementById('metric-intl-spend-24').textContent = formatCurrency(i.spend_2024);
-                    document.getElementById('metric-intl-avg-25').textContent   = formatCurrencyPrecise(i.avg_cost_2025);
-                    document.getElementById('metric-intl-avg-24').textContent   = formatCurrencyPrecise(i.avg_cost_2024);
                     document.getElementById('metric-intl-vol-25').textContent   = formatInt(i.vol_2025);
                     document.getElementById('metric-intl-vol-24').textContent   = formatInt(i.vol_2024);
                 }
