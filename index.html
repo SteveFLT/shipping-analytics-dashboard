@@ -1426,7 +1426,7 @@
                                 Two structural changes went live in <span class="text-emerald-400 font-semibold">February 2026</span>: a <span class="text-emerald-400 font-semibold">multi-carrier diversification strategy</span> — expanding beyond UPS/USPS to include GLS and EasyPost-routed carriers — and <span class="text-emerald-400 font-semibold">WMS cartonization logic</span>, which automates box selection at pick time to minimize dimensional weight. These charts extend the existing 2024/2025 comparison with actual 2026 YTD results and break down performance month-by-month to surface the February inflection point.
                             </p>
                             <p>
-                                The <span class="text-slate-200 font-medium">three-year charts</span> show where 2026 sits relative to prior full years. The <span class="text-slate-200 font-medium">monthly 2026 charts</span> show January as the pre-change baseline and February/March as the post-change trajectory — confirming whether improvements are structural or a one-month effect.
+                                The <span class="text-slate-200 font-medium">three-year charts</span> show where 2026 YTD sits relative to prior full years. The <span class="text-slate-200 font-medium">monthly 2026 charts</span> show January as the pre-change baseline and the post-change trajectory through the current month. The <span class="text-slate-200 font-medium">Q1 head-to-head charts</span> compare Jan–Mar 2026 directly against Jan–Mar 2025 to isolate structural improvement from seasonal effects.
                             </p>
                         </div>
                     </div>
@@ -1458,7 +1458,7 @@
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
                                 <div class="flex justify-between items-start mb-1">
-                                    <h3 class="text-base font-bold text-white">Chart I2: 2026 Monthly Avg Cost (Jan / Feb / Mar)</h3>
+                                    <h3 class="text-base font-bold text-white">Chart I2: 2026 YTD Monthly Avg Cost</h3>
                                     <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </div>
                                 <p id="desc-I2" class="card-desc text-sm text-slate-400 mb-0">Month-by-month avg cost within 2026 — Jan is the pre-change baseline; Feb/Mar show the post-change trajectory.</p>
@@ -1490,7 +1490,7 @@
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
                                 <div class="flex justify-between items-start mb-1">
-                                    <h3 class="text-base font-bold text-white">Chart I4: 2026 Monthly Carrier Mix (Jan / Feb / Mar)</h3>
+                                    <h3 class="text-base font-bold text-white">Chart I4: 2026 YTD Monthly Carrier Mix</h3>
                                     <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </div>
                                 <p id="desc-I4" class="card-desc text-sm text-slate-400 mb-0">Carrier mix evolution within 2026 — new carriers enter in February and March, reducing UPS concentration and lowering the blended rate.</p>
@@ -1517,7 +1517,7 @@
                         <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
                             <a href="visualizations/2026_monthly_avg_weight_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
                             <div class="h-48 img-placeholder relative overflow-hidden">
-                                <img src="visualizations/2026_monthly_avg_weight.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Weight">
+                                <img src="visualizations/2026_monthly_avg_weight.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="2026 Monthly Avg Weight">
                                 <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
                             </div>
                             <div class="p-5 relative z-10 pointer-events-none">
@@ -1526,6 +1526,54 @@
                                     <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </div>
                                 <p id="desc-I6" class="card-desc text-sm text-slate-400 mb-0">Avg order weight per month in 2026 — a downward trend from January signals WMS cartonization is right-sizing boxes and reducing billable dimensional weight.</p>
+                            </div>
+                        </div>
+
+                        <!-- I7: Q1 Volume Comparison -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/q1_volume_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/q1_volume_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q1 Order Volume Comparison">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I7: Q1 Order Volume — 2025 vs 2026</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I7" class="card-desc text-sm text-slate-400 mb-0">Q1 order volume comparison — Jan, Feb, Mar side-by-side for 2025 and 2026. Shows demand growth on an apples-to-apples calendar basis.</p>
+                            </div>
+                        </div>
+
+                        <!-- I8: Q1 Avg Cost Comparison -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/q1_avg_cost_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/q1_avg_cost_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q1 Avg Cost Comparison">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I8: Q1 Avg Cost Per Order — 2025 vs 2026</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I8" class="card-desc text-sm text-slate-400 mb-0">Q1 avg cost per order, Jan–Mar 2025 vs 2026. A direct calendar comparison to quantify the cost impact of the February 2026 structural changes.</p>
+                            </div>
+                        </div>
+
+                        <!-- I9: Q1 Carrier Mix Comparison -->
+                        <div class="bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 hover:border-emerald-500 transition duration-300 shadow-lg relative group">
+                            <a href="visualizations/q1_carrier_mix_comparison_interactive.html" class="absolute inset-0 z-20" aria-label="Open Interactive View"><span class="sr-only">Open Interactive View</span></a>
+                            <div class="h-48 img-placeholder relative overflow-hidden">
+                                <img src="visualizations/q1_carrier_mix_comparison.png" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="absolute inset-0 w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-105" alt="Q1 Carrier Mix Comparison">
+                                <div style="display:none;" class="absolute inset-0 img-placeholder bg-pattern">Bar Chart Data</div>
+                            </div>
+                            <div class="p-5 relative z-10 pointer-events-none">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="text-base font-bold text-white">Chart I9: Q1 Carrier Mix — 2025 vs 2026</h3>
+                                    <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <p id="desc-I9" class="card-desc text-sm text-slate-400 mb-0">Carrier mix comparison for Q1 2025 vs Q1 2026. Isolating the same quarter confirms the carrier diversification shift is structural — not a seasonal pattern.</p>
                             </div>
                         </div>
 
