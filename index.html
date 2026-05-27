@@ -664,7 +664,7 @@
                             <h2 class="text-xl font-bold text-slate-200 tracking-tight">Executive Summary: Contract Analysis</h2>
                         </div>
                         <p class="text-sm text-slate-400 mb-8 max-w-3xl leading-relaxed">
-                            Rate and term data extracted from executed contracts on file. MasonHub and ShipFusion data is sourced directly from signed agreements (MSA/SOW and Rate Card/SLA respectively). Red Stag rates are modeled estimates — no contract is currently on file.
+                            Rate and term data extracted from contracts and proposals on file. MasonHub and ShipFusion data is sourced from signed agreements (MSA/SOW and Rate Card/SLA). Red Stag rates are sourced from the received proposal (rate card only — no SLA or agreement terms are on file).
                         </p>
 
                         <!-- ── Table 1: Rate & Fee Comparison ── -->
@@ -690,7 +690,8 @@
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$1.80</td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40">
                                             <span class="text-slate-300">$1.40</span>
-                                            <span class="block text-xs text-slate-500 italic">modeled est.</span>
+                                            <span class="block text-xs text-slate-500">next-day cutoff</span>
+                                            <span class="block text-xs text-slate-500">$1.60 same-day (3 PM)</span>
                                         </td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
                                             <span class="text-emerald-300 font-semibold">FREE</span>
@@ -702,10 +703,7 @@
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Additional Item Pick</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$0.30</td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40">
-                                            <span class="text-slate-300">$0.25</span>
-                                            <span class="block text-xs text-slate-500 italic">modeled est.</span>
-                                        </td>
+                                        <td class="px-4 py-3 text-center text-slate-300 border-l border-slate-700/40">$0.25</td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
                                             <span class="text-emerald-300 font-semibold">FREE</span>
                                             <span class="block text-xs text-emerald-500/70">waiver ~3 mo.</span>
@@ -716,10 +714,7 @@
                                     <tr class="bg-slate-800/40 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Pack Fee</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$0.60</td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40">
-                                            <span class="text-slate-300">$0.60</span>
-                                            <span class="block text-xs text-slate-500 italic">modeled est.</span>
-                                        </td>
+                                        <td class="px-4 py-3 text-center text-slate-300 border-l border-slate-700/40">$0.60</td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
                                             <span class="text-emerald-300 font-semibold">FREE</span>
                                             <span class="block text-xs text-emerald-500/70">waiver ~3 mo.</span>
@@ -730,10 +725,7 @@
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Pallet Receiving</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$15.00<span class="text-slate-500">/pallet</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40">
-                                            <span class="text-slate-300">$12.50<span class="text-slate-500">/pallet</span></span>
-                                            <span class="block text-xs text-slate-500 italic">modeled est.</span>
-                                        </td>
+                                        <td class="px-4 py-3 text-center text-slate-300 border-l border-slate-700/40">$12.50<span class="text-slate-500">/pallet</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
                                             <span class="text-emerald-300 font-semibold">$10.00</span><span class="text-emerald-500/70">/pallet</span>
                                         </td>
@@ -747,7 +739,7 @@
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$25.00<span class="text-slate-500">/pallet/mo</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40">
                                             <span class="text-slate-300">$0.35<span class="text-slate-500">/cu ft/mo</span></span>
-                                            <span class="block text-xs text-slate-500 italic">modeled est.</span>
+                                            <span class="block text-xs text-slate-500">days 1–180; +$0.05 to day 365; +$0.85 beyond</span>
                                         </td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$25.00<span class="text-slate-500">/pallet/mo</span></td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/30">$25.00<span class="text-slate-500">/pallet/mo</span></td>
@@ -770,8 +762,9 @@
                                     <tr class="bg-slate-800/40 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Platform / Tech Fee</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$500<span class="text-slate-500">/month</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40">
-                                            <span class="text-slate-500 italic text-xs">Not on file</span>
+                                        <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
+                                            <span class="text-emerald-300 font-semibold">—</span>
+                                            <span class="block text-xs text-emerald-500/70">$0 setup &amp; onboarding</span>
                                         </td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
                                             <span class="text-emerald-300 font-semibold">—</span>
@@ -977,7 +970,7 @@
                                 <div class="pl-1">
                                     <span class="inline-block text-xs font-bold text-slate-400 bg-slate-800/80 border border-slate-600/40 rounded px-2 py-0.5 mb-2">→ Note</span>
                                     <h4 class="text-sm font-semibold text-slate-200 mb-1">Monthly Minimums: Downside Exposure</h4>
-                                    <p class="text-xs text-slate-400 leading-relaxed">MasonHub's <strong class="text-slate-300">$10,000/month minimum</strong> is 2× ShipFusion's $5,000. At current modeled spend, both floors are comfortably exceeded — but in a slow month, MasonHub's minimum represents a harder commitment. Red Stag's minimum is unknown.</p>
+                                    <p class="text-xs text-slate-400 leading-relaxed">MasonHub's <strong class="text-slate-300">$10,000/month minimum</strong> is 2× ShipFusion's $5,000. At current modeled spend, both floors are comfortably exceeded — but in a slow month, MasonHub's minimum represents a harder commitment. Red Stag's proposal states no monthly minimum.</p>
                                 </div>
                             </div>
 
