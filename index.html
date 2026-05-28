@@ -664,7 +664,7 @@
                             <h2 class="text-xl font-bold text-slate-200 tracking-tight">Executive Summary: Contract Analysis</h2>
                         </div>
                         <p class="text-sm text-slate-400 mb-8 max-w-3xl leading-relaxed">
-                            Rate and term data extracted from contracts and proposals on file. MasonHub and ShipFusion data is sourced from signed agreements (MSA/SOW and Rate Card/SLA). Red Stag rates are sourced from the received proposal (rate card only — no SLA or agreement terms are on file).
+                            Rate and term data extracted from executed contracts on file. MasonHub and ShipFusion data is sourced from signed agreements (MSA/SOW and Rate Card/SLA). Red Stag rates and terms are sourced from the executed Client Services Agreement (Exhibit B rate schedule + contract terms).
                         </p>
 
                         <!-- ── Table 1: Rate & Fee Comparison ── -->
@@ -778,7 +778,8 @@
                                         <td class="px-4 py-3 text-slate-300 font-medium">Annual Rate Increase</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">5% <span class="text-xs text-slate-400">+ pass-throughs</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40">
-                                            <span class="text-slate-500 italic text-xs">Not on file</span>
+                                            <span class="text-slate-300">Customary annual increase</span>
+                                            <span class="block text-xs text-slate-500">no fixed % in contract</span>
                                         </td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
                                             <span class="text-emerald-300 font-semibold">4% flat</span>
@@ -792,7 +793,8 @@
                                         <td class="px-4 py-3 text-slate-300 font-medium">Returns — Base Fee</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$3.00<span class="text-slate-500">/return</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40">
-                                            <span class="text-slate-500 italic text-xs">Not on file</span>
+                                            <span class="text-amber-400 font-semibold">$6.00</span><span class="text-slate-500">/return</span>
+                                            <span class="block text-xs text-slate-500">highest of three</span>
                                         </td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
                                             <span class="text-emerald-300 font-semibold">$2.50</span><span class="text-emerald-500/70">/return</span>
@@ -804,11 +806,9 @@
                                     <!-- Row: Project/Kitting Labor -->
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Project / Kitting Labor</td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$40–$55<span class="text-slate-500">/hr</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30">
-                                            <span class="text-emerald-300 font-semibold">$40–$55<span class="text-emerald-500/70">/hr</span></span>
-                                        </td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40">
-                                            <span class="text-slate-500 italic text-xs">Not on file</span>
+                                            <span class="text-emerald-300 font-semibold">$40<span class="text-emerald-500/70">/hr flat</span></span>
                                         </td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">$45<span class="text-slate-500">/hr</span></td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/30">$45<span class="text-slate-500">/hr</span></td>
@@ -836,61 +836,64 @@
                                     <tr class="bg-slate-800/40 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Initial Commitment</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">2 years</td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">2 years</td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">90-day trial</span></td>
                                     </tr>
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Auto-Renewal</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">2-year terms</td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">1-year terms</span></td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">9 mo → then annual</td>
                                     </tr>
                                     <tr class="bg-slate-800/40 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Termination Notice</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">90 days <span class="text-xs text-slate-400">(after Yr 2)</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">90 days <span class="text-xs text-slate-400">(before term end)</span></td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">90 days</td>
                                     </tr>
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Payment Terms</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Net-0 <span class="text-xs text-slate-400">(ACH on receipt)</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
-                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Net-7</td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Net-10 <span class="text-xs text-slate-400">(ACH debit)</span></td>
+                                        <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">Net-7</span></td>
                                     </tr>
                                     <tr class="bg-slate-800/40 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Late Payment Penalty</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">1.5%/month <span class="text-xs text-slate-400">+ suspension</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center border-l border-slate-700/40">
+                                            <span class="text-amber-400 font-semibold">2.0%/month</span>
+                                            <span class="block text-xs text-slate-500">or $250 min + suspension</span>
+                                        </td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Service suspension</td>
                                     </tr>
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Liability Cap</td>
-                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">12-month fees paid</td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">12-month fees paid</span></td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">6-month fulfillment charges <span class="text-xs text-slate-500">(excl. storage &amp; shipping)</span></td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Lesser of cost or FMV</td>
                                     </tr>
                                     <tr class="bg-slate-800/40 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Annual Escalation</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">5% <span class="text-xs text-slate-400">+ carrier pass-throughs + labor adj.</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Customary annual increase <span class="text-xs text-slate-500">(no fixed %; 30-day notice)</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">4% flat</span></td>
                                     </tr>
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">SLA — DTC Shipping</td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">95% same-day</span> <span class="text-xs text-emerald-500/80">(by noon)</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">95% same-day</span> <span class="text-xs text-emerald-500/80">(by noon; contractual KPI)</span></td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Same-day <span class="text-xs text-slate-400">(by 3 PM ET) or next-day (by 12 AM ET)</span><span class="block text-xs text-slate-500">$50/order penalty if missed</span></td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Same-day <span class="text-xs text-slate-400">(if before 8 AM)</span></td>
                                     </tr>
                                     <tr class="bg-slate-800/40 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">SLA — Inventory Accuracy</td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40 bg-emerald-950/30"><span class="text-emerald-300 font-semibold">98.0%</span> <span class="text-xs text-emerald-500/80">net (yearly)</span></td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-400 text-xs">Not specified</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-400 text-xs">Not specified</span></td>
                                     </tr>
                                     <tr class="bg-slate-800/20 hover:bg-slate-800/70 transition-colors">
                                         <td class="px-4 py-3 text-slate-300 font-medium">Governing Law</td>
                                         <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">California</td>
-                                        <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-500 italic text-xs">Not on file</span></td>
+                                        <td class="px-4 py-3 text-center text-slate-200 border-l border-slate-700/40">Tennessee <span class="text-xs text-slate-400">(Knoxville courts)</span></td>
                                         <td class="px-4 py-3 text-center border-l border-slate-700/40"><span class="text-slate-400 text-xs">Not specified</span></td>
                                     </tr>
                                 </tbody>
@@ -904,13 +907,13 @@
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-                            <!-- Card 1: MasonHub Lock-In Risk -->
+                            <!-- Card 1: MasonHub + Red Stag Lock-In Risk -->
                             <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50 relative overflow-hidden">
                                 <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl"></div>
                                 <div class="pl-1">
                                     <span class="inline-block text-xs font-bold text-amber-400 bg-amber-950/50 border border-amber-700/40 rounded px-2 py-0.5 mb-2">⚠ Commitment Risk</span>
-                                    <h4 class="text-sm font-semibold text-slate-200 mb-1">MasonHub: 2-Year Lock-In</h4>
-                                    <p class="text-xs text-slate-400 leading-relaxed">MasonHub requires a <strong class="text-slate-300">2-year initial commitment</strong> with 90 days' notice to exit after Year 2 — and auto-renews as another 2-year term. Highest contractual lock-in of all three proposals.</p>
+                                    <h4 class="text-sm font-semibold text-slate-200 mb-1">MasonHub &amp; Red Stag: 2-Year Lock-In</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Both MasonHub and Red Stag require a <strong class="text-slate-300">2-year initial commitment</strong> with 90 days' notice to exit. MasonHub auto-renews as additional 2-year terms; Red Stag renews in 1-year terms. ShipFusion is the only provider offering a short-commitment entry point.</p>
                                 </div>
                             </div>
 
@@ -971,6 +974,26 @@
                                     <span class="inline-block text-xs font-bold text-slate-400 bg-slate-800/80 border border-slate-600/40 rounded px-2 py-0.5 mb-2">→ Note</span>
                                     <h4 class="text-sm font-semibold text-slate-200 mb-1">Monthly Minimums: Downside Exposure</h4>
                                     <p class="text-xs text-slate-400 leading-relaxed">MasonHub's <strong class="text-slate-300">$10,000/month minimum</strong> is 2× ShipFusion's $5,000. At current modeled spend, both floors are comfortably exceeded — but in a slow month, MasonHub's minimum represents a harder commitment. Red Stag's proposal states no monthly minimum.</p>
+                                </div>
+                            </div>
+
+                            <!-- Card 8: Red Stag Return Processing Cost -->
+                            <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50 relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-xl"></div>
+                                <div class="pl-1">
+                                    <span class="inline-block text-xs font-bold text-amber-400 bg-amber-950/50 border border-amber-700/40 rounded px-2 py-0.5 mb-2">⚠ Cost Disparity</span>
+                                    <h4 class="text-sm font-semibold text-slate-200 mb-1">Red Stag: $6.00/Return Processing</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Red Stag's return processing fee is <strong class="text-slate-300">$6.00/return</strong> — 2× MasonHub ($3.00) and 2.4× ShipFusion ($2.50). At meaningful return rates, this compounds quickly. Red Stag's returns process is also governed entirely by their SOPs at their sole discretion.</p>
+                                </div>
+                            </div>
+
+                            <!-- Card 9: Red Stag Liability Cap -->
+                            <div class="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50 relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500 rounded-l-xl"></div>
+                                <div class="pl-1">
+                                    <span class="inline-block text-xs font-bold text-indigo-400 bg-indigo-950/50 border border-indigo-700/40 rounded px-2 py-0.5 mb-2">↔ Comparison</span>
+                                    <h4 class="text-sm font-semibold text-slate-200 mb-1">Liability Cap: MasonHub Leads</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">MasonHub caps liability at <strong class="text-slate-300">12 months of fees paid</strong>. Red Stag caps at only <strong class="text-slate-300">6 months of fulfillment charges</strong> — excluding storage and shipping costs entirely. Red Stag also caps total penalty claims at $30,000 over any 6-month period regardless of order volume.</p>
                                 </div>
                             </div>
 
