@@ -2472,6 +2472,7 @@
       const [pallets, setPallets] = useState(100);
       const [returnRate, setReturnRate] = useState(10);
       const [simZone, setSimZone] = useState(5);
+      const [tableWeight, setTableWeight] = useState(8);  // independent weight for the rate table
       const [chartZone, setChartZone] = useState(8);
 
       // Live costs — reactive to all simulator sliders
@@ -2717,9 +2718,17 @@
               </div>
 
               <div style={{ background: "#fff", borderRadius: 14, padding: 22, border: "1px solid #e5e7eb", marginBottom: 20 }}>
-                <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 4px", color: "#111" }}>Rate Table @ {avgWeight} lbs (all zones)</h3>
-                <p style={{ fontSize: 11, color: "#888", margin: "0 0 14px" }}>Lowest rate per zone highlighted. Adjust avg weight in Cost Simulator.</p>
-                <ZoneRateTable weight={avgWeight} />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, flexWrap: "wrap", gap: 10 }}>
+                  <h3 style={{ fontSize: 14, fontWeight: 800, margin: 0, color: "#111" }}>Rate Table @ {tableWeight} lbs (all zones)</h3>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: "#888" }}>Weight:</span>
+                    <input type="range" min={1} max={25} step={1} value={tableWeight} onChange={e => setTableWeight(+e.target.value)}
+                      style={{ width: 120, accentColor: "#1B4965" }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#1B4965", minWidth: 40 }}>{tableWeight} lbs</span>
+                  </div>
+                </div>
+                <p style={{ fontSize: 11, color: "#888", margin: "0 0 14px" }}>Lowest rate per zone highlighted.</p>
+                <ZoneRateTable weight={tableWeight} />
               </div>
 
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
