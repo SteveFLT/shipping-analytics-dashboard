@@ -2466,6 +2466,157 @@
       );
     }
 
+    // ── Cost breakdown chart & table ─────────────────────────────────────────
+    const COST_SEGMENTS = [
+      { key: "shipping",    label: "Shipping",          color: "#3B82F6" },
+      { key: "fulfillTotal",label: "Fulfillment",        color: "#7C3AED" },
+      { key: "returns",     label: "Returns",            color: "#DC2626" },
+      { key: "storage",     label: "Storage",            color: "#D97706" },
+      { key: "serial",      label: "Serial Scan",        color: "#059669" },
+      { key: "packaging",   label: "Packaging",          color: "#0891B2" },
+      { key: "insert",      label: "Inserts",            color: "#DB2777" },
+      { key: "techFee",     label: "Tech Fee",           color: "#EA580C" },
+      { key: "receiving",   label: "Receiving",          color: "#64748B" },
+    ];
+
+    function StackedCostChart({ costs }) {
+      const maxTotal = Math.max(...costs.map(c => c.monthlyTotal));
+      const W = 560, padL = 78, padR = 74, barH = 36, gap = 14;
+      const plotW = W - padL - padR;
+      const H = costs.length * (barH + gap) + 20;
+
+      return (
+        <div>
+          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
+            {costs.map((c, ci) => {
+              const y = 10 + ci * (barH + gap);
+              let cumX = padL;
+              const rects = COST_SEGMENTS.map(seg => {
+                const segW = (c[seg.key] / maxTotal) * plotW;
+                const x0 = cumX;
+                cumX += segW;
+                if (segW < 1) return null;
+                return { seg, x0, segW };
+              }).filter(Boolean);
+              const barEndX = cumX;
+              return (
+                <g key={c.vendor}>
+                  <text x={padL - 8} y={y + barH / 2 + 4} textAnchor="end"
+                    fontSize={11} fontWeight="700" fill={VENDOR_COLORS[c.vendor]}>
+                    {c.vendor.split(" ")[0]}
+                  </text>
+                  {/* track background */}
+                  <rect x={padL} y={y} width={plotW} height={barH} rx={5} fill="#f1f5f9" />
+                  {rects.map(({ seg, x0, segW }, i) => (
+                    <rect key={seg.key} x={x0} y={y} width={segW} height={barH}
+                      fill={seg.color}
+                      rx={i === 0 ? 5 : 0} ry={i === 0 ? 5 : 0}
+                    />
+                  ))}
+                  <text x={barEndX + 8} y={y + barH / 2 + 4}
+                    fontSize={11} fontWeight="800" fill="#111">
+                    {fmtK(c.monthlyTotal)}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+          {/* Legend */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 14px", marginTop: 10, paddingTop: 10, borderTop: "1px solid #f1f5f9" }}>
+            {COST_SEGMENTS.map(s => (
+              <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: s.color, flexShrink: 0 }} />
+                <span style={{ fontSize: 10, color: "#666", fontWeight: 500 }}>{s.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function CostTable({ costs, simZone, avgWeight }) {
+      const rows = [
+        { label: "Fulfillment (pick+pack)", key: "fulfillTotal" },
+        { label: "Shipping",                key: "shipping" },
+        { label: "Storage",                 key: "storage" },
+        { label: "Returns Processing",      key: "returns" },
+        { label: "Serial Scan",             key: "serial",    note: "MH waived" },
+        { label: "Packaging Materials",     key: "packaging", note: "MH/RS: client-supplied" },
+        { label: "Insert Fees",             key: "insert" },
+        { label: "Platform / Tech Fee",     key: "techFee" },
+        { label: "Receiving",               key: "receiving" },
+      ];
+
+      const lowestTotal = Math.min(...costs.map(c => c.monthlyTotal));
+
+      return (
+        <div style={{ overflowX: "auto", marginTop: 20 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
+                <th style={{ textAlign: "left", padding: "8px 10px", fontWeight: 700, color: "#555" }}>Category</th>
+                {costs.map(c => (
+                  <th key={c.vendor} style={{ textAlign: "right", padding: "8px 10px", fontWeight: 800, color: VENDOR_COLORS[c.vendor], minWidth: 110 }}>
+                    {c.vendor}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, ri) => {
+                const vals = costs.map(c => c[row.key]);
+                const positiveVals = vals.filter(v => v > 0);
+                const minVal = positiveVals.length ? Math.min(...positiveVals) : null;
+                return (
+                  <tr key={row.key} style={{ borderBottom: "1px solid #f3f4f6", background: ri % 2 === 0 ? "#FAFAF8" : "#fff" }}>
+                    <td style={{ padding: "8px 10px", color: "#374151", fontWeight: 500 }}>
+                      {row.label}
+                      {row.note && <span style={{ fontSize: 10, color: "#aaa", fontWeight: 400, marginLeft: 5 }}>({row.note})</span>}
+                    </td>
+                    {costs.map((c, ci) => {
+                      const v = c[row.key];
+                      const isBest = v === minVal && v > 0;
+                      return (
+                        <td key={ci} style={{
+                          textAlign: "right", padding: "8px 10px",
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontWeight: isBest ? 800 : 400,
+                          color: isBest ? VENDOR_COLORS[c.vendor] : (v === 0 ? "#c8d0da" : "#555"),
+                          background: isBest ? VENDOR_ACCENT[c.vendor] : "transparent",
+                        }}>
+                          {v === 0 ? "—" : fmt(v)}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr style={{ borderTop: "2px solid #1e293b", background: "#1e293b" }}>
+                <td style={{ padding: "10px 10px", fontWeight: 800, fontSize: 13, color: "#fff" }}>
+                  Monthly Total <span style={{ fontWeight: 400, fontSize: 10, color: "#94a3b8" }}>Zone {simZone} · {avgWeight} lbs</span>
+                </td>
+                {costs.map((c, ci) => {
+                  const isLow = c.monthlyTotal === lowestTotal;
+                  return (
+                    <td key={ci} style={{
+                      textAlign: "right", padding: "10px 10px",
+                      fontFamily: "'JetBrains Mono', monospace", fontWeight: 900, fontSize: 15,
+                      color: isLow ? "#4ade80" : "#e2e8f0",
+                    }}>
+                      {fmtK(c.monthlyTotal)}
+                      {isLow && <span style={{ fontSize: 10, marginLeft: 4 }}>★</span>}
+                    </td>
+                  );
+                })}
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      );
+    }
+
     function ComparisonApp() {
       const [tab, setTab] = useState("overview");
       const [orders, setOrders] = useState(7500);
@@ -2653,26 +2804,9 @@
                   </div>
 
                   <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid #e5e7eb" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                      <h3 style={{ fontSize: 14, fontWeight: 800, margin: 0, color: "#111" }}>Cost Breakdown</h3>
-                      <div style={{ display: "flex", gap: 12 }}>
-                        {VENDORS.map(v => (
-                          <div key={v} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                            <div style={{ width: 10, height: 10, borderRadius: 3, background: VENDOR_COLORS[v] }} />
-                            <span style={{ fontSize: 10, fontWeight: 600, color: "#666" }}>{v.split(" ")[0]}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <CostBar label="Fulfillment (pick+pack)" values={costs.map(c => c.fulfillTotal)}  highlight />
-                    <CostBar label="Shipping"                values={costs.map(c => c.shipping)}      highlight />
-                    <CostBar label="Storage"                 values={costs.map(c => c.storage)}       highlight />
-                    <CostBar label="Returns Processing"      values={costs.map(c => c.returns)}       highlight />
-                    <CostBar label="Serial Scan (avg 1/order, MH waived)" values={costs.map(c => c.serial)} highlight />
-                    <CostBar label="Packaging Materials (MH/RS client-supplied, SF $0.15)" values={costs.map(c => c.packaging)} highlight />
-                    <CostBar label="Insert Fees"             values={costs.map(c => c.insert)}        highlight />
-                    <CostBar label="Platform / Tech Fee"     values={costs.map(c => c.techFee)}       highlight />
-                    <CostBar label="Receiving"               values={costs.map(c => c.receiving)}     highlight />
+                    <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 16px", color: "#111" }}>Cost Breakdown</h3>
+                    <StackedCostChart costs={costs} />
+                    <CostTable costs={costs} simZone={simZone} avgWeight={avgWeight} />
 
                     <div style={{ borderTop: "2px solid #e5e7eb", marginTop: 12, paddingTop: 12 }}>
                       <div style={{ fontSize: 11, fontWeight: 700, color: "#111", marginBottom: 6 }}>Per-Order Fulfillment Cost (excl. shipping)</div>
