@@ -2183,7 +2183,7 @@
       liabilityCap: ["12-mo fees paid", "6-mo fulfillment", "Lesser cost/FMV"],
       annualEsc: ["5%+pass-thru", "Customary", "4% flat"],
       slaDTC: ["95% same-day (noon)", "Same-day (3PM ET) $50 penalty", "Same-day (8AM)"],
-      slaInventory: ["99%", "100%", "100%"],
+      slaInventory: ["98.0% net yearly (contractual)", "Not specified", "Not specified"],
     };
 
     const RATE_WEIGHTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25];
@@ -2236,6 +2236,45 @@
       }
       return rates[0];
     };
+
+    // ── Pure cost engine (called both for baseline scoring and live simulator) ──
+    function computeCosts(orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone) {
+      return VENDORS.map((v, vi) => {
+        const pick         = SERVICE_COSTS.firstPick[vi] + (itemsPerOrder - 1) * SERVICE_COSTS.addlPick[vi];
+        const pack         = SERVICE_COSTS.packFee[vi] + (vi === 1 && avgWeight > 4 ? 0.20 : 0); // RS heavy surcharge
+        const fulfillPerOrder = pick + pack;
+        const fulfillTotal = fulfillPerOrder * orders;
+        const serial       = SERVICE_COSTS.serialScan[vi] * itemsPerOrder * orders;
+        const insert       = SERVICE_COSTS.insertFee[vi] * orders;
+        const returns      = orders * (returnRate / 100) * SERVICE_COSTS.returnsFee[vi];
+        const storage      = vi === 1 ? pallets * 48 * 0.35 : pallets * 25;
+        const techFee      = SERVICE_COSTS.techFee[vi];
+        const shipRate     = interpRate(v, avgWeight, simZone);
+        const shipping     = shipRate * orders;
+        const receiving    = SERVICE_COSTS.palletReceiving[vi] * 6;
+        const monthlyTotal = fulfillTotal + serial + insert + returns + storage + techFee + shipping + receiving;
+        const minApplies   = SERVICE_COSTS.monthlyMin[vi] > 0 && (fulfillTotal + serial + insert + returns) < SERVICE_COSTS.monthlyMin[vi];
+        return { vendor: v, fulfillPerOrder, fulfillTotal, serial, insert, returns, storage, techFee, shipping, shipRate, receiving, monthlyTotal, minApplies, monthlyMin: SERVICE_COSTS.monthlyMin[vi] };
+      });
+    }
+
+    // ── Stable baseline scores — computed ONCE at module load, never change ──
+    // Baseline: 7,500 orders/mo · 4 items · 8 lb avg · 100 pallets · 10% returns · Zone 5
+    // Scores are fixed so Overview never shifts when Cost Simulator sliders change.
+    const BASELINE_COSTS = computeCosts(7500, 4, 8, 100, 10, 5);
+    const _bTotals   = BASELINE_COSTS.map(c => c.monthlyTotal);
+    const _bMin      = Math.min(..._bTotals), _bMax = Math.max(..._bTotals);
+    const _costScores = _bTotals.map(t => _bMax === _bMin ? 33 : 35 * (1 - (t - _bMin) / (_bMax - _bMin)));
+    const VENDOR_SCORES = VENDORS.map((v, i) => ({
+      vendor:  v,
+      total:   Math.round(_costScores[i] + [12,14,20][i] + [15,18,13][i] + [8,4,9][i] + [7,9,8][i]),
+      cost:    Math.round(_costScores[i]),
+      flex:    [12, 14, 20][i],
+      sla:     [15, 18, 13][i],
+      returns: [8,  4,  9][i],
+      tech:    [7,  9,  8][i],
+    }));
+    const VENDOR_SCORES_SORTED = [...VENDOR_SCORES].sort((a, b) => b.total - a.total);
 
     function Badge({ children, color }) {
       return (
@@ -2435,44 +2474,17 @@
       const [simZone, setSimZone] = useState(5);
       const [chartZone, setChartZone] = useState(8);
 
-      const costs = useMemo(() => {
-        return VENDORS.map((v, vi) => {
-          const pick = SERVICE_COSTS.firstPick[vi] + (itemsPerOrder - 1) * SERVICE_COSTS.addlPick[vi];
-          const pack = SERVICE_COSTS.packFee[vi];
-          const fulfillPerOrder = pick + pack;
-          const fulfillTotal = fulfillPerOrder * orders;
-          const serial = SERVICE_COSTS.serialScan[vi] * itemsPerOrder * orders;
-          const insert = SERVICE_COSTS.insertFee[vi] * orders;
-          const returns = orders * (returnRate / 100) * SERVICE_COSTS.returnsFee[vi];
-          const storage = vi === 1 ? pallets * 48 * 0.35 : pallets * 25;
-          const techFee = SERVICE_COSTS.techFee[vi];
-          const shipRate = interpRate(v, avgWeight, simZone);
-          const shipping = shipRate * orders;
-          const receiving = SERVICE_COSTS.palletReceiving[vi] * 6;
-          const monthlyTotal = fulfillTotal + serial + insert + returns + storage + techFee + shipping + receiving;
-          const minApplies = SERVICE_COSTS.monthlyMin[vi] > 0 && (fulfillTotal + serial + insert + returns) < SERVICE_COSTS.monthlyMin[vi];
-          return { vendor: v, fulfillPerOrder, fulfillTotal, serial, insert, returns, storage, techFee, shipping, shipRate, receiving, monthlyTotal, minApplies, monthlyMin: SERVICE_COSTS.monthlyMin[vi] };
-        });
-      }, [orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone]);
+      // Live costs — reactive to all simulator sliders
+      const costs = useMemo(
+        () => computeCosts(orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone),
+        [orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone]
+      );
 
       const lowestTotal = Math.min(...costs.map(c => c.monthlyTotal));
 
-      const scores = useMemo(() => {
-        const totals = costs.map(c => c.monthlyTotal);
-        const minT = Math.min(...totals), maxT = Math.max(...totals);
-        const costScores = totals.map(t => maxT === minT ? 33 : 35 * (1 - (t - minT) / (maxT - minT)));
-        const flexScores = [12, 14, 20];
-        const slaScores = [15, 18, 13];
-        const returnScores = [8, 4, 9];
-        const techScores = [7, 9, 8];
-        return VENDORS.map((v, i) => ({
-          vendor: v,
-          total: Math.round(costScores[i] + flexScores[i] + slaScores[i] + returnScores[i] + techScores[i]),
-          cost: Math.round(costScores[i]), flex: flexScores[i], sla: slaScores[i], returns: returnScores[i], tech: techScores[i],
-        }));
-      }, [costs]);
-
-      const sorted = [...scores].sort((a, b) => b.total - a.total);
+      // Scores are stable module-level constants — never recalculate here
+      const scores = VENDOR_SCORES;
+      const sorted = VENDOR_SCORES_SORTED;
 
       const innerTabs = [
         { id: "overview",  label: "Overview" },
@@ -2556,7 +2568,10 @@
               </div>
 
               <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid #e5e7eb" }}>
-                <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 14px", color: "#111" }}>Score Breakdown</h3>
+                <div style={{ marginBottom: 14 }}>
+                  <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 4px", color: "#111" }}>Score Breakdown</h3>
+                  <p style={{ fontSize: 11, color: "#888", margin: 0 }}>Fixed baseline: 7,500 orders/mo · 4 items · 8 lb avg · Zone 5 · 10% returns. <em>Total Landed Cost</em> includes fulfillment, shipping, storage, returns &amp; fees — not shipping alone.</p>
+                </div>
                 <div style={{ overflowX: "auto" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
                     <thead>
@@ -2567,7 +2582,7 @@
                     </thead>
                     <tbody>
                       {[
-                        { label: "Cost Competitiveness", key: "cost",    max: 35 },
+                        { label: "Total Landed Cost",    key: "cost",    max: 35 },
                         { label: "Contract Flexibility",  key: "flex",    max: 20 },
                         { label: "SLA Strength",          key: "sla",     max: 18 },
                         { label: "Returns Handling",      key: "returns", max: 10 },
