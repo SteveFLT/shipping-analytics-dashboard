@@ -2746,6 +2746,74 @@
             </>}
 
             {tab === "contracts" && <>
+
+              {/* ── Fee Comparison Table ── */}
+              <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid #e5e7eb", overflowX: "auto", marginBottom: 20 }}>
+                <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 4px", color: "#111" }}>Fee Comparison</h3>
+                <p style={{ fontSize: 11, color: "#888", margin: "0 0 14px" }}>Lowest fee per row highlighted. Storage rates use different units and are not directly comparable.</p>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
+                      <th style={{ textAlign: "left", padding: "8px 8px", fontWeight: 700, color: "#555", minWidth: 160 }}>Fee</th>
+                      <th style={{ textAlign: "left", padding: "8px 8px", fontWeight: 700, color: "#555", minWidth: 80 }}>Unit</th>
+                      {VENDORS.map(v => (
+                        <th key={v} style={{ textAlign: "center", padding: "8px 8px", fontWeight: 800, color: VENDOR_COLORS[v], minWidth: 120 }}>{v}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { label: "First Pick Fee",        unit: "/order",   vals: SERVICE_COSTS.firstPick,     comparable: true },
+                      { label: "Additional Item Pick",   unit: "/item",    vals: SERVICE_COSTS.addlPick,      comparable: true },
+                      { label: "Pack Fee",               unit: "/order",   vals: SERVICE_COSTS.packFee,       comparable: true },
+                      { label: "Pallet Receiving",       unit: "/pallet",  vals: SERVICE_COSTS.palletReceiving, comparable: true },
+                      { label: "Storage",                unit: "",         vals: [null, null, null],
+                        display: ["$25.00 / pallet / mo", "$0.35 / cu ft / mo", "$25.00 / pallet / mo"], comparable: false },
+                      { label: "Monthly Minimum",        unit: "/month",   vals: SERVICE_COSTS.monthlyMin,    comparable: true, zeroLabel: "None" },
+                      { label: "Platform / Tech Fee",    unit: "/month",   vals: SERVICE_COSTS.techFee,       comparable: true, zeroLabel: "—" },
+                      { label: "Returns Processing",     unit: "/return",  vals: SERVICE_COSTS.returnsFee,    comparable: true },
+                      { label: "Serial Scan",            unit: "/unit",    vals: SERVICE_COSTS.serialScan,    comparable: true, zeroLabel: "Waived ✓" },
+                      { label: "Insert / Marketing",     unit: "/order",   vals: SERVICE_COSTS.insertFee,     comparable: true },
+                    ].map((row, ri) => {
+                      const comparableVals = row.comparable ? row.vals.filter(v => v > 0) : [];
+                      const minVal = row.comparable && comparableVals.length ? Math.min(...comparableVals) : null;
+                      // For monthly min, 0 = no minimum = best
+                      const effectiveMin = row.zeroLabel === "None" ? Math.min(...row.vals) : minVal;
+                      return (
+                        <tr key={row.label} style={{ borderBottom: "1px solid #f3f4f6", background: ri % 2 === 0 ? "#FAFAF8" : "#fff" }}>
+                          <td style={{ padding: "9px 8px", fontWeight: 600, color: "#374151" }}>{row.label}</td>
+                          <td style={{ padding: "9px 8px", color: "#999", fontSize: 11 }}>{row.unit}</td>
+                          {row.vals.map((v, vi) => {
+                            const displayVal = row.display
+                              ? row.display[vi]
+                              : v === 0 && row.zeroLabel
+                                ? row.zeroLabel
+                                : fmt(v);
+                            const isBest = row.comparable && (
+                              row.zeroLabel === "None" ? v === effectiveMin :
+                              row.zeroLabel ? v === 0 :
+                              v === minVal
+                            );
+                            return (
+                              <td key={vi} style={{
+                                textAlign: "center", padding: "9px 8px",
+                                fontWeight: isBest ? 800 : 500,
+                                color: isBest ? VENDOR_COLORS[VENDORS[vi]] : "#555",
+                                background: isBest ? VENDOR_ACCENT[VENDORS[vi]] : "transparent",
+                                borderRadius: 4,
+                              }}>
+                                {displayVal}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* ── Contract Terms Table ── */}
               <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid #e5e7eb", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
                   <thead>
