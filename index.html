@@ -2170,7 +2170,7 @@
       monthlyMin: [10000, 0, 5000],
       techFee: [500, 0, 0],
       returnsFee: [3, 6, 2.50],
-      serialScan: [0, 0.20, 0.10],
+      serialScan: [0, 0.20, 0.20],  // MH waived (negotiated); RS $0.20/unit; SF $0.10 inbound + $0.10 outbound
       insertFee: [0.15, 0.25, 0.14],
     };
 
@@ -2244,7 +2244,7 @@
         const pack         = SERVICE_COSTS.packFee[vi];
         const fulfillPerOrder = pick + pack;
         const fulfillTotal = fulfillPerOrder * orders;
-        const serial       = SERVICE_COSTS.serialScan[vi] * itemsPerOrder * orders;
+        const serial       = SERVICE_COSTS.serialScan[vi] * orders;  // avg 1 serialized SKU per order
         const insert       = SERVICE_COSTS.insertFee[vi] * orders;
         const returns      = orders * (returnRate / 100) * SERVICE_COSTS.returnsFee[vi];
         const storage      = vi === 1 ? pallets * 48 * 0.35 : pallets * 25;
@@ -2538,10 +2538,10 @@
                 {sorted.map((s, idx) => {
                   const hlMap = {
                     MasonHub: [
-                      { good: true,  text: "Strong carrier rates across zones" },
-                      { good: true,  text: "95% same-day SLA (contractual KPI)" },
-                      { good: false, text: "2-year lock-in commitment" },
-                      { good: false, text: "$500/mo platform fee + $10K min" },
+                      { good: true,  text: "Serial scan fee waived — negotiated to $0 (competitors charge $0.20/unit)" },
+                      { good: true,  text: "95% same-day SLA with contractual KPI & inventory accuracy" },
+                      { good: false, text: "2-year lock-in; auto-renews as 2-year terms" },
+                      { good: false, text: "$500/mo platform fee + $10K monthly minimum" },
                     ],
                     "Red Stag": [
                       { good: true,  text: "100% inventory accuracy SLA" },
@@ -2666,7 +2666,7 @@
                     <CostBar label="Shipping"                values={costs.map(c => c.shipping)}      highlight />
                     <CostBar label="Storage"                 values={costs.map(c => c.storage)}       highlight />
                     <CostBar label="Returns Processing"      values={costs.map(c => c.returns)}       highlight />
-                    <CostBar label="Serial Scan"             values={costs.map(c => c.serial)}        highlight />
+                    <CostBar label="Serial Scan (avg 1/order, MH waived)" values={costs.map(c => c.serial)} highlight />
                     <CostBar label="Insert Fees"             values={costs.map(c => c.insert)}        highlight />
                     <CostBar label="Platform / Tech Fee"     values={costs.map(c => c.techFee)}       highlight />
                     <CostBar label="Receiving"               values={costs.map(c => c.receiving)}     highlight />
