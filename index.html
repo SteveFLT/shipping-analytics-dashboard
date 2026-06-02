@@ -2172,6 +2172,7 @@
       returnsFee: [3, 6, 2.50],
       serialScan: [0, 0.20, 0.20],  // MH waived (negotiated); RS $0.20/unit; SF $0.10 inbound + $0.10 outbound
       insertFee: [0.15, 0.25, 0.14],
+      packagingMaterials: [0, 0, 0.15],  // MH & RS: client-supplied branded packaging ($0); SF: $0.15/unit (rate card)
     };
 
     const CONTRACT = {
@@ -2246,15 +2247,16 @@
         const fulfillTotal = fulfillPerOrder * orders;
         const serial       = SERVICE_COSTS.serialScan[vi] * orders;  // avg 1 serialized SKU per order
         const insert       = SERVICE_COSTS.insertFee[vi] * orders;
+        const packaging    = SERVICE_COSTS.packagingMaterials[vi] * orders;
         const returns      = orders * (returnRate / 100) * SERVICE_COSTS.returnsFee[vi];
         const storage      = vi === 1 ? pallets * 48 * 0.35 : pallets * 25;
         const techFee      = SERVICE_COSTS.techFee[vi];
         const shipRate     = interpRate(v, avgWeight, simZone);
         const shipping     = shipRate * orders;
         const receiving    = SERVICE_COSTS.palletReceiving[vi] * 6;
-        const monthlyTotal = fulfillTotal + serial + insert + returns + storage + techFee + shipping + receiving;
+        const monthlyTotal = fulfillTotal + serial + insert + packaging + returns + storage + techFee + shipping + receiving;
         const minApplies   = SERVICE_COSTS.monthlyMin[vi] > 0 && (fulfillTotal + serial + insert + returns) < SERVICE_COSTS.monthlyMin[vi];
-        return { vendor: v, fulfillPerOrder, fulfillTotal, serial, insert, returns, storage, techFee, shipping, shipRate, receiving, monthlyTotal, minApplies, monthlyMin: SERVICE_COSTS.monthlyMin[vi] };
+        return { vendor: v, fulfillPerOrder, fulfillTotal, serial, insert, packaging, returns, storage, techFee, shipping, shipRate, receiving, monthlyTotal, minApplies, monthlyMin: SERVICE_COSTS.monthlyMin[vi] };
       });
     }
 
@@ -2667,6 +2669,7 @@
                     <CostBar label="Storage"                 values={costs.map(c => c.storage)}       highlight />
                     <CostBar label="Returns Processing"      values={costs.map(c => c.returns)}       highlight />
                     <CostBar label="Serial Scan (avg 1/order, MH waived)" values={costs.map(c => c.serial)} highlight />
+                    <CostBar label="Packaging Materials (MH/RS client-supplied, SF $0.15)" values={costs.map(c => c.packaging)} highlight />
                     <CostBar label="Insert Fees"             values={costs.map(c => c.insert)}        highlight />
                     <CostBar label="Platform / Tech Fee"     values={costs.map(c => c.techFee)}       highlight />
                     <CostBar label="Receiving"               values={costs.map(c => c.receiving)}     highlight />
