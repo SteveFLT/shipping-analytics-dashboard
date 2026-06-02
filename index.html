@@ -9,6 +9,9 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <!-- IMPORT LOCAL METRICS DATA (Bypasses CORS restrictions) -->
     <script src="visualizations/dashboard_metrics.js"></script>
@@ -92,6 +95,7 @@
                     <button id="tabAnalytics" class="px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all">Current Analytics</button>
                     <button id="tabProposals" class="px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all">3PL Proposals</button>
                     <button id="tabQ1Results" class="px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all">2026 Performance</button>
+                    <button id="tabComparison" class="px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all">3PL Comparison</button>
                 </div>
 
             </div>
@@ -1653,6 +1657,12 @@
                 </section>
 
             </div>
+
+            <!-- ================= VIEW 4: 3PL COMPARISON ================= -->
+            <div id="viewComparison" class="flex flex-col w-full hidden animate-fade-in">
+                <div id="react-comparison-root"></div>
+            </div>
+
         </div>
 
         <!-- ============================================== -->
@@ -1841,19 +1851,22 @@
         let currentVizIndex = 0;
         let vizLinks = [];
         let currentTab = 'analytics';
-        const savedScrollPositions = { analytics: 0, proposals: 0, q1results: 0 };
+        const savedScrollPositions = { analytics: 0, proposals: 0, q1results: 0, comparison: 0 };
 
         // Tab Switching Logic
-        const tabAnalytics  = document.getElementById('tabAnalytics');
-        const tabProposals  = document.getElementById('tabProposals');
-        const tabQ1Results  = document.getElementById('tabQ1Results');
-        const viewAnalytics = document.getElementById('viewAnalytics');
-        const viewProposals = document.getElementById('viewProposals');
-        const viewQ1Results = document.getElementById('viewQ1Results');
+        const tabAnalytics   = document.getElementById('tabAnalytics');
+        const tabProposals   = document.getElementById('tabProposals');
+        const tabQ1Results   = document.getElementById('tabQ1Results');
+        const tabComparison  = document.getElementById('tabComparison');
+        const viewAnalytics  = document.getElementById('viewAnalytics');
+        const viewProposals  = document.getElementById('viewProposals');
+        const viewQ1Results  = document.getElementById('viewQ1Results');
+        const viewComparison = document.getElementById('viewComparison');
 
-        const TAB_ACTIVE   = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all';
-        const TAB_INACTIVE = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
-        const TAB_ACTIVE_GREEN = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md ring-1 ring-white/10 transition-all';
+        const TAB_ACTIVE        = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md ring-1 ring-white/10 transition-all';
+        const TAB_INACTIVE      = 'px-5 py-1.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 transition-all';
+        const TAB_ACTIVE_GREEN  = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md ring-1 ring-white/10 transition-all';
+        const TAB_ACTIVE_VIOLET = 'px-5 py-1.5 text-sm font-medium rounded-lg bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-md ring-1 ring-white/10 transition-all';
 
         function switchTab(viewName, pushHistory) {
             // If the detail viewer is open, close it first before switching tabs
@@ -1869,10 +1882,12 @@
             viewAnalytics.classList.add('hidden');
             viewProposals.classList.add('hidden');
             viewQ1Results.classList.add('hidden');
+            viewComparison.classList.add('hidden');
             // Reset all tabs
-            tabAnalytics.className = TAB_INACTIVE;
-            tabProposals.className = TAB_INACTIVE;
-            tabQ1Results.className = TAB_INACTIVE;
+            tabAnalytics.className  = TAB_INACTIVE;
+            tabProposals.className  = TAB_INACTIVE;
+            tabQ1Results.className  = TAB_INACTIVE;
+            tabComparison.className = TAB_INACTIVE;
 
             if (viewName === 'analytics') {
                 viewAnalytics.classList.remove('hidden');
@@ -1883,6 +1898,9 @@
             } else if (viewName === 'q1results') {
                 viewQ1Results.classList.remove('hidden');
                 tabQ1Results.className = TAB_ACTIVE_GREEN;
+            } else if (viewName === 'comparison') {
+                viewComparison.classList.remove('hidden');
+                tabComparison.className = TAB_ACTIVE_VIOLET;
             }
 
             currentTab = viewName;
@@ -1896,9 +1914,10 @@
             buildVizLinks();
         }
 
-        tabAnalytics.addEventListener('click', () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('analytics'); window.scrollTo(0, 0); });
-        tabProposals.addEventListener('click', () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('proposals'); window.scrollTo(0, 0); });
-        tabQ1Results.addEventListener('click', () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('q1results'); window.scrollTo(0, 0); });
+        tabAnalytics.addEventListener('click',  () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('analytics');   window.scrollTo(0, 0); });
+        tabProposals.addEventListener('click',  () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('proposals');   window.scrollTo(0, 0); });
+        tabQ1Results.addEventListener('click',  () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('q1results');  window.scrollTo(0, 0); });
+        tabComparison.addEventListener('click', () => { savedScrollPositions[currentTab] = window.scrollY; switchTab('comparison'); window.scrollTo(0, 0); });
 
         // Build vizLinks from whichever view is currently visible.
         // Called once on load and again on every tab switch.
@@ -2132,5 +2151,624 @@
         }
 
     </script>
+
+    <!-- ============================================================ -->
+    <!-- 3PL COMPARISON TOOL — React component (transpiled by Babel)  -->
+    <!-- ============================================================ -->
+    <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const VENDORS = ["MasonHub", "Red Stag", "ShipFusion"];
+    const VENDOR_COLORS = { MasonHub: "#E85D26", "Red Stag": "#2D6A4F", ShipFusion: "#1B4965" };
+    const VENDOR_ACCENT = { MasonHub: "#FFF0EB", "Red Stag": "#E8F5EE", ShipFusion: "#E3EDF3" };
+
+    const SERVICE_COSTS = {
+      firstPick: [1.80, 1.60, 1.99],
+      addlPick: [0.30, 0.25, 0.41],
+      packFee: [0.60, 0.60, 1.20],
+      palletReceiving: [15, 12.50, 10],
+      monthlyMin: [10000, 0, 5000],
+      techFee: [500, 0, 0],
+      returnsFee: [3, 6, 2.50],
+      serialScan: [0, 0.20, 0.10],
+      insertFee: [0.15, 0.25, 0.14],
+    };
+
+    const CONTRACT = {
+      commitment: ["2 years", "2 years", "90-day trial"],
+      autoRenew: ["2-year terms", "1-year terms", "9 mo → annual"],
+      termNotice: ["90 days (after Yr 2)", "90 days (before end)", "90 days"],
+      payment: ["Net-0 (ACH)", "Net-10 (ACH debit)", "Net-7"],
+      latePenalty: ["1.5%/mo + suspend", "2%/mo or $250 min", "Service suspend"],
+      liabilityCap: ["12-mo fees paid", "6-mo fulfillment", "Lesser cost/FMV"],
+      annualEsc: ["5%+pass-thru", "Customary", "4% flat"],
+      slaDTC: ["95% same-day (noon)", "Same-day (3PM ET) $50 penalty", "Same-day (8AM)"],
+      slaInventory: ["99%", "100%", "100%"],
+    };
+
+    const RATE_WEIGHTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25];
+
+    const MASON_RATES = {
+      2: [5.63,6.05,6.57,6.87,7.36,9.01,9.15,9.26,9.26,9.31,9.31,9.39,9.48],
+      3: [5.71,6.24,6.77,7.21,7.49,9.11,9.15,9.58,9.58,9.62,9.96,9.71,10.56],
+      4: [5.80,6.47,7.12,7.55,7.58,9.11,9.46,9.58,9.58,9.96,9.96,10.07,11.27],
+      5: [6.07,6.75,7.31,7.89,8.39,9.42,9.46,9.57,9.91,9.95,10.27,12.37,13.51],
+      6: [6.19,6.84,7.42,7.95,9.10,9.42,9.46,9.91,9.91,9.96,11.84,14.40,16.48],
+      7: [6.37,7.17,8.05,9.09,9.52,9.43,9.79,10.15,10.47,11.02,14.27,17.52,19.88],
+      8: [6.55,7.54,8.66,9.47,9.89,9.91,10.31,10.90,11.36,12.29,15.74,19.52,22.68],
+    };
+
+    const REDSTAG_RATES = {
+      2: [6.10,7.52,8.41,8.99,8.99,8.99,8.99,8.99,8.99,8.99,8.99,9.68,9.89],
+      3: [6.27,7.84,8.86,8.99,8.99,8.99,8.99,8.99,8.99,8.99,9.68,9.89,10.84],
+      4: [6.47,8.10,8.99,8.99,8.99,8.99,8.99,9.15,9.19,9.28,9.89,9.89,11.59],
+      5: [6.72,8.26,8.99,8.99,9.27,9.30,9.60,9.87,9.89,9.89,10.21,12.14,13.89],
+      6: [6.91,8.49,8.99,9.11,9.63,9.65,9.82,9.89,9.89,9.89,11.79,14.16,17.11],
+      7: [7.17,8.94,9.11,9.78,9.89,9.89,9.89,9.89,10.24,10.72,14.22,17.26,20.68],
+      8: [7.41,8.99,9.56,9.89,9.89,9.89,10.10,10.54,11.10,11.83,15.86,19.50,23.76],
+    };
+
+    const SHIPFUSION_RATES = {
+      2: [6.28,6.53,6.60,6.65,6.74,7.19,7.52,7.68,7.84,7.97,8.96,9.65,10.29],
+      3: [6.57,6.65,6.71,6.76,6.83,7.51,7.83,8.20,8.54,9.56,9.58,11.39,12.67],
+      4: [6.64,6.73,6.80,6.92,7.03,7.42,8.36,8.62,8.84,8.89,10.03,11.71,13.81],
+      5: [6.74,6.80,6.90,7.03,7.22,7.65,8.73,9.05,9.30,9.33,12.32,14.44,17.12],
+      6: [6.85,7.04,7.28,7.49,7.83,8.43,9.16,9.55,9.76,9.81,13.75,16.54,19.41],
+      7: [7.13,7.56,7.75,7.86,8.06,8.89,9.39,9.78,10.26,10.29,14.53,17.41,20.39],
+      8: [7.58,8.22,8.54,8.71,8.87,9.30,10.42,10.63,10.75,10.81,15.94,19.00,22.22],
+    };
+
+    const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES };
+    const ZONES = [2, 3, 4, 5, 6, 7, 8];
+
+    const fmt  = (n) => (typeof n === "number" ? "$" + n.toFixed(2) : n);
+    const fmtK = (n) => (n >= 1000 ? "$" + (n / 1000).toFixed(1) + "k" : "$" + n.toFixed(0));
+
+    const interpRate = (vendor, weight, zone) => {
+      const rates = ALL_RATES[vendor][zone];
+      if (weight <= RATE_WEIGHTS[0]) return rates[0];
+      if (weight >= RATE_WEIGHTS[RATE_WEIGHTS.length - 1]) return rates[rates.length - 1];
+      for (let i = 0; i < RATE_WEIGHTS.length - 1; i++) {
+        if (weight >= RATE_WEIGHTS[i] && weight <= RATE_WEIGHTS[i + 1]) {
+          const t = (weight - RATE_WEIGHTS[i]) / (RATE_WEIGHTS[i + 1] - RATE_WEIGHTS[i]);
+          return rates[i] + t * (rates[i + 1] - rates[i]);
+        }
+      }
+      return rates[0];
+    };
+
+    function Badge({ children, color }) {
+      return (
+        <span style={{
+          background: color || "#10B981", color: "#fff", fontSize: 10, fontWeight: 700,
+          padding: "2px 8px", borderRadius: 99, textTransform: "uppercase", letterSpacing: 0.5,
+        }}>{children}</span>
+      );
+    }
+
+    function VendorCard({ name, tagline, highlights, score, rank }) {
+      const c = VENDOR_COLORS[name];
+      const bg = VENDOR_ACCENT[name];
+      return (
+        <div style={{
+          background: "#fff", borderRadius: 16, border: `2px solid ${rank === 1 ? c : "#e5e7eb"}`,
+          padding: "24px 20px", position: "relative", flex: 1, minWidth: 220,
+          boxShadow: rank === 1 ? `0 4px 24px ${c}22` : "0 1px 4px #0001",
+        }}>
+          {rank === 1 && <div style={{
+            position: "absolute", top: -12, left: 20, background: c, color: "#fff",
+            fontSize: 11, fontWeight: 700, padding: "3px 12px", borderRadius: 99, letterSpacing: 0.4,
+          }}>★ TOP PICK</div>}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, marginTop: rank === 1 ? 4 : 0 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10, background: bg,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 18, fontWeight: 800, color: c,
+            }}>{name[0]}</div>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: 16, color: "#111" }}>{name}</div>
+              <div style={{ fontSize: 11, color: "#888", fontWeight: 500 }}>{tagline}</div>
+            </div>
+          </div>
+          <div style={{
+            margin: "14px 0 12px", padding: "10px 14px", borderRadius: 10, background: bg,
+            display: "flex", alignItems: "baseline", gap: 6,
+          }}>
+            <span style={{ fontSize: 28, fontWeight: 900, color: c }}>{score}</span>
+            <span style={{ fontSize: 12, color: "#666", fontWeight: 600 }}>/100</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {highlights.map((h, i) => (
+              <div key={i} style={{ fontSize: 12, color: "#444", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                <span style={{ color: h.good ? "#10B981" : "#EF4444", fontSize: 14, marginTop: -1 }}>{h.good ? "✓" : "✗"}</span>
+                <span>{h.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function SliderInput({ label, value, onChange, min, max, step, suffix }) {
+      return (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+            <label style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{label}</label>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#111", fontVariantNumeric: "tabular-nums" }}>
+              {value.toLocaleString()}{suffix || ""}
+            </span>
+          </div>
+          <input type="range" min={min} max={max} step={step || 1} value={value} onChange={e => onChange(+e.target.value)}
+            style={{ width: "100%", accentColor: "#1B4965" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#aaa", marginTop: 2 }}>
+            <span>{min.toLocaleString()}{suffix}</span><span>{max.toLocaleString()}{suffix}</span>
+          </div>
+        </div>
+      );
+    }
+
+    function CostBar({ label, values, highlight }) {
+      const maxVal = Math.max(...values.filter(x => x > 0), 1);
+      return (
+        <div style={{ marginBottom: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "#555", marginBottom: 4 }}>{label}</div>
+          <div style={{ display: "flex", gap: 4 }}>
+            {values.map((v, i) => {
+              const w = maxVal > 0 ? Math.max((v / maxVal) * 100, 4) : 4;
+              const isLow = v === Math.min(...values.filter(x => x > 0));
+              return (
+                <div key={i} style={{ flex: 1 }}>
+                  <div style={{
+                    height: 22, borderRadius: 6,
+                    background: isLow && highlight ? VENDOR_COLORS[VENDORS[i]] : `${VENDOR_COLORS[VENDORS[i]]}55`,
+                    width: `${w}%`, minWidth: 30, display: "flex", alignItems: "center", justifyContent: "flex-end",
+                    paddingRight: 6, transition: "width 0.5s ease",
+                  }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: isLow ? "#fff" : "#333" }}>{fmt(v)}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    function ShipChart({ zone }) {
+      const maxRate = Math.max(...VENDORS.map(v => Math.max(...ALL_RATES[v][zone])));
+      const h = 180, w = 440, padL = 44, padB = 30, padT = 10, padR = 16;
+      const plotW = w - padL - padR, plotH = h - padB - padT;
+      const xStep = plotW / (RATE_WEIGHTS.length - 1);
+
+      const path = (vendor) =>
+        RATE_WEIGHTS.map((wt, i) => {
+          const x = padL + i * xStep;
+          const y = padT + plotH - (ALL_RATES[vendor][zone][i] / maxRate) * plotH;
+          return `${i === 0 ? "M" : "L"}${x},${y}`;
+        }).join(" ");
+
+      return (
+        <svg viewBox={`0 0 ${w} ${h}`} style={{ width: "100%", maxWidth: 480 }}>
+          {[0, 0.25, 0.5, 0.75, 1].map(f => {
+            const y = padT + plotH * (1 - f);
+            return <g key={f}>
+              <line x1={padL} x2={w - padR} y1={y} y2={y} stroke="#e5e7eb" strokeWidth={0.5} />
+              <text x={padL - 4} y={y + 3} textAnchor="end" fontSize={9} fill="#999">${(maxRate * f).toFixed(0)}</text>
+            </g>;
+          })}
+          {RATE_WEIGHTS.map((wt, i) => (
+            <text key={i} x={padL + i * xStep} y={h - 6} textAnchor="middle" fontSize={8} fill="#999">{wt}lb</text>
+          ))}
+          {VENDORS.map(v => (
+            <path key={v} d={path(v)} fill="none" stroke={VENDOR_COLORS[v]} strokeWidth={2.2}
+              strokeLinecap="round" strokeLinejoin="round" />
+          ))}
+          {VENDORS.map((v, vi) => (
+            <g key={v}>
+              <line x1={w - padR - 120 + vi * 50} y1={padT} x2={w - padR - 108 + vi * 50} y2={padT}
+                stroke={VENDOR_COLORS[v]} strokeWidth={2.5} />
+              <text x={w - padR - 104 + vi * 50} y={padT + 3.5} fontSize={8} fontWeight={700}
+                fill={VENDOR_COLORS[v]}>{v.split(" ")[0]}</text>
+            </g>
+          ))}
+        </svg>
+      );
+    }
+
+    function ZoneRateTable({ weight }) {
+      return (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
+                <th style={{ textAlign: "left", padding: "8px 6px", fontWeight: 700, color: "#555" }}>Zone</th>
+                {VENDORS.map(v => (
+                  <th key={v} style={{ textAlign: "center", padding: "8px 6px", fontWeight: 800, color: VENDOR_COLORS[v] }}>{v}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ZONES.map((z, zi) => {
+                const rates = VENDORS.map(v => interpRate(v, weight, z));
+                const minRate = Math.min(...rates);
+                return (
+                  <tr key={z} style={{ borderBottom: "1px solid #f3f4f6", background: zi % 2 === 0 ? "#FAFAF8" : "#fff" }}>
+                    <td style={{ padding: "8px 6px", fontWeight: 600, color: "#374151" }}>Zone {z}</td>
+                    {rates.map((r, vi) => (
+                      <td key={vi} style={{
+                        textAlign: "center", padding: "8px 6px",
+                        fontFamily: "'JetBrains Mono', monospace", fontWeight: r === minRate ? 800 : 500,
+                        color: r === minRate ? VENDOR_COLORS[VENDORS[vi]] : "#666",
+                        background: r === minRate ? VENDOR_ACCENT[VENDORS[vi]] : "transparent", borderRadius: 4,
+                      }}>{fmt(r)}</td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    function ZoneSelect({ value, onChange, style }) {
+      return (
+        <div style={{ display: "flex", gap: 4, ...style }}>
+          {ZONES.map(z => (
+            <button key={z} onClick={() => onChange(z)} style={{
+              width: 34, height: 30, borderRadius: 7, fontSize: 12, fontWeight: z === value ? 800 : 500,
+              background: z === value ? "#1B4965" : "#f3f4f6", color: z === value ? "#fff" : "#666",
+              border: "none", cursor: "pointer", fontFamily: "inherit",
+            }}>{z}</button>
+          ))}
+        </div>
+      );
+    }
+
+    function ComparisonApp() {
+      const [tab, setTab] = useState("overview");
+      const [orders, setOrders] = useState(7500);
+      const [itemsPerOrder, setItemsPerOrder] = useState(4);
+      const [avgWeight, setAvgWeight] = useState(8);
+      const [pallets, setPallets] = useState(100);
+      const [returnRate, setReturnRate] = useState(10);
+      const [simZone, setSimZone] = useState(5);
+      const [chartZone, setChartZone] = useState(8);
+
+      const costs = useMemo(() => {
+        return VENDORS.map((v, vi) => {
+          const pick = SERVICE_COSTS.firstPick[vi] + (itemsPerOrder - 1) * SERVICE_COSTS.addlPick[vi];
+          const pack = SERVICE_COSTS.packFee[vi];
+          const fulfillPerOrder = pick + pack;
+          const fulfillTotal = fulfillPerOrder * orders;
+          const serial = SERVICE_COSTS.serialScan[vi] * itemsPerOrder * orders;
+          const insert = SERVICE_COSTS.insertFee[vi] * orders;
+          const returns = orders * (returnRate / 100) * SERVICE_COSTS.returnsFee[vi];
+          const storage = vi === 1 ? pallets * 48 * 0.35 : pallets * 25;
+          const techFee = SERVICE_COSTS.techFee[vi];
+          const shipRate = interpRate(v, avgWeight, simZone);
+          const shipping = shipRate * orders;
+          const receiving = SERVICE_COSTS.palletReceiving[vi] * 6;
+          const monthlyTotal = fulfillTotal + serial + insert + returns + storage + techFee + shipping + receiving;
+          const minApplies = SERVICE_COSTS.monthlyMin[vi] > 0 && (fulfillTotal + serial + insert + returns) < SERVICE_COSTS.monthlyMin[vi];
+          return { vendor: v, fulfillPerOrder, fulfillTotal, serial, insert, returns, storage, techFee, shipping, shipRate, receiving, monthlyTotal, minApplies, monthlyMin: SERVICE_COSTS.monthlyMin[vi] };
+        });
+      }, [orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone]);
+
+      const lowestTotal = Math.min(...costs.map(c => c.monthlyTotal));
+
+      const scores = useMemo(() => {
+        const totals = costs.map(c => c.monthlyTotal);
+        const minT = Math.min(...totals), maxT = Math.max(...totals);
+        const costScores = totals.map(t => maxT === minT ? 33 : 35 * (1 - (t - minT) / (maxT - minT)));
+        const flexScores = [12, 14, 20];
+        const slaScores = [15, 18, 13];
+        const returnScores = [8, 4, 9];
+        const techScores = [7, 9, 8];
+        return VENDORS.map((v, i) => ({
+          vendor: v,
+          total: Math.round(costScores[i] + flexScores[i] + slaScores[i] + returnScores[i] + techScores[i]),
+          cost: Math.round(costScores[i]), flex: flexScores[i], sla: slaScores[i], returns: returnScores[i], tech: techScores[i],
+        }));
+      }, [costs]);
+
+      const sorted = [...scores].sort((a, b) => b.total - a.total);
+
+      const innerTabs = [
+        { id: "overview",  label: "Overview" },
+        { id: "costs",     label: "Cost Simulator" },
+        { id: "shipping",  label: "Shipping Rates" },
+        { id: "contracts", label: "Contract Terms" },
+      ];
+
+      const contractRows = [
+        { label: "Initial Commitment",    key: "commitment",   note: "risk" },
+        { label: "Auto-Renewal",          key: "autoRenew" },
+        { label: "Termination Notice",    key: "termNotice" },
+        { label: "Payment Terms",         key: "payment",      note: "cash" },
+        { label: "Late Payment Penalty",  key: "latePenalty",  note: "risk" },
+        { label: "Liability Cap",         key: "liabilityCap" },
+        { label: "Annual Escalation",     key: "annualEsc",    note: "cost" },
+        { label: "SLA — DTC Shipping",    key: "slaDTC",       note: "sla" },
+        { label: "SLA — Inventory Accuracy", key: "slaInventory", note: "sla" },
+      ];
+
+      return (
+        <div style={{ fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif", background: "#F8F7F4", minHeight: "100vh" }}>
+          <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+          <div style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E293B 100%)", padding: "32px 28px 20px", color: "#fff" }}>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, color: "#94A3B8", textTransform: "uppercase", marginBottom: 6 }}>
+              Fulfillment Partner Analysis
+            </div>
+            <h1 style={{ fontSize: 26, fontWeight: 900, margin: 0, letterSpacing: -0.5, lineHeight: 1.15 }}>3PL Vendor Comparison</h1>
+            <p style={{ fontSize: 13, color: "#94A3B8", margin: "6px 0 0", fontWeight: 500 }}>
+              FDA-cleared medical devices · 5K–10K orders/mo · High AOV · Serialized + lot-controlled
+            </p>
+          </div>
+
+          <div style={{ display: "flex", gap: 0, background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "0 12px", overflowX: "auto" }}>
+            {innerTabs.map(t => (
+              <button key={t.id} onClick={() => setTab(t.id)} style={{
+                padding: "12px 18px", fontSize: 13, fontWeight: tab === t.id ? 700 : 500,
+                color: tab === t.id ? "#111" : "#888", background: "none", border: "none",
+                borderBottom: tab === t.id ? "2px solid #111" : "2px solid transparent",
+                cursor: "pointer", whiteSpace: "nowrap", fontFamily: "inherit",
+              }}>{t.label}</button>
+            ))}
+          </div>
+
+          <div style={{ padding: "20px 20px 40px", maxWidth: 920, margin: "0 auto" }}>
+
+            {tab === "overview" && <>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 24 }}>
+                {sorted.map((s, idx) => {
+                  const hlMap = {
+                    MasonHub: [
+                      { good: true,  text: "Strong carrier rates across zones" },
+                      { good: true,  text: "95% same-day SLA (contractual KPI)" },
+                      { good: false, text: "2-year lock-in commitment" },
+                      { good: false, text: "$500/mo platform fee + $10K min" },
+                    ],
+                    "Red Stag": [
+                      { good: true,  text: "100% inventory accuracy SLA" },
+                      { good: true,  text: "$50/order penalty if SLA missed" },
+                      { good: true,  text: "No platform fee or monthly min" },
+                      { good: false, text: "$6 per return (2× competitors)" },
+                    ],
+                    ShipFusion: [
+                      { good: true,  text: "90-day trial — lowest commitment" },
+                      { good: true,  text: "Cheapest returns at $2.50" },
+                      { good: true,  text: "Fixed 4% annual escalation cap" },
+                      { good: false, text: "Highest pick + pack per order" },
+                    ],
+                  };
+                  const tagMap = { MasonHub: "Pennsylvania · Est. fulfillment", "Red Stag": "Tennessee · Precision fulfillment", ShipFusion: "Pennsylvania · Flexible fulfillment" };
+                  return <VendorCard key={s.vendor} name={s.vendor} tagline={tagMap[s.vendor]} highlights={hlMap[s.vendor]} score={s.total} rank={idx + 1} />;
+                })}
+              </div>
+
+              <div style={{ background: "#1E293B", borderRadius: 12, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 10 }}>
+                <span style={{ fontSize: 18 }}>⚡</span>
+                <div style={{ fontSize: 12, color: "#CBD5E1", lineHeight: 1.6 }}>
+                  <strong style={{ color: "#fff" }}>Shipping rates are shown per-zone, not blended.</strong> Each 3PL ships from a different origin, so your zone distribution will differ by vendor. Use the <em>Shipping Rates</em> tab to compare rates at each zone independently, and the <em>Cost Simulator</em> to model costs at a specific zone.
+                </div>
+              </div>
+
+              <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid #e5e7eb" }}>
+                <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 14px", color: "#111" }}>Score Breakdown</h3>
+                <div style={{ overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                    <thead>
+                      <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
+                        <th style={{ textAlign: "left", padding: "8px 6px", fontWeight: 700, color: "#555" }}>Category</th>
+                        {sorted.map(s => <th key={s.vendor} style={{ textAlign: "center", padding: "8px 6px", fontWeight: 700, color: VENDOR_COLORS[s.vendor] }}>{s.vendor}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { label: "Cost Competitiveness", key: "cost",    max: 35 },
+                        { label: "Contract Flexibility",  key: "flex",    max: 20 },
+                        { label: "SLA Strength",          key: "sla",     max: 18 },
+                        { label: "Returns Handling",      key: "returns", max: 10 },
+                        { label: "Technology / Fees",     key: "tech",    max: 10 },
+                      ].map(row => (
+                        <tr key={row.key} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                          <td style={{ padding: "8px 6px", fontWeight: 600, color: "#374151" }}>{row.label}<span style={{ color: "#bbb", fontWeight: 400 }}> /{row.max}</span></td>
+                          {sorted.map(s => (
+                            <td key={s.vendor} style={{ textAlign: "center", padding: "8px 6px" }}>
+                              <span style={{
+                                fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 14,
+                                color: s[row.key] >= row.max * 0.75 ? "#10B981" : s[row.key] >= row.max * 0.5 ? "#F59E0B" : "#EF4444",
+                              }}>{s[row.key]}</span>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                      <tr style={{ borderTop: "2px solid #e5e7eb" }}>
+                        <td style={{ padding: "10px 6px", fontWeight: 800, fontSize: 13, color: "#111" }}>Total Score</td>
+                        {sorted.map(s => <td key={s.vendor} style={{ textAlign: "center", padding: "10px 6px" }}><span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 900, fontSize: 18, color: VENDOR_COLORS[s.vendor] }}>{s.total}</span></td>)}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>}
+
+            {tab === "costs" && <>
+              <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+                <div style={{ flex: "1 1 280px", background: "#fff", borderRadius: 14, padding: 22, border: "1px solid #e5e7eb" }}>
+                  <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 18px", color: "#111" }}>Your Business Parameters</h3>
+                  <SliderInput label="Orders / Month"   value={orders}         onChange={setOrders}         min={1000}  max={15000} step={500} />
+                  <SliderInput label="Items per Order"  value={itemsPerOrder}  onChange={setItemsPerOrder}  min={1}     max={8} />
+                  <SliderInput label="Avg Weight (lbs)" value={avgWeight}      onChange={setAvgWeight}      min={1}     max={25} />
+                  <SliderInput label="Pallets Stored"   value={pallets}        onChange={setPallets}        min={10}    max={300} />
+                  <SliderInput label="Return Rate"      value={returnRate}     onChange={setReturnRate}     min={0}     max={25} suffix="%" />
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                      <label style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>Shipping Zone</label>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "#1B4965" }}>Zone {simZone}</span>
+                    </div>
+                    <ZoneSelect value={simZone} onChange={setSimZone} />
+                    <div style={{ fontSize: 10, color: "#999", marginTop: 6, lineHeight: 1.4 }}>
+                      Each vendor ships from a different origin — zone maps differ. Compare across zones to understand the range.
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ flex: "1 1 380px" }}>
+                  <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
+                    {costs.map(c => {
+                      const isLow = c.monthlyTotal === lowestTotal;
+                      return (
+                        <div key={c.vendor} style={{
+                          flex: 1, minWidth: 140, background: isLow ? VENDOR_COLORS[c.vendor] : "#fff",
+                          borderRadius: 12, padding: "16px 14px", border: isLow ? "none" : "1px solid #e5e7eb",
+                        }}>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: isLow ? "#fffc" : "#888", marginBottom: 2 }}>{c.vendor} {isLow && "★"}</div>
+                          <div style={{ fontSize: 22, fontWeight: 900, color: isLow ? "#fff" : "#111", fontFamily: "'JetBrains Mono', monospace" }}>{fmtK(c.monthlyTotal)}</div>
+                          <div style={{ fontSize: 10, color: isLow ? "#fff9" : "#aaa", fontWeight: 500 }}>/month · Zone {simZone}</div>
+                          {c.minApplies && <div style={{ fontSize: 9, color: "#F59E0B", fontWeight: 600, marginTop: 4, background: "#FEF3C7", padding: "2px 6px", borderRadius: 4, display: "inline-block" }}>Min applies: {fmtK(c.monthlyMin)}</div>}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid #e5e7eb" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                      <h3 style={{ fontSize: 14, fontWeight: 800, margin: 0, color: "#111" }}>Cost Breakdown</h3>
+                      <div style={{ display: "flex", gap: 12 }}>
+                        {VENDORS.map(v => (
+                          <div key={v} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            <div style={{ width: 10, height: 10, borderRadius: 3, background: VENDOR_COLORS[v] }} />
+                            <span style={{ fontSize: 10, fontWeight: 600, color: "#666" }}>{v.split(" ")[0]}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <CostBar label="Fulfillment (pick+pack)" values={costs.map(c => c.fulfillTotal)}  highlight />
+                    <CostBar label="Shipping"                values={costs.map(c => c.shipping)}      highlight />
+                    <CostBar label="Storage"                 values={costs.map(c => c.storage)}       highlight />
+                    <CostBar label="Returns Processing"      values={costs.map(c => c.returns)}       highlight />
+                    <CostBar label="Serial Scan"             values={costs.map(c => c.serial)}        highlight />
+                    <CostBar label="Insert Fees"             values={costs.map(c => c.insert)}        highlight />
+                    <CostBar label="Platform / Tech Fee"     values={costs.map(c => c.techFee)}       highlight />
+                    <CostBar label="Receiving"               values={costs.map(c => c.receiving)}     highlight />
+
+                    <div style={{ borderTop: "2px solid #e5e7eb", marginTop: 12, paddingTop: 12 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#111", marginBottom: 6 }}>Per-Order Fulfillment Cost (excl. shipping)</div>
+                      <div style={{ display: "flex", gap: 12 }}>
+                        {costs.map(c => (
+                          <div key={c.vendor} style={{ flex: 1, textAlign: "center", padding: "8px 0", borderRadius: 8, background: VENDOR_ACCENT[c.vendor] }}>
+                            <div style={{ fontSize: 10, fontWeight: 600, color: "#888" }}>{c.vendor.split(" ")[0]}</div>
+                            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 16, fontWeight: 800, color: VENDOR_COLORS[c.vendor] }}>{fmt(c.fulfillPerOrder)}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ marginTop: 12 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#111", marginBottom: 6 }}>Shipping Rate @ Zone {simZone}, {avgWeight} lbs</div>
+                      <div style={{ display: "flex", gap: 12 }}>
+                        {costs.map(c => (
+                          <div key={c.vendor} style={{ flex: 1, textAlign: "center", padding: "8px 0", borderRadius: 8, background: VENDOR_ACCENT[c.vendor] }}>
+                            <div style={{ fontSize: 10, fontWeight: 600, color: "#888" }}>{c.vendor.split(" ")[0]}</div>
+                            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 16, fontWeight: 800, color: VENDOR_COLORS[c.vendor] }}>{fmt(c.shipRate)}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>}
+
+            {tab === "shipping" && <>
+              <div style={{ background: "#1E293B", borderRadius: 12, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 10 }}>
+                <span style={{ fontSize: 18 }}>📍</span>
+                <div style={{ fontSize: 12, color: "#CBD5E1", lineHeight: 1.6 }}>
+                  <strong style={{ color: "#fff" }}>Rates are from each vendor's own rate card relative to their origin.</strong> MasonHub &amp; ShipFusion ship from PA; Red Stag ships from TN. The same "Zone 5" covers different geographies for each vendor. To make an apples-to-apples shipping comparison you'd need each vendor's zone map overlaid on your customer distribution.
+                </div>
+              </div>
+
+              <div style={{ background: "#fff", borderRadius: 14, padding: 22, border: "1px solid #e5e7eb", marginBottom: 20 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
+                  <h3 style={{ fontSize: 14, fontWeight: 800, margin: 0, color: "#111" }}>Rate Comparison by Zone</h3>
+                  <div>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: "#888", marginRight: 8 }}>Zone:</span>
+                    <ZoneSelect value={chartZone} onChange={setChartZone} />
+                  </div>
+                </div>
+                <ShipChart zone={chartZone} />
+              </div>
+
+              <div style={{ background: "#fff", borderRadius: 14, padding: 22, border: "1px solid #e5e7eb", marginBottom: 20 }}>
+                <h3 style={{ fontSize: 14, fontWeight: 800, margin: "0 0 4px", color: "#111" }}>Rate Table @ {avgWeight} lbs (all zones)</h3>
+                <p style={{ fontSize: 11, color: "#888", margin: "0 0 14px" }}>Lowest rate per zone highlighted. Adjust avg weight in Cost Simulator.</p>
+                <ZoneRateTable weight={avgWeight} />
+              </div>
+
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+                {[
+                  { vendor: "MasonHub",   text: "Competitive across all zones, especially at heavier weights (5+ lbs). Rate structure scales smoothly — no sharp jumps at weight thresholds." },
+                  { vendor: "Red Stag",   text: "Flat floor pricing (~$8.99–$9.89) at lower zones and lighter weights, climbing steeply above 10 lbs at outer zones. TN origin may yield a better overall zone mix for eastern/central customers." },
+                  { vendor: "ShipFusion", text: "Competitive at lighter weights (1–5 lbs), but rates jump sharply at 11+ lbs. PA origin means similar zone map to MasonHub. Weakest value for heavier packages." },
+                ].map(t => (
+                  <div key={t.vendor} style={{ flex: 1, minWidth: 220, padding: 14, borderRadius: 10, background: VENDOR_ACCENT[t.vendor], borderLeft: `3px solid ${VENDOR_COLORS[t.vendor]}` }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: VENDOR_COLORS[t.vendor], marginBottom: 4 }}>{t.vendor}</div>
+                    <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>{t.text}</div>
+                  </div>
+                ))}
+              </div>
+            </>}
+
+            {tab === "contracts" && <>
+              <div style={{ background: "#fff", borderRadius: 14, padding: 20, border: "1px solid #e5e7eb", overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
+                      <th style={{ textAlign: "left", padding: "10px 8px", fontWeight: 700, color: "#555", minWidth: 140 }}>Term</th>
+                      {VENDORS.map(v => <th key={v} style={{ textAlign: "left", padding: "10px 8px", fontWeight: 800, color: VENDOR_COLORS[v], minWidth: 160 }}>{v}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {contractRows.map((row, ri) => {
+                      const vals = CONTRACT[row.key];
+                      return (
+                        <tr key={row.key} style={{ borderBottom: "1px solid #f3f4f6", background: ri % 2 === 0 ? "#FAFAF8" : "#fff" }}>
+                          <td style={{ padding: "10px 8px", fontWeight: 600, color: "#374151" }}>
+                            {row.label}
+                            {row.note && <span style={{ marginLeft: 6 }}><Badge color={row.note === "risk" ? "#EF4444" : row.note === "cost" ? "#F59E0B" : row.note === "sla" ? "#3B82F6" : "#6B7280"}>{row.note}</Badge></span>}
+                          </td>
+                          {vals.map((v, vi) => <td key={vi} style={{ padding: "10px 8px", color: "#444", lineHeight: 1.4 }}>{v}</td>)}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div style={{ display: "flex", gap: 14, marginTop: 20, flexWrap: "wrap" }}>
+                {[
+                  { title: "⚠️ Escalation Risk",  body: "MasonHub's 5%+ escalation with carrier pass-throughs is open-ended. ShipFusion's fixed 4% cap is the safest. Red Stag's 'customary increase' is vague but includes 30-day notice.", color: "#FEF3C7", border: "#F59E0B" },
+                  { title: "🔒 Lock-in Risk",      body: "Both MasonHub and Red Stag require 2-year commitments. ShipFusion's 90-day trial is the lowest-risk entry. Consider negotiating a pilot period with the others.", color: "#FEE2E2", border: "#EF4444" },
+                  { title: "💰 Cash Flow",         body: "MasonHub's Net-0 is the most aggressive — payment on receipt. Red Stag's Net-10 gives breathing room. ShipFusion's Net-7 is in between. Factor this into working capital planning.", color: "#E0F2FE", border: "#3B82F6" },
+                ].map(c => (
+                  <div key={c.title} style={{ flex: 1, minWidth: 220, padding: 16, borderRadius: 12, background: c.color, borderLeft: `3px solid ${c.border}` }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{c.title}</div>
+                    <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>{c.body}</div>
+                  </div>
+                ))}
+              </div>
+            </>}
+          </div>
+        </div>
+      );
+    }
+
+    // Mount when DOM is ready (Babel runs after DOM load)
+    const compRoot = ReactDOM.createRoot(document.getElementById('react-comparison-root'));
+    compRoot.render(<ComparisonApp />);
+    </script>
+
 </body>
 </html>
