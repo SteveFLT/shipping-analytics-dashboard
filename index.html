@@ -2183,7 +2183,7 @@
       liabilityCap: ["12-mo fees paid", "6-mo fulfillment", "Lesser cost/FMV"],
       annualEsc: ["5%+pass-thru", "Customary", "4% flat"],
       slaDTC: ["95% same-day (noon)", "Same-day (3PM ET) $50 penalty", "Same-day (8AM)"],
-      slaInventory: ["98.0% net yearly (contractual)", "Not specified", "Not specified"],
+      slaInventory: ["99%", "100%", "100%"],
     };
 
     const RATE_WEIGHTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25];
@@ -2241,7 +2241,7 @@
     function computeCosts(orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone) {
       return VENDORS.map((v, vi) => {
         const pick         = SERVICE_COSTS.firstPick[vi] + (itemsPerOrder - 1) * SERVICE_COSTS.addlPick[vi];
-        const pack         = SERVICE_COSTS.packFee[vi] + (vi === 1 && avgWeight > 4 ? 0.20 : 0); // RS heavy surcharge
+        const pack         = SERVICE_COSTS.packFee[vi];
         const fulfillPerOrder = pick + pack;
         const fulfillTotal = fulfillPerOrder * orders;
         const serial       = SERVICE_COSTS.serialScan[vi] * itemsPerOrder * orders;
