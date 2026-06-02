@@ -2766,6 +2766,10 @@
                       { label: "First Pick Fee",        unit: "/order",   vals: SERVICE_COSTS.firstPick,     comparable: true },
                       { label: "Additional Item Pick",   unit: "/item",    vals: SERVICE_COSTS.addlPick,      comparable: true },
                       { label: "Pack Fee",               unit: "/order",   vals: SERVICE_COSTS.packFee,       comparable: true },
+                      { label: "Packaging Materials",    unit: "/unit",    vals: [0, null, 0.15],
+                        display: ["— (client-supplied)", "On request*", "$0.15"],
+                        note: "MH: SOW §1.9.2 — client-supplied. RS: contract lists 'Various*', no catalog. SF: $0.15/unit for custom packaging (rate card).",
+                        comparable: false, bestIdx: 0 },
                       { label: "Pallet Receiving",       unit: "/pallet",  vals: SERVICE_COSTS.palletReceiving, comparable: true },
                       { label: "Storage",                unit: "",         vals: [null, null, null],
                         display: ["$25.00 / pallet / mo", "$0.35 / cu ft / mo", "$25.00 / pallet / mo"], comparable: false },
@@ -2781,7 +2785,12 @@
                       const effectiveMin = row.zeroLabel === "None" ? Math.min(...row.vals) : minVal;
                       return (
                         <tr key={row.label} style={{ borderBottom: "1px solid #f3f4f6", background: ri % 2 === 0 ? "#FAFAF8" : "#fff" }}>
-                          <td style={{ padding: "9px 8px", fontWeight: 600, color: "#374151" }}>{row.label}</td>
+                          <td style={{ padding: "9px 8px", fontWeight: 600, color: "#374151" }}>
+                            {row.label}
+                            {row.note && (
+                              <div style={{ fontSize: 9.5, color: "#999", fontWeight: 400, marginTop: 2, lineHeight: 1.4 }}>{row.note}</div>
+                            )}
+                          </td>
                           <td style={{ padding: "9px 8px", color: "#999", fontSize: 11 }}>{row.unit}</td>
                           {row.vals.map((v, vi) => {
                             const displayVal = row.display
@@ -2789,11 +2798,9 @@
                               : v === 0 && row.zeroLabel
                                 ? row.zeroLabel
                                 : fmt(v);
-                            const isBest = row.comparable && (
-                              row.zeroLabel === "None" ? v === effectiveMin :
-                              row.zeroLabel ? v === 0 :
-                              v === minVal
-                            );
+                            const isBest = row.comparable
+                              ? (row.zeroLabel === "None" ? v === effectiveMin : row.zeroLabel ? v === 0 : v === minVal)
+                              : row.bestIdx === vi;
                             return (
                               <td key={vi} style={{
                                 textAlign: "center", padding: "9px 8px",
