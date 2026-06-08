@@ -2222,6 +2222,38 @@
     const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES };
     const ZONES = [2, 3, 4, 5, 6, 7, 8];
 
+    // ── Rate table CSV export ────────────────────────────────────────────────
+    // Exports all RATE_WEIGHTS × all ZONES for every vendor.
+    // Winning cell in each row gets a ★ suffix; a "Best Rate (Vendor)" column
+    // makes the winner machine-readable in Excel.
+    function exportRateCSV() {
+      const headers = ["Weight (lbs)", "Zone", "MasonHub", "Red Stag", "ShipFusion", "Best Rate (Vendor)"];
+      const rows = [headers];
+      RATE_WEIGHTS.forEach(w => {
+        ZONES.forEach(z => {
+          const rates = VENDORS.map(v => interpRate(v, w, z));
+          const minRate = Math.min(...rates);
+          const winnerIdx = rates.indexOf(minRate);
+          rows.push([
+            w,
+            `Zone ${z}`,
+            ...rates.map((r, vi) => vi === winnerIdx ? `$${r.toFixed(2)} ★` : `$${r.toFixed(2)}`),
+            VENDORS[winnerIdx],
+          ]);
+        });
+      });
+      const csv = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\r\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "3pl_shipping_rates_all_weights_zones.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
     const fmt  = (n) => (typeof n === "number" ? "$" + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : n);
     const fmtK = (n) => (n >= 1000 ? "$" + (n / 1000).toFixed(1) + "k" : "$" + n.toFixed(0));
 
@@ -2857,11 +2889,25 @@
               <div style={{ background: "#fff", borderRadius: 14, padding: 22, border: "1px solid #e5e7eb", marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, flexWrap: "wrap", gap: 10 }}>
                   <h3 style={{ fontSize: 14, fontWeight: 800, margin: 0, color: "#111" }}>Rate Table @ {tableWeight} lbs (all zones)</h3>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: "#888" }}>Weight:</span>
-                    <input type="range" min={1} max={25} step={1} value={tableWeight} onChange={e => setTableWeight(+e.target.value)}
-                      style={{ width: 120, accentColor: "#1B4965" }} />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#1B4965", minWidth: 40 }}>{tableWeight} lbs</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "#888" }}>Weight:</span>
+                      <input type="range" min={1} max={25} step={1} value={tableWeight} onChange={e => setTableWeight(+e.target.value)}
+                        style={{ width: 120, accentColor: "#1B4965" }} />
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "#1B4965", minWidth: 40 }}>{tableWeight} lbs</span>
+                    </div>
+                    <button onClick={exportRateCSV} title="Export all weights × all zones as CSV" style={{
+                      display: "flex", alignItems: "center", gap: 5,
+                      padding: "5px 11px", borderRadius: 7, border: "1px solid #d1d5db",
+                      background: "#f9fafb", color: "#374151", fontSize: 11, fontWeight: 700,
+                      cursor: "pointer", lineHeight: 1, whiteSpace: "nowrap",
+                    }}
+                      onMouseEnter={e => { e.currentTarget.style.background="#1B4965"; e.currentTarget.style.color="#fff"; e.currentTarget.style.borderColor="#1B4965"; }}
+                      onMouseLeave={e => { e.currentTarget.style.background="#f9fafb"; e.currentTarget.style.color="#374151"; e.currentTarget.style.borderColor="#d1d5db"; }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-5 2h10v1.5H3V14z"/></svg>
+                      Export CSV
+                    </button>
                   </div>
                 </div>
                 <p style={{ fontSize: 11, color: "#888", margin: "0 0 14px" }}>Lowest rate per zone highlighted.</p>
