@@ -2223,34 +2223,70 @@
     const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES };
     const ZONES = [2, 3, 4, 5, 6, 7, 8];
 
-    // ── Rate table CSV export ────────────────────────────────────────────────
-    // Exports all RATE_WEIGHTS × all ZONES for every vendor.
-    // Winning cell in each row gets a ★ suffix; a "Best Rate (Vendor)" column
-    // makes the winner machine-readable in Excel.
-    function exportRateCSV() {
-      const headers = ["Weight (lbs)", "Zone", "MasonHub", "Red Stag", "ShipFusion", "Best Rate (Vendor)"];
-      const rows = [headers];
-      // Export every integer lb 1–25 (interpRate interpolates between rate-card breakpoints)
+    // ── Rate table Excel export ──────────────────────────────────────────────
+    // Generates an HTML-based .xls file (Excel XML trick) — opens natively in
+    // Excel and Google Sheets with full color highlighting on winning cells.
+    // UTF-8 BOM ensures ★ and $ render correctly without encoding issues.
+    function exportRateXLS() {
       const exportWeights = Array.from({ length: 25 }, (_, i) => i + 1);
+      const WIN_BG  = { MasonHub: "#FFE8DF", "Red Stag": "#D6EFE0", ShipFusion: "#D6E8F2" };
+      const WIN_FG  = { MasonHub: "#C0401A", "Red Stag": "#1A5C38", ShipFusion: "#0F3554" };
+      const HDR_BG  = { MasonHub: "#E85D26", "Red Stag": "#2D6A4F", ShipFusion: "#1B4965" };
+
+      const cellStyle = (bg, fg, bold) =>
+        `background-color:${bg};color:${fg};${bold ? "font-weight:bold;" : ""}`;
+
+      let rows = "";
       exportWeights.forEach(w => {
         ZONES.forEach(z => {
           const rates = VENDORS.map(v => interpRate(v, w, z));
           const minRate = Math.min(...rates);
           const winnerIdx = rates.indexOf(minRate);
-          rows.push([
-            w,
-            `Zone ${z}`,
-            ...rates.map((r, vi) => vi === winnerIdx ? `$${r.toFixed(2)} ★` : `$${r.toFixed(2)}`),
-            VENDORS[winnerIdx],
-          ]);
+          const winVendor = VENDORS[winnerIdx];
+          let cells = `<td style="background:#F8FAFC;color:#374151">${w}</td>` +
+                      `<td style="background:#F8FAFC;color:#374151">Zone ${z}</td>`;
+          rates.forEach((r, vi) => {
+            const v = VENDORS[vi];
+            const win = vi === winnerIdx;
+            const bg = win ? WIN_BG[v] : "#FFFFFF";
+            const fg = win ? WIN_FG[v] : "#374151";
+            cells += `<td style="${cellStyle(bg, fg, win)}">$${r.toFixed(2)}${win ? " ★" : ""}</td>`;
+          });
+          cells += `<td style="background:#F1F5F9;color:#374151;font-weight:600">${winVendor}</td>`;
+          rows += `<tr>${cells}</tr>\n`;
         });
       });
-      const csv = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\r\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+
+      const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8">
+<style>
+  table { border-collapse: collapse; font-family: Calibri, Arial, sans-serif; font-size: 11pt; }
+  td, th { border: 1px solid #CBD5E1; padding: 4px 10px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<table>
+<thead><tr>
+  <th style="background:#1E293B;color:#FFF;font-weight:bold">Weight (lbs)</th>
+  <th style="background:#1E293B;color:#FFF;font-weight:bold">Zone</th>
+  <th style="background:${HDR_BG.MasonHub};color:#FFF;font-weight:bold">MasonHub</th>
+  <th style="background:${HDR_BG["Red Stag"]};color:#FFF;font-weight:bold">Red Stag</th>
+  <th style="background:${HDR_BG.ShipFusion};color:#FFF;font-weight:bold">ShipFusion</th>
+  <th style="background:#1E293B;color:#FFF;font-weight:bold">Best Rate</th>
+</tr></thead>
+<tbody>
+${rows}</tbody>
+</table>
+</body></html>`;
+
+      // UTF-8 BOM (﻿) ensures Excel reads the file as UTF-8
+      const blob = new Blob(["﻿" + html], { type: "application/vnd.ms-excel;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "3pl_shipping_rates_1-25lbs_all_zones.csv";
+      a.download = "3pl_shipping_rates_1-25lbs_all_zones.xls";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -2899,7 +2935,7 @@
                         style={{ width: 120, accentColor: "#1B4965" }} />
                       <span style={{ fontSize: 12, fontWeight: 700, color: "#1B4965", minWidth: 40 }}>{tableWeight} lbs</span>
                     </div>
-                    <button onClick={exportRateCSV} title="Export all weights × all zones as CSV" style={{
+                    <button onClick={exportRateXLS} title="Export all weights × all zones as Excel (.xls)" style={{
                       display: "flex", alignItems: "center", gap: 5,
                       padding: "5px 11px", borderRadius: 7, border: "1px solid #d1d5db",
                       background: "#f9fafb", color: "#374151", fontSize: 11, fontWeight: 700,
@@ -2909,7 +2945,7 @@
                       onMouseLeave={e => { e.currentTarget.style.background="#f9fafb"; e.currentTarget.style.color="#374151"; e.currentTarget.style.borderColor="#d1d5db"; }}
                     >
                       <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-5 2h10v1.5H3V14z"/></svg>
-                      Export CSV
+                      Export Excel
                     </button>
                   </div>
                 </div>
