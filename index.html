@@ -2229,7 +2229,9 @@
     function exportRateCSV() {
       const headers = ["Weight (lbs)", "Zone", "MasonHub", "Red Stag", "ShipFusion", "Best Rate (Vendor)"];
       const rows = [headers];
-      RATE_WEIGHTS.forEach(w => {
+      // Export every integer lb 1–25 (interpRate interpolates between rate-card breakpoints)
+      const exportWeights = Array.from({ length: 25 }, (_, i) => i + 1);
+      exportWeights.forEach(w => {
         ZONES.forEach(z => {
           const rates = VENDORS.map(v => interpRate(v, w, z));
           const minRate = Math.min(...rates);
@@ -2247,7 +2249,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "3pl_shipping_rates_all_weights_zones.csv";
+      a.download = "3pl_shipping_rates_1-25lbs_all_zones.csv";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
