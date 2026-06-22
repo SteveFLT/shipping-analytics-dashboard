@@ -2158,34 +2158,35 @@
     <script type="text/babel" data-presets="react">
     const { useState, useMemo } = React;
 
-    const VENDORS = ["MasonHub", "Red Stag", "ShipFusion", "DCL Logistics", "Jay Group"];
-    const VENDOR_COLORS = { MasonHub: "#E85D26", "Red Stag": "#2D6A4F", ShipFusion: "#1B4965", "DCL Logistics": "#6B21A8", "Jay Group": "#0E7490" };
-    const VENDOR_ACCENT = { MasonHub: "#FFF0EB", "Red Stag": "#E8F5EE", ShipFusion: "#E3EDF3", "DCL Logistics": "#F5F0FF", "Jay Group": "#E0F7FA" };
+    const VENDORS = ["MasonHub", "Red Stag", "ShipFusion", "DCL Logistics", "Jay Group", "ITS Logistics"];
+    const VENDOR_COLORS = { MasonHub: "#E85D26", "Red Stag": "#2D6A4F", ShipFusion: "#1B4965", "DCL Logistics": "#6B21A8", "Jay Group": "#0E7490", "ITS Logistics": "#BE123C" };
+    const VENDOR_ACCENT = { MasonHub: "#FFF0EB", "Red Stag": "#E8F5EE", ShipFusion: "#E3EDF3", "DCL Logistics": "#F5F0FF", "Jay Group": "#E0F7FA", "ITS Logistics": "#FFF1F2" };
 
     const SERVICE_COSTS = {
-      firstPick:          [1.80, 1.60, 1.99, 2.25, 1.30],
-      addlPick:           [0.30, 0.25, 0.41, 0.50, 0.30],
-      packFee:            [0.60, 0.60, 1.20, 0.28, 0],
-      palletReceiving:    [15,   12.50, 10,  16,   9.00],
-      monthlyMin:         [10000, 0,   5000, 10000, 30000],
-      techFee:            [500,   0,    0,   2500, 1000],
-      returnsFee:         [3,     6,    2.50, 5.50, 2.00],
-      serialScan:         [0,     0.20, 0.20, 0.10, 0.15],
-      insertFee:          [0.15,  0.25, 0.14, 0.10, 0.12],
-      packagingMaterials: [0,     0,    0.15, 0,    0],
-      storagePerPallet:   [25,    16.80, 25,  18,   28.80],  // RS: 48cu-ft×$0.35; JG: 48cu-ft×$0.60
+      firstPick:          [1.80, 1.60, 1.99, 2.25, 1.30, 4.28],   // ITS: $3.86/order + $0.42/unit pick
+      addlPick:           [0.30, 0.25, 0.41, 0.50, 0.30, 0.42],
+      packFee:            [0.60, 0.60, 1.20, 0.28, 0,    0],       // ITS: pack included in per-order fee
+      palletReceiving:    [15,   12.50, 10,  16,   9.00, 7.11],
+      monthlyMin:         [10000, 0,   5000, 10000, 30000, 21956],
+      techFee:            [500,   0,    0,   2500, 1000,  0],
+      returnsFee:         [3,     6,    2.50, 5.50, 2.00, 3.56],
+      serialScan:         [0,     0.20, 0.20, 0.10, 0.15, 0],
+      insertFee:          [0.15,  0.25, 0.14, 0.10, 0.12, 0.17],
+      packagingMaterials: [0,     0,    0.15, 0,    0,    0],
+      storagePerPallet:   [25,    16.80, 25,  18,   28.80, 0],     // RS: 48cu-ft×$0.35; JG: 48cu-ft×$0.60; ITS: see storageFlatFee
+      storageFlatFee:     [0,     0,    0,    0,    0,    4500],   // ITS: 3,984 sq ft × $1.13/sq ft/mo (dedicated footprint)
     };
 
     const CONTRACT = {
-      commitment:   ["2 years", "2 years", "90-day trial", "Not specified", "Not specified"],
-      autoRenew:    ["2-year terms", "1-year terms", "9 mo → annual", "Not specified", "Not specified"],
-      termNotice:   ["90 days (after Yr 2)", "90 days (before end)", "90 days", "Not specified", "Not specified"],
-      payment:      ["Net-0 (ACH)", "Net-10 (ACH debit)", "Net-7", "Not specified", "Net-15"],
-      latePenalty:  ["1.5%/mo + suspend", "2%/mo or $250 min", "Service suspend", "Not specified", "Not specified"],
-      liabilityCap: ["12-mo fees paid", "6-mo fulfillment", "Lesser cost/FMV", "Not specified", "Not specified"],
-      annualEsc:    ["5%+pass-thru", "Customary", "4% flat", "Not specified", "Not specified"],
-      slaDTC:       ["95% same-day (noon)", "Same-day (3PM ET) $50 penalty", "Same-day (8AM)", "Not specified", "Same-day (noon)"],
-      slaInventory: ["99%", "100%", "100%", "Not specified", "Not specified"],
+      commitment:   ["2 years", "2 years", "90-day trial", "Not specified", "Not specified", "Not specified"],
+      autoRenew:    ["2-year terms", "1-year terms", "9 mo → annual", "Not specified", "Not specified", "Not specified"],
+      termNotice:   ["90 days (after Yr 2)", "90 days (before end)", "90 days", "Not specified", "Not specified", "Not specified"],
+      payment:      ["Net-0 (ACH)", "Net-10 (ACH debit)", "Net-7", "Not specified", "Net-15", "Not specified"],
+      latePenalty:  ["1.5%/mo + suspend", "2%/mo or $250 min", "Service suspend", "Not specified", "Not specified", "Not specified"],
+      liabilityCap: ["12-mo fees paid", "6-mo fulfillment", "Lesser cost/FMV", "Not specified", "Not specified", "Not specified"],
+      annualEsc:    ["5%+pass-thru", "Customary", "4% flat", "Not specified", "Not specified", "Not specified"],
+      slaDTC:       ["95% same-day (noon)", "Same-day (3PM ET) $50 penalty", "Same-day (8AM)", "Not specified", "Same-day (noon)", "Not specified"],
+      slaInventory: ["99%", "100%", "100%", "Not specified", "Not specified", "Not specified"],
     };
 
     // RATE_WEIGHTS now covers every integer pound 1–25 (exact values from source rate cards)
@@ -2236,7 +2237,7 @@
       8: [5.58,6.34,6.98,6.99,7.41,7.41,7.70,8.94,9.26,9.87,12.74,13.34,13.94,15.16,15.78,16.56,16.56,17.86,18.72,19.40,19.99,20.67,21.70,22.93,23.65],
     };
 
-    const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES, "DCL Logistics": DCL_RATES, "Jay Group": JAYGROUP_RATES };
+    const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES, "DCL Logistics": DCL_RATES, "Jay Group": JAYGROUP_RATES, "ITS Logistics": null };  // ITS: shipping rates not yet received
     const ZONES = [2, 3, 4, 5, 6, 7, 8];
 
     // ── Rate table Excel export ──────────────────────────────────────────────
@@ -2245,6 +2246,8 @@
     // UTF-8 BOM ensures ★ and $ render correctly without encoding issues.
     function exportRateXLS() {
       const exportWeights = Array.from({ length: 25 }, (_, i) => i + 1);
+      // Only export vendors with available rate data
+      const rateVendors = VENDORS.filter(v => ALL_RATES[v] !== null);
       const WIN_BG  = { MasonHub: "#FFE8DF", "Red Stag": "#D6EFE0", ShipFusion: "#D6E8F2", "DCL Logistics": "#EDE9FE", "Jay Group": "#CCFBF1" };
       const WIN_FG  = { MasonHub: "#C0401A", "Red Stag": "#1A5C38", ShipFusion: "#0F3554", "DCL Logistics": "#4C1D95", "Jay Group": "#064E3B" };
       const HDR_BG  = { MasonHub: "#E85D26", "Red Stag": "#2D6A4F", ShipFusion: "#1B4965", "DCL Logistics": "#6B21A8", "Jay Group": "#0E7490" };
@@ -2255,14 +2258,14 @@
       let rows = "";
       exportWeights.forEach(w => {
         ZONES.forEach(z => {
-          const rates = VENDORS.map(v => interpRate(v, w, z));
+          const rates = rateVendors.map(v => interpRate(v, w, z));
           const minRate = Math.min(...rates);
           const winnerIdx = rates.indexOf(minRate);
-          const winVendor = VENDORS[winnerIdx];
+          const winVendor = rateVendors[winnerIdx];
           let cells = `<td style="background:#F8FAFC;color:#374151">${w}</td>` +
                       `<td style="background:#F8FAFC;color:#374151">Zone ${z}</td>`;
           rates.forEach((r, vi) => {
-            const v = VENDORS[vi];
+            const v = rateVendors[vi];
             const win = vi === winnerIdx;
             const bg = win ? WIN_BG[v] : "#FFFFFF";
             const fg = win ? WIN_FG[v] : "#374151";
@@ -2273,6 +2276,7 @@
         });
       });
 
+      const hdrCells = rateVendors.map(v => `<th style="background:${HDR_BG[v]};color:#FFF;font-weight:bold">${v}</th>`).join("\n  ");
       const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
   xmlns:x="urn:schemas-microsoft-com:office:excel"
   xmlns="http://www.w3.org/TR/REC-html40">
@@ -2287,11 +2291,7 @@
 <thead><tr>
   <th style="background:#1E293B;color:#FFF;font-weight:bold">Weight (lbs)</th>
   <th style="background:#1E293B;color:#FFF;font-weight:bold">Zone</th>
-  <th style="background:${HDR_BG.MasonHub};color:#FFF;font-weight:bold">MasonHub</th>
-  <th style="background:${HDR_BG["Red Stag"]};color:#FFF;font-weight:bold">Red Stag</th>
-  <th style="background:${HDR_BG.ShipFusion};color:#FFF;font-weight:bold">ShipFusion</th>
-  <th style="background:${HDR_BG["DCL Logistics"]};color:#FFF;font-weight:bold">DCL Logistics</th>
-  <th style="background:${HDR_BG["Jay Group"]};color:#FFF;font-weight:bold">Jay Group</th>
+  ${hdrCells}
   <th style="background:#1E293B;color:#FFF;font-weight:bold">Best Rate</th>
 </tr></thead>
 <tbody>
@@ -2315,6 +2315,7 @@ ${rows}</tbody>
     const fmtK = (n) => (n >= 1000 ? "$" + (n / 1000).toFixed(1) + "k" : "$" + n.toFixed(0));
 
     const interpRate = (vendor, weight, zone) => {
+      if (!ALL_RATES[vendor]) return null;  // shipping rates not yet received
       const rates = ALL_RATES[vendor][zone];
       if (weight <= RATE_WEIGHTS[0]) return rates[0];
       if (weight >= RATE_WEIGHTS[RATE_WEIGHTS.length - 1]) return rates[rates.length - 1];
@@ -2334,17 +2335,19 @@ ${rows}</tbody>
         const pack         = SERVICE_COSTS.packFee[vi];
         const fulfillPerOrder = pick + pack;
         const fulfillTotal = fulfillPerOrder * orders;
-        const serial       = SERVICE_COSTS.serialScan[vi] * orders;  // avg 1 serialized SKU per order
+        const serial       = SERVICE_COSTS.serialScan[vi] * orders;
         const insert       = SERVICE_COSTS.insertFee[vi] * orders;
         const packaging    = SERVICE_COSTS.packagingMaterials[vi] * orders;
         const returns      = orders * (returnRate / 100) * SERVICE_COSTS.returnsFee[vi];
-        const storage      = pallets * SERVICE_COSTS.storagePerPallet[vi];
+        const storage      = pallets * SERVICE_COSTS.storagePerPallet[vi] + SERVICE_COSTS.storageFlatFee[vi];
         const techFee      = SERVICE_COSTS.techFee[vi];
-        const shipRate     = interpRate(v, avgWeight, simZone);
-        const shipping     = shipRate * orders;
+        const shipRate     = interpRate(v, avgWeight, simZone);   // null if rates pending
+        const shipping     = shipRate !== null ? shipRate * orders : null;
         const receiving    = SERVICE_COSTS.palletReceiving[vi] * 6;
-        const monthlyTotal = fulfillTotal + serial + insert + packaging + returns + storage + techFee + shipping + receiving;
-        const minApplies   = SERVICE_COSTS.monthlyMin[vi] > 0 && (fulfillTotal + serial + insert + returns) < SERVICE_COSTS.monthlyMin[vi];
+        const monthlyTotal = shipping !== null
+          ? fulfillTotal + serial + insert + packaging + returns + storage + techFee + shipping + receiving
+          : null;
+        const minApplies   = SERVICE_COSTS.monthlyMin[vi] > 0 && monthlyTotal !== null && (fulfillTotal + serial + insert + returns) < SERVICE_COSTS.monthlyMin[vi];
         return { vendor: v, fulfillPerOrder, fulfillTotal, serial, insert, packaging, returns, storage, techFee, shipping, shipRate, receiving, monthlyTotal, minApplies, monthlyMin: SERVICE_COSTS.monthlyMin[vi] };
       });
     }
@@ -2353,17 +2356,19 @@ ${rows}</tbody>
     // Baseline: 7,500 orders/mo · 4 items · 8 lb avg · 100 pallets · 10% returns · Zone 5
     // Scores are fixed so Overview never shifts when Cost Simulator sliders change.
     const BASELINE_COSTS = computeCosts(7500, 4, 8, 100, 10, 5);
-    const _bTotals   = BASELINE_COSTS.map(c => c.monthlyTotal);
-    const _bMin      = Math.min(..._bTotals), _bMax = Math.max(..._bTotals);
-    const _costScores = _bTotals.map(t => _bMax === _bMin ? 33 : 35 * (1 - (t - _bMin) / (_bMax - _bMin)));
+    const _bTotals    = BASELINE_COSTS.map(c => c.monthlyTotal);
+    const _bValid     = _bTotals.filter(t => t !== null);
+    const _bMin       = Math.min(..._bValid), _bMax = Math.max(..._bValid);
+    // Vendors with null shipping get cost score 0 (cannot rank until rates arrive)
+    const _costScores = _bTotals.map(t => t === null ? 0 : (_bMax === _bMin ? 33 : 35 * (1 - (t - _bMin) / (_bMax - _bMin))));
     const VENDOR_SCORES = VENDORS.map((v, i) => ({
       vendor:  v,
-      total:   Math.round(_costScores[i] + [12,14,20,15,16][i] + [15,18,13,14,12][i] + [8,4,9,6,10][i] + [7,9,8,4,5][i]),
+      total:   Math.round(_costScores[i] + [12,14,20,15,16,13][i] + [15,18,13,14,12,11][i] + [8,4,9,6,10,7][i] + [7,9,8,4,5,8][i]),
       cost:    Math.round(_costScores[i]),
-      flex:    [12, 14, 20, 15, 16][i],
-      sla:     [15, 18, 13, 14, 12][i],
-      returns: [8,  4,  9,  6,  10][i],
-      tech:    [7,  9,  8,  4,  5][i],
+      flex:    [12, 14, 20, 15, 16, 13][i],
+      sla:     [15, 18, 13, 14, 12, 11][i],
+      returns: [8,  4,  9,  6,  10,  7][i],
+      tech:    [7,  9,  8,  4,  5,   8][i],
     }));
     const VENDOR_SCORES_SORTED = [...VENDOR_SCORES].sort((a, b) => b.total - a.total);
 
@@ -2465,7 +2470,8 @@ ${rows}</tbody>
     }
 
     function ShipChart({ zone }) {
-      const maxRate = Math.max(...VENDORS.map(v => Math.max(...ALL_RATES[v][zone])));
+      const chartVendors = VENDORS.filter(v => ALL_RATES[v] !== null);
+      const maxRate = Math.max(...chartVendors.map(v => Math.max(...ALL_RATES[v][zone])));
       const h = 180, w = 560, padL = 44, padB = 30, padT = 10, padR = 16;
       const plotW = w - padL - padR, plotH = h - padB - padT;
       const xStep = plotW / (RATE_WEIGHTS.length - 1);
@@ -2490,18 +2496,22 @@ ${rows}</tbody>
             {RATE_WEIGHTS.map((wt, i) => (
               <text key={i} x={padL + i * xStep} y={h - 6} textAnchor="middle" fontSize={8} fill="#999">{wt}lb</text>
             ))}
-            {VENDORS.map(v => (
+            {chartVendors.map(v => (
               <path key={v} d={path(v)} fill="none" stroke={VENDOR_COLORS[v]} strokeWidth={2.2}
                 strokeLinecap="round" strokeLinejoin="round" />
             ))}
           </svg>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", marginTop: 6 }}>
-            {VENDORS.map(v => (
+            {chartVendors.map(v => (
               <div key={v} style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <div style={{ width: 18, height: 3, background: VENDOR_COLORS[v], borderRadius: 2 }} />
                 <span style={{ fontSize: 10, color: VENDOR_COLORS[v], fontWeight: 700 }}>{v}</span>
               </div>
             ))}
+            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <div style={{ width: 18, height: 3, background: "#ddd", borderRadius: 2, border: "1px dashed #aaa" }} />
+              <span style={{ fontSize: 10, color: "#aaa", fontStyle: "italic" }}>ITS Logistics — rates pending</span>
+            </div>
           </div>
         </div>
       );
@@ -2522,18 +2532,23 @@ ${rows}</tbody>
             <tbody>
               {ZONES.map((z, zi) => {
                 const rates = VENDORS.map(v => interpRate(v, weight, z));
-                const minRate = Math.min(...rates);
+                const validRates = rates.filter(r => r !== null);
+                const minRate = validRates.length ? Math.min(...validRates) : null;
                 return (
                   <tr key={z} style={{ borderBottom: "1px solid #f3f4f6", background: zi % 2 === 0 ? "#FAFAF8" : "#fff" }}>
                     <td style={{ padding: "8px 6px", fontWeight: 600, color: "#374151" }}>Zone {z}</td>
-                    {rates.map((r, vi) => (
-                      <td key={vi} style={{
-                        textAlign: "center", padding: "8px 6px",
-                        fontFamily: "'JetBrains Mono', monospace", fontWeight: r === minRate ? 800 : 500,
-                        color: r === minRate ? VENDOR_COLORS[VENDORS[vi]] : "#666",
-                        background: r === minRate ? VENDOR_ACCENT[VENDORS[vi]] : "transparent", borderRadius: 4,
-                      }}>{fmt(r)}</td>
-                    ))}
+                    {rates.map((r, vi) => {
+                      const isBest = r !== null && r === minRate;
+                      return (
+                        <td key={vi} style={{
+                          textAlign: "center", padding: "8px 6px",
+                          fontFamily: "'JetBrains Mono', monospace", fontWeight: isBest ? 800 : 500,
+                          color: r === null ? "#bbb" : isBest ? VENDOR_COLORS[VENDORS[vi]] : "#666",
+                          background: isBest ? VENDOR_ACCENT[VENDORS[vi]] : "transparent", borderRadius: 4,
+                          fontStyle: r === null ? "italic" : "normal",
+                        }}>{r === null ? "TBD" : fmt(r)}</td>
+                      );
+                    })}
                   </tr>
                 );
               })}
@@ -2571,7 +2586,7 @@ ${rows}</tbody>
     ];
 
     function StackedCostChart({ costs }) {
-      const maxTotal = Math.max(...costs.map(c => c.monthlyTotal));
+      const maxTotal = Math.max(...costs.map(c => c.monthlyTotal).filter(t => t !== null));
       const W = 560, padL = 78, padR = 74, barH = 36, gap = 14;
       const plotW = W - padL - padR;
       const H = costs.length * (barH + gap) + 20;
@@ -2581,6 +2596,19 @@ ${rows}</tbody>
           <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
             {costs.map((c, ci) => {
               const y = 10 + ci * (barH + gap);
+              if (c.monthlyTotal === null) {
+                return (
+                  <g key={c.vendor}>
+                    <text x={padL - 8} y={y + barH / 2 + 4} textAnchor="end"
+                      fontSize={11} fontWeight="700" fill={VENDOR_COLORS[c.vendor]}>
+                      {c.vendor.split(" ")[0]}
+                    </text>
+                    <rect x={padL} y={y} width={plotW} height={barH} rx={5} fill="#f1f5f9" />
+                    <rect x={padL} y={y} width={plotW * 0.15} height={barH} rx={5} fill={`${VENDOR_COLORS[c.vendor]}44`} />
+                    <text x={padL + 12} y={y + barH / 2 + 4} fontSize={10} fill="#aaa" fontStyle="italic">Shipping rates pending — total TBD</text>
+                  </g>
+                );
+              }
               let cumX = padL;
               const rects = COST_SEGMENTS.map(seg => {
                 const segW = (c[seg.key] / maxTotal) * plotW;
@@ -2596,7 +2624,6 @@ ${rows}</tbody>
                     fontSize={11} fontWeight="700" fill={VENDOR_COLORS[c.vendor]}>
                     {c.vendor.split(" ")[0]}
                   </text>
-                  {/* track background */}
                   <rect x={padL} y={y} width={plotW} height={barH} rx={5} fill="#f1f5f9" />
                   {rects.map(({ seg, x0, segW }, i) => (
                     <rect key={seg.key} x={x0} y={y} width={segW} height={barH}
@@ -2638,7 +2665,8 @@ ${rows}</tbody>
         { label: "Receiving",               key: "receiving" },
       ];
 
-      const lowestTotal = Math.min(...costs.map(c => c.monthlyTotal));
+      const validTotals = costs.filter(c => c.monthlyTotal !== null).map(c => c.monthlyTotal);
+      const lowestTotal = validTotals.length ? Math.min(...validTotals) : null;
 
       return (
         <div style={{ overflowX: "auto", marginTop: 20 }}>
@@ -2656,7 +2684,7 @@ ${rows}</tbody>
             <tbody>
               {rows.map((row, ri) => {
                 const vals = costs.map(c => c[row.key]);
-                const positiveVals = vals.filter(v => v > 0);
+                const positiveVals = vals.filter(v => v !== null && v > 0);
                 const minVal = positiveVals.length ? Math.min(...positiveVals) : null;
                 return (
                   <tr key={row.key} style={{ borderBottom: "1px solid #f3f4f6", background: ri % 2 === 0 ? "#FAFAF8" : "#fff" }}>
@@ -2666,16 +2694,17 @@ ${rows}</tbody>
                     </td>
                     {costs.map((c, ci) => {
                       const v = c[row.key];
-                      const isBest = v === minVal && v > 0;
+                      const isBest = v !== null && v === minVal && v > 0;
                       return (
                         <td key={ci} style={{
                           textAlign: "right", padding: "8px 10px",
                           fontFamily: "'JetBrains Mono', monospace",
                           fontWeight: isBest ? 800 : 400,
-                          color: isBest ? VENDOR_COLORS[c.vendor] : (v === 0 ? "#c8d0da" : "#555"),
+                          color: v === null ? "#bbb" : isBest ? VENDOR_COLORS[c.vendor] : (v === 0 ? "#c8d0da" : "#555"),
                           background: isBest ? VENDOR_ACCENT[c.vendor] : "transparent",
+                          fontStyle: v === null ? "italic" : "normal",
                         }}>
-                          {v === 0 ? "—" : fmt(v)}
+                          {v === null ? "TBD" : v === 0 ? "—" : fmt(v)}
                         </td>
                       );
                     })}
@@ -2689,14 +2718,15 @@ ${rows}</tbody>
                   Monthly Total <span style={{ fontWeight: 400, fontSize: 10, color: "#94a3b8" }}>Zone {simZone} · {avgWeight} lbs</span>
                 </td>
                 {costs.map((c, ci) => {
-                  const isLow = c.monthlyTotal === lowestTotal;
+                  const isLow = c.monthlyTotal !== null && c.monthlyTotal === lowestTotal;
                   return (
                     <td key={ci} style={{
                       textAlign: "right", padding: "10px 10px",
                       fontFamily: "'JetBrains Mono', monospace", fontWeight: 900, fontSize: 15,
-                      color: isLow ? "#4ade80" : "#e2e8f0",
+                      color: c.monthlyTotal === null ? "#64748b" : isLow ? "#4ade80" : "#e2e8f0",
+                      fontStyle: c.monthlyTotal === null ? "italic" : "normal",
                     }}>
-                      {fmtK(c.monthlyTotal)}
+                      {c.monthlyTotal === null ? "TBD" : fmtK(c.monthlyTotal)}
                       {isLow && <span style={{ fontSize: 10, marginLeft: 4 }}>★</span>}
                     </td>
                   );
@@ -2725,7 +2755,8 @@ ${rows}</tbody>
         [orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone]
       );
 
-      const lowestTotal = Math.min(...costs.map(c => c.monthlyTotal));
+      const _validTotals = costs.filter(c => c.monthlyTotal !== null).map(c => c.monthlyTotal);
+      const lowestTotal = _validTotals.length ? Math.min(..._validTotals) : null;
 
       // Scores are stable module-level constants — never recalculate here
       const scores = VENDOR_SCORES;
@@ -2811,6 +2842,12 @@ ${rows}</tbody>
                       { good: false, text: "$30,000 monthly minimum — 3× MasonHub, highest of all vendors" },
                       { good: false, text: "$0.60/cu-ft storage = $28.80/pallet/mo — most expensive storage" },
                     ],
+                    "ITS Logistics": [
+                      { good: true,  text: "$0.42/unit pick + $3.86/order fee — no separate pack charge" },
+                      { good: true,  text: "No start-up costs; first-month storage abatement (~$4,500 savings)" },
+                      { good: false, text: "$21,956/month all-in minimum — 2nd highest of all vendors" },
+                      { good: false, text: "Shipping rates not yet received — total landed cost TBD" },
+                    ],
                   };
                   const tagMap = {
                     MasonHub: "Pennsylvania · Established fulfillment",
@@ -2818,6 +2855,7 @@ ${rows}</tbody>
                     ShipFusion: "Pennsylvania · Flexible fulfillment",
                     "DCL Logistics": "Kentucky · Flat-rate shipping",
                     "Jay Group": "Lancaster PA · Amazon Ground",
+                    "ITS Logistics": "Dedicated footprint · Rates pending",
                   };
                   return <VendorCard key={s.vendor} name={s.vendor} tagline={tagMap[s.vendor]} highlights={hlMap[s.vendor]} score={s.total} rank={idx + 1} />;
                 })}
@@ -2897,15 +2935,22 @@ ${rows}</tbody>
                 <div style={{ flex: "1 1 380px" }}>
                   <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
                     {costs.map(c => {
-                      const isLow = c.monthlyTotal === lowestTotal;
+                      const isLow = c.monthlyTotal !== null && c.monthlyTotal === lowestTotal;
+                      const isPending = c.monthlyTotal === null;
                       return (
                         <div key={c.vendor} style={{
-                          flex: 1, minWidth: 140, background: isLow ? VENDOR_COLORS[c.vendor] : "#fff",
-                          borderRadius: 12, padding: "16px 14px", border: isLow ? "none" : "1px solid #e5e7eb",
+                          flex: 1, minWidth: 140,
+                          background: isPending ? "#f8fafc" : isLow ? VENDOR_COLORS[c.vendor] : "#fff",
+                          borderRadius: 12, padding: "16px 14px",
+                          border: isPending ? `1px dashed ${VENDOR_COLORS[c.vendor]}88` : isLow ? "none" : "1px solid #e5e7eb",
                         }}>
-                          <div style={{ fontSize: 11, fontWeight: 600, color: isLow ? "#fffc" : "#888", marginBottom: 2 }}>{c.vendor} {isLow && "★"}</div>
-                          <div style={{ fontSize: 22, fontWeight: 900, color: isLow ? "#fff" : "#111", fontFamily: "'JetBrains Mono', monospace" }}>{fmtK(c.monthlyTotal)}</div>
-                          <div style={{ fontSize: 10, color: isLow ? "#fff9" : "#aaa", fontWeight: 500 }}>/month · Zone {simZone}</div>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: isPending ? VENDOR_COLORS[c.vendor] : isLow ? "#fffc" : "#888", marginBottom: 2 }}>{c.vendor} {isLow && "★"}</div>
+                          <div style={{ fontSize: isPending ? 14 : 22, fontWeight: 900, color: isPending ? "#aaa" : isLow ? "#fff" : "#111", fontFamily: "'JetBrains Mono', monospace", fontStyle: isPending ? "italic" : "normal" }}>
+                            {isPending ? "TBD" : fmtK(c.monthlyTotal)}
+                          </div>
+                          <div style={{ fontSize: 10, color: isPending ? "#bbb" : isLow ? "#fff9" : "#aaa", fontWeight: 500 }}>
+                            {isPending ? "Shipping rates pending" : `/month · Zone ${simZone}`}
+                          </div>
                           {c.minApplies && <div style={{ fontSize: 9, color: "#F59E0B", fontWeight: 600, marginTop: 4, background: "#FEF3C7", padding: "2px 6px", borderRadius: 4, display: "inline-block" }}>Min applies: {fmtK(c.monthlyMin)}</div>}
                         </div>
                       );
@@ -2934,7 +2979,7 @@ ${rows}</tbody>
                         {costs.map(c => (
                           <div key={c.vendor} style={{ flex: 1, textAlign: "center", padding: "8px 0", borderRadius: 8, background: VENDOR_ACCENT[c.vendor] }}>
                             <div style={{ fontSize: 10, fontWeight: 600, color: "#888" }}>{c.vendor.split(" ")[0]}</div>
-                            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 16, fontWeight: 800, color: VENDOR_COLORS[c.vendor] }}>{fmt(c.shipRate)}</div>
+                            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: c.shipRate === null ? 12 : 16, fontWeight: 800, color: c.shipRate === null ? "#aaa" : VENDOR_COLORS[c.vendor], fontStyle: c.shipRate === null ? "italic" : "normal" }}>{c.shipRate === null ? "TBD" : fmt(c.shipRate)}</div>
                           </div>
                         ))}
                       </div>
@@ -2993,15 +3038,21 @@ ${rows}</tbody>
 
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
                 {[
-                  { vendor: "MasonHub",   text: "Competitive across all zones, especially at heavier weights (5+ lbs). Rate structure scales smoothly — no sharp jumps at weight thresholds." },
-                  { vendor: "Red Stag",   text: "Flat floor pricing (~$8.99–$9.89) at lower zones and lighter weights, climbing steeply above 10 lbs at outer zones. TN origin may yield a better overall zone mix for eastern/central customers." },
-                  { vendor: "ShipFusion", text: "Competitive at lighter weights (1–5 lbs), but rates jump sharply at 11+ lbs. PA origin means similar zone map to MasonHub. Weakest value for heavier packages." },
+                  { vendor: "MasonHub",       text: "Competitive across all zones, especially at heavier weights (5+ lbs). Rate structure scales smoothly — no sharp jumps at weight thresholds." },
+                  { vendor: "Red Stag",       text: "Flat floor pricing (~$8.99–$9.89) at lower zones and lighter weights, climbing steeply above 10 lbs at outer zones. TN origin may yield a better overall zone mix for eastern/central customers." },
+                  { vendor: "ShipFusion",     text: "Competitive at lighter weights (1–5 lbs), but rates jump sharply at 11+ lbs. PA origin means similar zone map to MasonHub. Weakest value for heavier packages." },
+                  { vendor: "DCL Logistics",  text: "Zone-independent flat rates from KY origin. Eliminates zone-spread risk but costs more to coastal markets vs. zone-based carriers. Predictable billing is an operational advantage." },
+                  { vendor: "Jay Group",      text: "Amazon Ground network (Lancaster PA). Strong rates at lower zones (2–5) — often the lowest in the comparison. Rates climb sharply at Zone 7–8 and 11+ lbs." },
                 ].map(t => (
                   <div key={t.vendor} style={{ flex: 1, minWidth: 220, padding: 14, borderRadius: 10, background: VENDOR_ACCENT[t.vendor], borderLeft: `3px solid ${VENDOR_COLORS[t.vendor]}` }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: VENDOR_COLORS[t.vendor], marginBottom: 4 }}>{t.vendor}</div>
                     <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>{t.text}</div>
                   </div>
                 ))}
+                <div style={{ flex: 1, minWidth: 220, padding: 14, borderRadius: 10, background: "#FFF1F2", borderLeft: `3px solid #BE123C`, borderStyle: "dashed" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#BE123C", marginBottom: 4 }}>ITS Logistics</div>
+                  <div style={{ fontSize: 11, color: "#777", lineHeight: 1.5, fontStyle: "italic" }}>Shipping rate card not yet received. Rates will appear here once provided by ITS.</div>
+                </div>
               </div>
             </>}
 
@@ -3027,8 +3078,8 @@ ${rows}</tbody>
                       { label: "Additional Item Pick",   unit: "/item",    vals: SERVICE_COSTS.addlPick,      comparable: true },
                       { label: "Pack Fee",               unit: "/order",   vals: SERVICE_COSTS.packFee,       comparable: true },
 					  { label: "Pallet Receiving",       unit: "/pallet",  vals: SERVICE_COSTS.palletReceiving, comparable: true },
-                      { label: "Storage",                unit: "",         vals: [null, null, null],
-                        display: ["$25.00 / pallet / mo", "$0.35 / cu ft / mo", "$25.00 / pallet / mo"], comparable: false },
+                      { label: "Storage",                unit: "",         vals: [null, null, null, null, null, null],
+                        display: ["$25/pallet/mo", "$0.35/cu ft/mo", "$25/pallet/mo", "$18/pallet/mo", "$28.80/pallet/mo", "~$4,500/mo flat"], comparable: false },
                       { label: "Monthly Minimum",        unit: "/month",   vals: SERVICE_COSTS.monthlyMin,    comparable: true, zeroLabel: "None" },
                       { label: "Platform / Tech Fee",    unit: "/month",   vals: SERVICE_COSTS.techFee,       comparable: true, zeroLabel: "—" },
                       { label: "Returns Processing",     unit: "/return",  vals: SERVICE_COSTS.returnsFee,    comparable: true },
@@ -3104,9 +3155,10 @@ ${rows}</tbody>
 
               <div style={{ display: "flex", gap: 14, marginTop: 20, flexWrap: "wrap" }}>
                 {[
-                  { title: "⚠️ Escalation Risk",    titleColor: "#92400E", body: "MasonHub escalates via three separate mechanisms: 5% annually plus carrier pass-throughs plus labor cost adjustments. ShipFusion's 4% flat cap is the only contractually bounded increase. Red Stag's 'customary increase' is vague. DCL and Jay Group provided no escalation terms — adding open-ended long-term price risk.", color: "#FEF3C7", border: "#F59E0B" },
-                  { title: "🔒 Monthly Minimums",   titleColor: "#991B1B", body: "Jay Group's $30,000/month floor is the highest by far — 3× MasonHub's $10,000 and 6× ShipFusion's $5,000. DCL also carries a $10,000 minimum. Only Red Stag has no monthly minimum. These floors are comfortably exceeded at current volume but become hard exposure during slow months, a transition period, or a ramp.", color: "#FEE2E2", border: "#EF4444" },
-                  { title: "💡 Fixed Cost Exposure", titleColor: "#1E3A5F", body: "DCL's $2,500/month tech fee is 5× MasonHub's $500 and $1,500 more than Jay Group's $1,000/month. Fixed platform fees add $6,000–$30,000/year before a single order ships, regardless of volume. Red Stag and ShipFusion carry zero platform fees — a meaningful advantage at lower order volumes.", color: "#E0F2FE", border: "#3B82F6" },
+                  { title: "⚠️ Escalation Risk",    titleColor: "#92400E", body: "MasonHub escalates via three separate mechanisms: 5% annually plus carrier pass-throughs plus labor cost adjustments. ShipFusion's 4% flat cap is the only contractually bounded increase. Red Stag's 'customary increase' is vague. DCL, Jay Group, and ITS provided no escalation terms — adding open-ended long-term price risk.", color: "#FEF3C7", border: "#F59E0B" },
+                  { title: "🔒 Monthly Minimums",   titleColor: "#991B1B", body: "Jay Group's $30,000/month floor is the highest — 3× MasonHub's $10,000. ITS Logistics carries a $21,956 all-in minimum (covers handling, account mgmt, storage, and small parcel), making it the 2nd highest. DCL and MasonHub both carry $10,000 minimums. Only Red Stag has no minimum. These become hard exposure during slow months or ramp periods.", color: "#FEE2E2", border: "#EF4444" },
+                  { title: "💡 Fixed Cost Exposure", titleColor: "#1E3A5F", body: "DCL's $2,500/month tech fee is 5× MasonHub's $500 and $1,500 more than Jay Group's $1,000/month. ITS adds ~$4,500/month in dedicated storage overhead (fixed regardless of pallets stored). Fixed platform and storage fees add $6,000–$54,000/year before a single order ships. Red Stag and ShipFusion carry zero fixed fees.", color: "#E0F2FE", border: "#3B82F6" },
+                  { title: "🚚 ITS Shipping Pending", titleColor: "#4C1D95", body: "ITS Logistics has not yet provided a shipping rate card. Total landed cost cannot be modeled until rates are received. Service costs are competitive — $0.42/unit pick, $7.11 pallet receiving, $3.56 returns — but shipping typically represents 40–60% of total cost. Rates pending before ITS can be ranked.", color: "#F5F0FF", border: "#7C3AED" },
                 ].map(c => (
                   <div key={c.title} style={{ flex: 1, minWidth: 220, padding: 16, borderRadius: 12, background: c.color, borderLeft: `3px solid ${c.border}` }}>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, color: c.titleColor }}>{c.title}</div>
