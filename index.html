@@ -2237,7 +2237,11 @@
       8: [5.58,6.34,6.98,6.99,7.41,7.41,7.70,8.94,9.26,9.87,12.74,13.34,13.94,15.16,15.78,16.56,16.56,17.86,18.72,19.40,19.99,20.67,21.70,22.93,23.65],
     };
 
-    const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES, "DCL Logistics": DCL_RATES, "Jay Group": JAYGROUP_RATES, "ITS Logistics": null };  // ITS: shipping rates not yet received
+    // ITS Logistics: projected CPP $10.07/package (zone- and weight-independent) — actual rate card pending
+    const ITS_CPP_FLAT = Array(25).fill(10.07);
+    const ITS_RATES = { 2: ITS_CPP_FLAT, 3: ITS_CPP_FLAT, 4: ITS_CPP_FLAT, 5: ITS_CPP_FLAT, 6: ITS_CPP_FLAT, 7: ITS_CPP_FLAT, 8: ITS_CPP_FLAT };
+
+    const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES, "DCL Logistics": DCL_RATES, "Jay Group": JAYGROUP_RATES, "ITS Logistics": ITS_RATES };
     const ZONES = [2, 3, 4, 5, 6, 7, 8];
 
     // ── Rate table Excel export ──────────────────────────────────────────────
@@ -2248,9 +2252,9 @@
       const exportWeights = Array.from({ length: 25 }, (_, i) => i + 1);
       // Only export vendors with available rate data
       const rateVendors = VENDORS.filter(v => ALL_RATES[v] !== null);
-      const WIN_BG  = { MasonHub: "#FFE8DF", "Red Stag": "#D6EFE0", ShipFusion: "#D6E8F2", "DCL Logistics": "#EDE9FE", "Jay Group": "#CCFBF1" };
-      const WIN_FG  = { MasonHub: "#C0401A", "Red Stag": "#1A5C38", ShipFusion: "#0F3554", "DCL Logistics": "#4C1D95", "Jay Group": "#064E3B" };
-      const HDR_BG  = { MasonHub: "#E85D26", "Red Stag": "#2D6A4F", ShipFusion: "#1B4965", "DCL Logistics": "#6B21A8", "Jay Group": "#0E7490" };
+      const WIN_BG  = { MasonHub: "#FFE8DF", "Red Stag": "#D6EFE0", ShipFusion: "#D6E8F2", "DCL Logistics": "#EDE9FE", "Jay Group": "#CCFBF1", "ITS Logistics": "#FFE4E8" };
+      const WIN_FG  = { MasonHub: "#C0401A", "Red Stag": "#1A5C38", ShipFusion: "#0F3554", "DCL Logistics": "#4C1D95", "Jay Group": "#064E3B", "ITS Logistics": "#9F1239" };
+      const HDR_BG  = { MasonHub: "#E85D26", "Red Stag": "#2D6A4F", ShipFusion: "#1B4965", "DCL Logistics": "#6B21A8", "Jay Group": "#0E7490", "ITS Logistics": "#BE123C" };
 
       const cellStyle = (bg, fg, bold) =>
         `background-color:${bg};color:${fg};${bold ? "font-weight:bold;" : ""}`;
@@ -2505,13 +2509,10 @@ ${rows}</tbody>
             {chartVendors.map(v => (
               <div key={v} style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <div style={{ width: 18, height: 3, background: VENDOR_COLORS[v], borderRadius: 2 }} />
-                <span style={{ fontSize: 10, color: VENDOR_COLORS[v], fontWeight: 700 }}>{v}</span>
+                <span style={{ fontSize: 10, color: VENDOR_COLORS[v], fontWeight: 700 }}>{v}{v === "ITS Logistics" ? " *" : ""}</span>
               </div>
             ))}
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <div style={{ width: 18, height: 3, background: "#ddd", borderRadius: 2, border: "1px dashed #aaa" }} />
-              <span style={{ fontSize: 10, color: "#aaa", fontStyle: "italic" }}>ITS Logistics — rates pending</span>
-            </div>
+            <div style={{ fontSize: 9, color: "#aaa", marginTop: 2, fontStyle: "italic" }}>* ITS modeled at projected $10.07 CPP (flat) — actual rate card pending</div>
           </div>
         </div>
       );
@@ -2846,7 +2847,7 @@ ${rows}</tbody>
                       { good: true,  text: "$0.42/unit pick + $3.86/order fee — no separate pack charge" },
                       { good: true,  text: "No start-up costs; first-month storage abatement (~$4,500 savings)" },
                       { good: false, text: "$21,956/month all-in minimum — 2nd highest of all vendors" },
-                      { good: false, text: "Shipping rates not yet received — total landed cost TBD" },
+                      { good: false, text: "Shipping modeled at projected $10.07 CPP — actual rate card pending" },
                     ],
                   };
                   const tagMap = {
@@ -3049,9 +3050,9 @@ ${rows}</tbody>
                     <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>{t.text}</div>
                   </div>
                 ))}
-                <div style={{ flex: 1, minWidth: 220, padding: 14, borderRadius: 10, background: "#FFF1F2", borderLeft: `3px solid #BE123C`, borderStyle: "dashed" }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#BE123C", marginBottom: 4 }}>ITS Logistics</div>
-                  <div style={{ fontSize: 11, color: "#777", lineHeight: 1.5, fontStyle: "italic" }}>Shipping rate card not yet received. Rates will appear here once provided by ITS.</div>
+                <div style={{ flex: 1, minWidth: 220, padding: 14, borderRadius: 10, background: "#FFF1F2", borderLeft: `3px solid #BE123C` }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#BE123C", marginBottom: 4 }}>ITS Logistics *</div>
+                  <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>Modeled at a flat $10.07 projected CPP — zone- and weight-independent. Actual rates will vary; this projection may over- or under-state costs depending on your customer zone mix.</div>
                 </div>
               </div>
             </>}
@@ -3158,7 +3159,7 @@ ${rows}</tbody>
                   { title: "⚠️ Escalation Risk",    titleColor: "#92400E", body: "MasonHub escalates via three separate mechanisms: 5% annually plus carrier pass-throughs plus labor cost adjustments. ShipFusion's 4% flat cap is the only contractually bounded increase. Red Stag's 'customary increase' is vague. DCL, Jay Group, and ITS provided no escalation terms — adding open-ended long-term price risk.", color: "#FEF3C7", border: "#F59E0B" },
                   { title: "🔒 Monthly Minimums",   titleColor: "#991B1B", body: "Jay Group's $30,000/month floor is the highest — 3× MasonHub's $10,000. ITS Logistics carries a $21,956 all-in minimum (covers handling, account mgmt, storage, and small parcel), making it the 2nd highest. DCL and MasonHub both carry $10,000 minimums. Only Red Stag has no minimum. These become hard exposure during slow months or ramp periods.", color: "#FEE2E2", border: "#EF4444" },
                   { title: "💡 Fixed Cost Exposure", titleColor: "#1E3A5F", body: "DCL's $2,500/month tech fee is 5× MasonHub's $500 and $1,500 more than Jay Group's $1,000/month. ITS adds ~$4,500/month in dedicated storage overhead (fixed regardless of pallets stored). Fixed platform and storage fees add $6,000–$54,000/year before a single order ships. Red Stag and ShipFusion carry zero fixed fees.", color: "#E0F2FE", border: "#3B82F6" },
-                  { title: "🚚 ITS Shipping Pending", titleColor: "#4C1D95", body: "ITS Logistics has not yet provided a shipping rate card. Total landed cost cannot be modeled until rates are received. Service costs are competitive — $0.42/unit pick, $7.11 pallet receiving, $3.56 returns — but shipping typically represents 40–60% of total cost. Rates pending before ITS can be ranked.", color: "#F5F0FF", border: "#7C3AED" },
+                  { title: "📊 ITS Shipping (Projected)", titleColor: "#9F1239", body: "ITS provided a projected CPP (cost per package) of $10.07, used as a flat estimate until the actual rate card arrives. At $10.07/shipment, shipping is zone- and weight-independent. Actual rates will vary — this projection may over- or under-state cost depending on your customer geography.", color: "#FFF1F2", border: "#BE123C" },
                 ].map(c => (
                   <div key={c.title} style={{ flex: 1, minWidth: 220, padding: 16, borderRadius: 12, background: c.color, borderLeft: `3px solid ${c.border}` }}>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, color: c.titleColor }}>{c.title}</div>
