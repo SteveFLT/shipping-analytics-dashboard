@@ -2237,9 +2237,16 @@
       8: [5.58,6.34,6.98,6.99,7.41,7.41,7.70,8.94,9.26,9.87,12.74,13.34,13.94,15.16,15.78,16.56,16.56,17.86,18.72,19.40,19.99,20.67,21.70,22.93,23.65],
     };
 
-    // ITS Logistics: projected CPP $10.07/package (zone- and weight-independent) — actual rate card pending
-    const ITS_CPP_FLAT = Array(25).fill(10.07);
-    const ITS_RATES = { 2: ITS_CPP_FLAT, 3: ITS_CPP_FLAT, 4: ITS_CPP_FLAT, 5: ITS_CPP_FLAT, 6: ITS_CPP_FLAT, 7: ITS_CPP_FLAT, 8: ITS_CPP_FLAT };
+    // ITS Logistics: OnTrac ground rates (weights 1–25 lbs, zones 2–8; inclusive of fuel, residential, peak surcharges)
+    const ITS_RATES = {
+      2: [4.97,5.36,5.52,5.59,5.66,5.72,5.80,5.88,5.95,5.98,6.13,6.14,6.16,6.17,6.18,6.19,6.22,6.23,6.24,6.24,6.26,6.31,6.34,6.49,6.59],
+      3: [5.05,5.64,5.80,5.87,5.95,6.01,6.10,6.17,6.25,6.28,6.61,6.62,6.64,6.65,6.65,6.70,6.78,6.84,7.02,7.04,7.06,7.14,7.32,7.72,7.81],
+      4: [5.50,5.94,6.08,6.17,6.25,6.34,6.41,6.49,6.56,6.60,7.09,7.09,7.10,7.12,7.14,7.15,7.16,7.18,7.27,7.30,7.38,7.64,7.94,8.39,8.53],
+      5: [5.80,6.24,6.41,6.49,6.56,6.65,6.73,6.82,6.90,6.94,8.06,8.08,8.09,8.10,8.11,8.12,8.21,8.47,8.72,8.98,9.04,9.44,9.78,10.30,10.57],
+      6: [5.99,6.55,6.72,6.82,6.90,6.98,7.08,7.16,7.25,7.28,8.32,8.34,8.35,8.64,9.26,9.65,10.18,10.58,10.76,11.00,11.29,11.86,12.53,13.09,13.36],
+      7: [6.11,6.89,7.07,7.16,7.25,7.34,7.44,7.52,7.62,7.66,9.66,9.67,10.38,11.24,11.68,12.71,13.09,13.34,13.56,13.88,14.18,14.81,15.40,15.82,16.62],
+      8: [6.22,7.24,7.43,7.52,7.62,7.72,7.81,7.91,8.00,8.04,10.94,10.96,11.39,12.52,13.22,14.35,14.47,15.06,15.43,15.83,16.15,16.94,17.72,18.86,19.30],
+    };
 
     const ALL_RATES = { MasonHub: MASON_RATES, "Red Stag": REDSTAG_RATES, ShipFusion: SHIPFUSION_RATES, "DCL Logistics": DCL_RATES, "Jay Group": JAYGROUP_RATES, "ITS Logistics": ITS_RATES };
     const ZONES = [2, 3, 4, 5, 6, 7, 8];
@@ -2512,7 +2519,6 @@ ${rows}</tbody>
                 <span style={{ fontSize: 10, color: VENDOR_COLORS[v], fontWeight: 700 }}>{v}{v === "ITS Logistics" ? " *" : ""}</span>
               </div>
             ))}
-            <div style={{ fontSize: 9, color: "#aaa", marginTop: 2, fontStyle: "italic" }}>* ITS modeled at projected $10.07 CPP (flat) — actual rate card pending</div>
           </div>
         </div>
       );
@@ -2847,7 +2853,7 @@ ${rows}</tbody>
                       { good: true,  text: "$0.42/unit pick + $3.86/order fee — no separate pack charge" },
                       { good: true,  text: "No start-up costs; first-month storage abatement (~$4,500 savings)" },
                       { good: false, text: "$21,956/month all-in minimum — 2nd highest of all vendors" },
-                      { good: false, text: "Shipping modeled at projected $10.07 CPP — actual rate card pending" },
+                      { good: false, text: "Shipping via OnTrac ground; rates jump significantly above 10 lbs" },
                     ],
                   };
                   const tagMap = {
@@ -3050,10 +3056,6 @@ ${rows}</tbody>
                     <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>{t.text}</div>
                   </div>
                 ))}
-                <div style={{ flex: 1, minWidth: 220, padding: 14, borderRadius: 10, background: "#FFF1F2", borderLeft: `3px solid #BE123C` }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#BE123C", marginBottom: 4 }}>ITS Logistics *</div>
-                  <div style={{ fontSize: 11, color: "#555", lineHeight: 1.5 }}>Modeled at a flat $10.07 projected CPP — zone- and weight-independent. Actual rates will vary; this projection may over- or under-state costs depending on your customer zone mix.</div>
-                </div>
               </div>
             </>}
 
@@ -3159,7 +3161,7 @@ ${rows}</tbody>
                   { title: "⚠️ Escalation Risk",    titleColor: "#92400E", body: "MasonHub escalates via three separate mechanisms: 5% annually plus carrier pass-throughs plus labor cost adjustments. ShipFusion's 4% flat cap is the only contractually bounded increase. Red Stag's 'customary increase' is vague. DCL, Jay Group, and ITS provided no escalation terms — adding open-ended long-term price risk.", color: "#FEF3C7", border: "#F59E0B" },
                   { title: "🔒 Monthly Minimums",   titleColor: "#991B1B", body: "Jay Group's $30,000/month floor is the highest — 3× MasonHub's $10,000. ITS Logistics carries a $21,956 all-in minimum (covers handling, account mgmt, storage, and small parcel), making it the 2nd highest. DCL and MasonHub both carry $10,000 minimums. Only Red Stag has no minimum. These become hard exposure during slow months or ramp periods.", color: "#FEE2E2", border: "#EF4444" },
                   { title: "💡 Fixed Cost Exposure", titleColor: "#1E3A5F", body: "DCL's $2,500/month tech fee is 5× MasonHub's $500 and $1,500 more than Jay Group's $1,000/month. ITS adds ~$4,500/month in dedicated storage overhead (fixed regardless of pallets stored). Fixed platform and storage fees add $6,000–$54,000/year before a single order ships. Red Stag and ShipFusion carry zero fixed fees.", color: "#E0F2FE", border: "#3B82F6" },
-                  { title: "📊 ITS Shipping (Projected)", titleColor: "#9F1239", body: "ITS provided a projected CPP (cost per package) of $10.07, used as a flat estimate until the actual rate card arrives. At $10.07/shipment, shipping is zone- and weight-independent. Actual rates will vary — this projection may over- or under-state cost depending on your customer geography.", color: "#FFF1F2", border: "#BE123C" },
+                  { title: "📦 ITS OnTrac Shipping", titleColor: "#9F1239", body: "ITS ships via OnTrac ground with rates inclusive of fuel, residential, and peak surcharges. Light packages (1–10 lbs) run $4.97–$8.04 depending on zone. Rates jump at 11 lbs (surcharge tier), reaching $10.94–$19.30 for heavier packages in distant zones. Zone 2 stays under $6.60 for all weights.", color: "#FFF1F2", border: "#BE123C" },
                 ].map(c => (
                   <div key={c.title} style={{ flex: 1, minWidth: 220, padding: 16, borderRadius: 12, background: c.color, borderLeft: `3px solid ${c.border}` }}>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, color: c.titleColor }}>{c.title}</div>
