@@ -2170,7 +2170,7 @@
       monthlyMin:         [10000, 0,   5000, 10000, 30000, 21956],
       techFee:            [500,   0,    0,   2500, 1000,  0],
       returnsFee:         [3,     6,    2.50, 5.50, 2.00, 3.56],
-      serialScan:         [0,     0.20, 0.20, 0.10, 0.15, 0],
+      serialScan:         [0,     0.05, 0.20, 0.10, 0.15, 0],
       insertFee:          [0.15,  0.25, 0.14, 0.10, 0.12, 0.17],
       packagingMaterials: [0,     0,    0.15, 0,    0,    0],
       storagePerPallet:   [25,    16.80, 25,  18,   28.80, 0],     // RS: 48cu-ft×$0.35; JG: 48cu-ft×$0.60; ITS: see storageFlatFee
@@ -2820,40 +2820,40 @@ ${rows}</tbody>
                 {sorted.map((s, idx) => {
                   const hlMap = {
                     MasonHub: [
-                      { good: true,  text: "Serial scan fee waived — negotiated to $0 (competitors charge $0.10–$0.20/unit)" },
-                      { good: true,  text: "95% same-day SLA with contractual KPI & inventory accuracy" },
-                      { good: false, text: "2-year lock-in; auto-renews as 2-year terms" },
-                      { good: false, text: "$500/mo platform fee + $10K monthly minimum" },
+                      { good: true,  text: "Serial scan waived ($0) — only vendor offering this; others charge $0.05–$0.20/unit" },
+                      { good: true,  text: "Strongest SLAs: 95% same-day DTC + 98% inventory accuracy, both contractually backed" },
+                      { good: false, text: "2-year lock-in with 90-day notice; auto-renews as 2-year terms — highest commitment risk" },
+                      { good: false, text: "$500/mo tech fee + $10,000 monthly minimum adds ~$66K/yr in fixed overhead" },
                     ],
                     "Red Stag": [
-                      { good: true,  text: "100% inventory accuracy SLA" },
-                      { good: true,  text: "$50/order penalty if SLA missed" },
-                      { good: true,  text: "No platform fee or monthly minimum" },
-                      { good: false, text: "$6 per return (highest of all vendors)" },
+                      { good: true,  text: "Serial scan cut to $0.05/unit — lowest among vendors that charge it (reduced from $0.20)" },
+                      { good: true,  text: "No platform fee and no monthly minimum — lowest fixed cost exposure of all vendors" },
+                      { good: false, text: "$6.00/return — highest of all 6 vendors (3× Jay Group, 2× MasonHub)" },
+                      { good: false, text: "No contract on file — less contractual protection vs. vendors with executed agreements" },
                     ],
                     ShipFusion: [
-                      { good: true,  text: "90-day trial — lowest commitment" },
-                      { good: true,  text: "Fixed 4% annual escalation cap" },
-                      { good: false, text: "Highest pick + pack per order at run-rate" },
-                      { good: false, text: "$0.15/unit packaging materials fee" },
+                      { good: true,  text: "90-day trial period — lowest commitment risk; exits to 9-month then annual terms" },
+                      { good: true,  text: "$2.50/return + fixed 4% annual escalation cap (vs. MasonHub's 5% + pass-throughs)" },
+                      { good: false, text: "Highest run-rate fulfillment: $1.99 pick + $1.20 pack = $3.19/order base before inserts" },
+                      { good: false, text: "$0.15/unit packaging materials + $0.20/unit serial scan compound at volume" },
                     ],
                     "DCL Logistics": [
-                      { good: true,  text: "Flat rate shipping — zone-independent (KY origin)" },
-                      { good: true,  text: "Low insert ($0.10) and serial scan ($0.10) fees" },
-                      { good: false, text: "$2,500/mo tech fee — highest of all vendors (5× MasonHub)" },
-                      { good: false, text: "Flat rates mean higher cost to coastal markets vs. zone-based carriers" },
+                      { good: true,  text: "Zone-independent flat rates from Louisville, KY — most predictable shipping cost structure" },
+                      { good: true,  text: "Lowest insert fee: $0.10/order (tied with Jay Group); $0.10/unit serial scan" },
+                      { good: false, text: "$2,500/mo tech fee — 5× MasonHub, highest of all vendors ($30K/year fixed)" },
+                      { good: false, text: "$16/pallet receiving — highest in comparison; flat rates less competitive to coastal markets" },
                     ],
                     "Jay Group": [
-                      { good: true,  text: "Lowest pick fee at $1.30/order (Amazon Ground carrier)" },
-                      { good: true,  text: "Best returns fee at $2.00 — lowest of all vendors" },
-                      { good: false, text: "$30,000 monthly minimum — 3× MasonHub, highest of all vendors" },
-                      { good: false, text: "$0.60/cu-ft storage = $28.80/pallet/mo — most expensive storage" },
+                      { good: true,  text: "Lowest pick fee: $1.30/order via Amazon Ground carrier network" },
+                      { good: true,  text: "Best returns fee at $2.00/return — lowest of all 6 vendors" },
+                      { good: false, text: "$30,000/month minimum — highest of all vendors, nearly 3× MasonHub's $10,000" },
+                      { good: false, text: "Storage at $0.60/cu ft = $28.80/pallet/mo equivalent — most expensive storage in comparison" },
                     ],
                     "ITS Logistics": [
-                      { good: true,  text: "$0.42/unit pick + $3.86/order fee — no separate pack charge" },
-                      { good: true,  text: "No start-up costs; first-month storage abatement (~$4,500 savings)" },
-                      { good: false, text: "$21,956/month all-in minimum — 2nd highest of all vendors" },
-                      { good: false, text: "Shipping via OnTrac ground; rates jump significantly above 10 lbs" },
+                      { good: true,  text: "Lowest pallet receiving at $7.11/pallet — cheapest in comparison by $2+ vs. next best" },
+                      { good: true,  text: "No pack fee, no serial scan charge; inclusive all-in pricing model" },
+                      { good: false, text: "First pick fee $4.28/order — highest in comparison (base $3.86 order fee + $0.42/unit)" },
+                      { good: false, text: "$21,956/month all-in minimum — 2nd highest; OnTrac rates climb sharply above 10 lbs" },
                     ],
                   };
                   const tagMap = {
@@ -2940,13 +2940,12 @@ ${rows}</tbody>
                 </div>
 
                 <div style={{ flex: "1 1 380px" }}>
-                  <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 10, marginBottom: 16 }}>
                     {costs.map(c => {
                       const isLow = c.monthlyTotal !== null && c.monthlyTotal === lowestTotal;
                       const isPending = c.monthlyTotal === null;
                       return (
                         <div key={c.vendor} style={{
-                          flex: 1, minWidth: 140,
                           background: isPending ? "#f8fafc" : isLow ? VENDOR_COLORS[c.vendor] : "#fff",
                           borderRadius: 12, padding: "16px 14px",
                           border: isPending ? `1px dashed ${VENDOR_COLORS[c.vendor]}88` : isLow ? "none" : "1px solid #e5e7eb",
@@ -3046,10 +3045,11 @@ ${rows}</tbody>
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
                 {[
                   { vendor: "MasonHub",       text: "Competitive across all zones, especially at heavier weights (5+ lbs). Rate structure scales smoothly — no sharp jumps at weight thresholds." },
-                  { vendor: "Red Stag",       text: "Flat floor pricing (~$8.99–$9.89) at lower zones and lighter weights, climbing steeply above 10 lbs at outer zones. TN origin may yield a better overall zone mix for eastern/central customers." },
+                  { vendor: "Red Stag",       text: "Starts at $6.10 (Zone 2, 1 lb) with competitive light-weight rates across inner zones. Hits a $9.99 floor at mid-range weights; climbs above that at outer zones and heavier packages. TN origin may yield a better zone mix for eastern/central customers." },
                   { vendor: "ShipFusion",     text: "Competitive at lighter weights (1–5 lbs), but rates jump sharply at 11+ lbs. PA origin means similar zone map to MasonHub. Weakest value for heavier packages." },
                   { vendor: "DCL Logistics",  text: "Zone-independent flat rates from KY origin. Eliminates zone-spread risk but costs more to coastal markets vs. zone-based carriers. Predictable billing is an operational advantage." },
                   { vendor: "Jay Group",      text: "Amazon Ground network (Lancaster PA). Strong rates at lower zones (2–5) — often the lowest in the comparison. Rates climb sharply at Zone 7–8 and 11+ lbs." },
+                  { vendor: "ITS Logistics",  text: "OnTrac ground — fuel, residential, and peak surcharges inclusive. Competitive for light packages: Zone 2 stays under $6.60 for all weights. Notable jump at 11 lbs across all zones; steepest outer-zone climb at heavier weights." },
                 ].map(t => (
                   <div key={t.vendor} style={{ flex: 1, minWidth: 220, padding: 14, borderRadius: 10, background: VENDOR_ACCENT[t.vendor], borderLeft: `3px solid ${VENDOR_COLORS[t.vendor]}` }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: VENDOR_COLORS[t.vendor], marginBottom: 4 }}>{t.vendor}</div>
