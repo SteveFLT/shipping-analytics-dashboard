@@ -2340,7 +2340,7 @@ ${rows}</tbody>
     };
 
     // ── Pure cost engine (called both for baseline scoring and live simulator) ──
-    function computeCosts(orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone) {
+    function computeCosts(orders, itemsPerOrder, avgWeight, pallets, palletsReceived, returnRate, simZone) {
       return VENDORS.map((v, vi) => {
         const pick         = SERVICE_COSTS.firstPick[vi] + (itemsPerOrder - 1) * SERVICE_COSTS.addlPick[vi];
         const pack         = SERVICE_COSTS.packFee[vi];
@@ -2354,7 +2354,7 @@ ${rows}</tbody>
         const techFee      = SERVICE_COSTS.techFee[vi];
         const shipRate     = interpRate(v, avgWeight, simZone);   // null if rates pending
         const shipping     = shipRate !== null ? shipRate * orders : null;
-        const receiving    = SERVICE_COSTS.palletReceiving[vi] * 6;
+        const receiving    = SERVICE_COSTS.palletReceiving[vi] * palletsReceived;
         const monthlyTotal = shipping !== null
           ? fulfillTotal + serial + insert + packaging + returns + storage + techFee + shipping + receiving
           : null;
@@ -2366,7 +2366,7 @@ ${rows}</tbody>
     // ── Stable baseline scores — computed ONCE at module load, never change ──
     // Baseline: 7,500 orders/mo · 4 items · 8 lb avg · 100 pallets · 10% returns · Zone 5
     // Scores are fixed so Overview never shifts when Cost Simulator sliders change.
-    const BASELINE_COSTS = computeCosts(7500, 4, 8, 100, 10, 5);
+    const BASELINE_COSTS = computeCosts(7500, 4, 8, 100, 50, 10, 5);
     const _bTotals    = BASELINE_COSTS.map(c => c.monthlyTotal);
     const _bValid     = _bTotals.filter(t => t !== null);
     const _bMin       = Math.min(..._bValid), _bMax = Math.max(..._bValid);
@@ -2751,6 +2751,7 @@ ${rows}</tbody>
       const [itemsPerOrder, setItemsPerOrder] = useState(4);
       const [avgWeight, setAvgWeight] = useState(8);
       const [pallets, setPallets] = useState(100);
+      const [palletsReceived, setPalletsReceived] = useState(50);
       const [returnRate, setReturnRate] = useState(10);
       const [simZone, setSimZone] = useState(5);
       const [tableWeight, setTableWeight] = useState(8);  // independent weight for the rate table
@@ -2758,8 +2759,8 @@ ${rows}</tbody>
 
       // Live costs — reactive to all simulator sliders
       const costs = useMemo(
-        () => computeCosts(orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone),
-        [orders, itemsPerOrder, avgWeight, pallets, returnRate, simZone]
+        () => computeCosts(orders, itemsPerOrder, avgWeight, pallets, palletsReceived, returnRate, simZone),
+        [orders, itemsPerOrder, avgWeight, pallets, palletsReceived, returnRate, simZone]
       );
 
       const _validTotals = costs.filter(c => c.monthlyTotal !== null).map(c => c.monthlyTotal);
@@ -2926,6 +2927,7 @@ ${rows}</tbody>
                   <SliderInput label="Items per Order"  value={itemsPerOrder}  onChange={setItemsPerOrder}  min={1}     max={8} />
                   <SliderInput label="Avg Weight (lbs)" value={avgWeight}      onChange={setAvgWeight}      min={1}     max={25} />
                   <SliderInput label="Pallets Stored"   value={pallets}        onChange={setPallets}        min={10}    max={300} />
+                  <SliderInput label="Pallets Received / Mo" value={palletsReceived} onChange={setPalletsReceived} min={1} max={200} />
                   <SliderInput label="Return Rate"      value={returnRate}     onChange={setReturnRate}     min={0}     max={25} suffix="%" />
                   <div style={{ marginBottom: 16 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
