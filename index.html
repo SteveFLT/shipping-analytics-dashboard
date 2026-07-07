@@ -3003,8 +3003,62 @@ ${rows}</tbody>
               <div style={{ background: "#1E293B", borderRadius: 12, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 10 }}>
                 <span style={{ fontSize: 18 }}>📍</span>
                 <div style={{ fontSize: 12, color: "#CBD5E1", lineHeight: 1.6 }}>
-                  <strong style={{ color: "#fff" }}>Rates are from each vendor's own rate card relative to their origin.</strong> MasonHub, ShipFusion &amp; Jay Group ship from PA; Red Stag ships from TN; DCL ships from KY via SelectShip (flat rate — zone-independent; fuel billed separately monthly). "Zone 5" covers different geographies for each vendor. The <a href="https://steveflt.github.io/shipping-analytics-dashboard/#proposals" target="_blank" style={{ color: "#93c5fd", textDecoration: "underline" }}>3PL Proposals tab</a> applies each vendor's zone map to 77,500 actual 2025 orders for true blended total landed cost projections.
+                  <strong style={{ color: "#fff" }}>Rates are from each vendor's own rate card relative to their origin.</strong> MasonHub, ShipFusion &amp; Jay Group ship from PA; Red Stag ships from TN; DCL ships from KY via SelectShip (flat rate — zone-independent; fuel billed separately monthly). "Zone 5" covers different geographies for each vendor. The <a href="https://steveflt.github.io/shipping-analytics-dashboard/#proposals" target="_blank" style={{ color: "#93c5fd", textDecoration: "underline" }}>3PL Proposals tab</a> applies each vendor's zone map to 77,500 actual 2025 orders for true blended total landed cost projections.{" "}
+                  <strong style={{ color: "#93C5FD" }}>Bi-coastal context:</strong> <span style={{ color: "#CBD5E1" }}>This 3PL is evaluated as a 2nd fulfillment node — Zones 2–4 from its origin are the relevant range; Zones 5–8 route to the primary warehouse. See the near-zone callout below.</span>
                 </div>
+              </div>
+
+              {/* ── Bi-Coastal 2nd Node: Near-Zone Focus ── */}
+              <div style={{ background: "#EFF6FF", borderRadius: 14, padding: 20, border: "1px solid #BFDBFE", marginBottom: 20 }}>
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "#1E40AF", marginBottom: 5 }}>🏭 2nd Node: Near-Zone Rate Comparison — Zones 2–4</div>
+                  <div style={{ fontSize: 11, color: "#374151", lineHeight: 1.6 }}>
+                    In a bi-coastal setup, this 3PL covers <strong>Zones 2–3 only</strong> (and occasionally Zone 4) from its origin. Zones 5–8 are irrelevant — those customers ship from the primary warehouse.
+                    Vendors ranked by blended near-zone rate at <strong>{tableWeight} lb</strong>.
+                    {" "}<span style={{ color: "#6B7280" }}>Blend weights: Z2 30% · Z3 45% · Z4 25%. Adjust weight with the Rate Table slider below.</span>
+                  </div>
+                </div>
+                {(() => {
+                  const wi = tableWeight - 1;
+                  const rows = VENDORS.map(v => {
+                    const r = ALL_RATES[v];
+                    const z2 = r[2][wi], z3 = r[3][wi], z4 = r[4][wi];
+                    const blend = z2 * 0.30 + z3 * 0.45 + z4 * 0.25;
+                    return { v, z2, z3, z4, blend, isFlat: v === "DCL Logistics" };
+                  }).sort((a, b) => a.blend - b.blend);
+                  const best = rows[0].blend;
+                  return (
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))", gap: 10 }}>
+                      {rows.map(({ v, z2, z3, z4, blend, isFlat }, rank) => (
+                        <div key={v} style={{
+                          background: rank === 0 ? VENDOR_ACCENT[v] : "#fff",
+                          border: `2px solid ${rank === 0 ? VENDOR_COLORS[v] : "#E5E7EB"}`,
+                          borderRadius: 10, padding: "11px 13px", position: "relative",
+                        }}>
+                          {rank === 0 && <div style={{ position: "absolute", top: -9, right: 8, background: VENDOR_COLORS[v], color: "#fff", fontSize: 9, fontWeight: 800, padding: "2px 7px", borderRadius: 20, letterSpacing: "0.5px" }}>LOWEST</div>}
+                          <div style={{ fontSize: 11, fontWeight: 800, color: VENDOR_COLORS[v], marginBottom: 7 }}>#{rank + 1} {v}</div>
+                          <div style={{ fontSize: 11, color: "#4B5563", lineHeight: 1.9, marginBottom: 6 }}>
+                            {isFlat ? (
+                              <span><span style={{ color: "#9CA3AF" }}>Flat all zones: </span><strong>${z2.toFixed(2)}</strong></span>
+                            ) : (
+                              <>
+                                <span style={{ color: "#9CA3AF" }}>Z2 </span><strong>${z2.toFixed(2)}</strong>{"  "}
+                                <span style={{ color: "#9CA3AF" }}>Z3 </span><strong>${z3.toFixed(2)}</strong>{"  "}
+                                <span style={{ color: "#9CA3AF" }}>Z4 </span><strong>${z4.toFixed(2)}</strong>
+                              </>
+                            )}
+                          </div>
+                          <div style={{ borderTop: "1px solid #F3F4F6", paddingTop: 6, display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                            <span style={{ fontSize: 12, fontWeight: 800, color: rank === 0 ? VENDOR_COLORS[v] : "#111" }}>
+                              ${blend.toFixed(2)} blend
+                            </span>
+                            {rank > 0 && <span style={{ fontSize: 10, color: "#9CA3AF" }}>+{((blend / best - 1) * 100).toFixed(0)}%</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
 
               <div style={{ background: "#fff", borderRadius: 14, padding: 22, border: "1px solid #e5e7eb", marginBottom: 20 }}>
